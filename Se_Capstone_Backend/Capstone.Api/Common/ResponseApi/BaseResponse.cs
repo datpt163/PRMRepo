@@ -36,33 +36,33 @@
     }
 
     // Bad request response
-    public class BadRequestResponse : BaseResponse
+    public class ResponseBadRequest : BaseResponse
     {
-        public BadRequestResponse(string message = "Bad request.") : base(null, message, 400)
+        public ResponseBadRequest(string message = "Bad request.") : base(null, message, 400)
         {
         }
     }
 
     // Not found response
-    public class NotFoundResponse : BaseResponse
+    public class ResponseNotFound : BaseResponse
     {
-        public NotFoundResponse(string message = "Resource not found.") : base(null, message, 404)
+        public ResponseNotFound(string message = "Resource not found.") : base(null, message, 404)
         {
         }
     }
 
     // Internal server error response
-    public class InternalServerErrorResponse : BaseResponse
+    public class ResponseInternalServerError : BaseResponse
     {
-        public InternalServerErrorResponse(string message = "An unexpected error occurred.") : base(null, message, 500)
+        public ResponseInternalServerError(string message = "An unexpected error occurred.") : base(null, message, 500)
         {
         }
     }
 
     // Unauthorized response
-    public class UnauthorizedResponse : BaseResponse
+    public class ResponseUnauthorized : BaseResponse
     {
-        public UnauthorizedResponse(string message = "Unauthorized access.") : base(null, message, 401)
+        public ResponseUnauthorized(string message = "Unauthorized access.") : base(null, message, 401)
         {
         }
     }

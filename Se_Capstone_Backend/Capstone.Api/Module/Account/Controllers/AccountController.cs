@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Capstone.Api.Common.BaseControllers;
+using Capstone.Api.Module.Account.Request;
+using Capstone.Application.Module.Account.Command;
+using Capstone.Application.Module.Account.Query;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,16 +13,33 @@ namespace Capstone.Api.Module.Account.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        [HttpGet("Auth")]
-        public async Task<IActionResult> AuthAsync()
+        private readonly IMediator _mediator;
+
+        public AccountController(IMediator mediator)
         {
-            //(string accessToken, string errorMessage) = await AccountService.AuthAsync(accountAuthRequest);
-            //if (!string.IsNullOrEmpty(errorMessage))
-            //{
-            //    return ResponseBadRequest(errorMessage);
-            //}
-            //return ResponseOk(new { accessToken });
-            return Ok(new { });
+            _mediator = mediator;
+        }
+
+
+        [HttpPost("Auth")]
+        public async Task<IActionResult> Login([FromBody]LoginQuery loginQuery)
+        {
+            var result = await _mediator.Send(loginQuery);
+
+            if (result.IsSuccess)
+                return Ok(new ResponseSuccess(data: result.Data));
+            return BadRequest(new ResponseBadRequest( message: result.Message));
+        }
+
+        [HttpPatch("Password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody]ChangePassRequest request)
+        {
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var result = await _mediator.Send(new ChangePasswordCommand() { token = token, NewPassword = request.NewPassword, OldPassword = request.OldPassword});
+            if (result.IsSuccess)
+                return Ok( new ResponseSuccess(data: null) );
+            return BadRequest(new ResponseBadRequest(message: result.Message));
         }
     }
 }
