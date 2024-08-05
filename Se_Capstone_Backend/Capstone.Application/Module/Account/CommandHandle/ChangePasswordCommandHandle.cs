@@ -23,27 +23,27 @@ namespace Capstone.Application.Module.Account.CommandHandle
         public async Task<ResponseMediator> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(request.OldPassword))
-                return new ResponseMediator(false, "OldPassword is empty", null);
+                return new ResponseMediator("OldPassword is empty", null);
 
             if (string.IsNullOrEmpty(request.NewPassword))
-                return new ResponseMediator(false, "NewPassword is empty", null);
+                return new ResponseMediator("NewPassword is empty", null);
 
             if (string.IsNullOrEmpty(request.token))
-                return new ResponseMediator(false, "Token is empty", null);
+                return new ResponseMediator("Token is empty", null);
 
             if (request.NewPassword.Equals(request.OldPassword))
-                return new ResponseMediator(false, "New password is the same as the old password", null);
+                return new ResponseMediator("New password is the same as the old password", null);
 
             var ac = await _jwtService.VerifyToken(request.token);
 
             if(ac == null || ac.Password is null)
-                return new ResponseMediator(false, "Account is invalid", null);
+                return new ResponseMediator("Account is invalid", null);
 
             if(!ac.Password.Equals(request.OldPassword))
-                return new ResponseMediator(false, "Old password not correct", null);
+                return new ResponseMediator("Old password not correct", null);
 
             //change new pass
-            return new ResponseMediator(true, "Success", null);
+            return new ResponseMediator("", null);
         }
     }
 }

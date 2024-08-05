@@ -22,14 +22,17 @@ namespace Capstone.Application.Module.Account.CommandHandle
         public async Task<ResponseMediator> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(request.NewPassword))
-                return new ResponseMediator(false, "Password is null or empty", null);
+                return new ResponseMediator("Password is null or empty", null);
+
+            if (string.IsNullOrEmpty(request.Code))
+                return new ResponseMediator("Code is null or empty", null);
 
             var ac = await _jwtService.VerifyToken(request.Code);
 
             if(ac == null)
-                return new ResponseMediator(false, "Reset password is expire, you must resend emai", null);
+                return new ResponseMediator("Reset password is expire, you must resend emai", null);
 
-            return new ResponseMediator(true, "", null);
+            return new ResponseMediator("", null);
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Capstone.Domain.Entities;
 using Capstone.Infrastructure.DbContext;
+using Capstone.Application.Module.Account.Response;
 namespace Capstone.Application.Module.Account.QueryHandle
 {
     public class LoginQueryHandle : IRequestHandler<LoginQuery, ResponseMediator>
@@ -24,19 +25,20 @@ namespace Capstone.Application.Module.Account.QueryHandle
         public async Task<ResponseMediator> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(request.Email))
-                return new ResponseMediator(false, "email is empty", null);
+                return new ResponseMediator("email is empty", null);
 
             if (string.IsNullOrEmpty(request.Password))
-                return new ResponseMediator(false, "password is empty", null);
+                return new ResponseMediator("password is empty", null);
             //var ac = _unitofwork.Users.FindByCondition(s => s.Email.Equals(request.email) && s.Password.Equals(request.password)).Include(s => s.Role).FirstOrDefault();
             var ac = MyDbContext.Users.FirstOrDefault(a => (a.Email.Equals(request.Email) && a.Password.Equals(request.Password)));
 
             if (ac is null)
             {
-                return new ResponseMediator(false, "account is not found", null);
+                return new ResponseMediator("account is not found", null);
             }
-
-            return new ResponseMediator(true, "login succes", (await _jwtService.generatejwttokentw( ac) ));
+            var accessToken = await _jwtService.generatejwttokentw(ac);
+            var refreshToken = "";
+            return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken } );
         }
     }
 }

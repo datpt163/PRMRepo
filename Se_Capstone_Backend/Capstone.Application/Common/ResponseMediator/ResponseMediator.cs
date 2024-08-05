@@ -8,15 +8,13 @@ namespace Capstone.Application.Common.ResponseMediator
 {
     public class ResponseMediator
     {
-        public bool IsSuccess { get; set; }
-        public string? Message { get; set; }
+        public string? ErrorMessage { get; set; }
 
         public Object Data { get; set; }
 
-        public ResponseMediator(bool isSucees, string message, Object data)
+        public ResponseMediator(string errorMessage, Object data)
         {
-            IsSuccess = isSucees;
-            Message = message;
+            ErrorMessage = errorMessage;
             Data = data;
         }
     }
