@@ -1,4 +1,5 @@
 using Capstone.Application;
+using Capstone.Application.Common.Email;
 using Capstone.Application.Common.Jwt;
 using Capstone.Infrastructure.DbContext;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -31,8 +32,10 @@ builder.Services.AddAuthentication(options =>
     options.RequireHttpsMetadata = false;
     options.TokenValidationParameters = new TokenValidationParameters()
     {
+        ClockSkew = TimeSpan.Zero,
         ValidateIssuer = true,
         ValidateAudience = true,
+        ValidateLifetime = true,
         ValidIssuer = issuer,
         ValidAudience = issuer,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
@@ -42,7 +45,8 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 #endregion
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AssemblyReference.Assembly));
-builder.Services.AddScoped<MyDbContext, MyDbContext>(); 
+builder.Services.AddScoped<MyDbContext, MyDbContext>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -22,7 +22,7 @@ namespace Capstone.Api.Module.Account.Controllers
 
 
         [HttpPost("Auth")]
-        public async Task<IActionResult> Login([FromBody]LoginQuery loginQuery)
+        public async Task<IActionResult> Auth([FromBody]LoginQuery loginQuery)
         {
             var result = await _mediator.Send(loginQuery);
 
@@ -39,6 +39,24 @@ namespace Capstone.Api.Module.Account.Controllers
             var result = await _mediator.Send(new ChangePasswordCommand() { token = token, NewPassword = request.NewPassword, OldPassword = request.OldPassword});
             if (result.IsSuccess)
                 return Ok( new ResponseSuccess(data: null) );
+            return BadRequest(new ResponseBadRequest(message: result.Message));
+        }
+
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> SendEmailForgotPass([FromBody] ForgotPasswordQuery forgotPasswordQuery)
+        {
+            var result = await _mediator.Send(forgotPasswordQuery);
+            if (result.IsSuccess)
+                return Ok(new ResponseSuccess(data: null));
+            return BadRequest(new ResponseBadRequest(message: result.Message));
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand resetPasswordCommand)
+        {
+            var result = await _mediator.Send(resetPasswordCommand);
+            if (result.IsSuccess)
+                return Ok(new ResponseSuccess(data: null));
             return BadRequest(new ResponseBadRequest(message: result.Message));
         }
     }

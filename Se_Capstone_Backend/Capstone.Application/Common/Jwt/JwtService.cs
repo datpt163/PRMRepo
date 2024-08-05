@@ -15,14 +15,13 @@ namespace Capstone.Application.Common.Jwt
         private const string secretKey = "ijurkbdlhmklqacwqzdxmkkhvqowlyqa99";
         private const string issuer = "localhost:7144";
 
-        public async Task<string> generatejwttokentw(User account)
+        public async Task<string> generatejwttokentw(User account, int expireTime = 30)
         {
             List<Claim> claims = new()
             {
                 new Claim(ClaimTypes.NameIdentifier, account.Id + ""),
-                //new Claim(ClaimTypes.Role , account.Role.Name + "")
             };
-
+            // add role into claim
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -30,7 +29,7 @@ namespace Capstone.Application.Common.Jwt
                 issuer: issuer,
                 audience: issuer,
                 claims: claims,
-                expires: DateTime.Now.AddDays(30),
+                expires: DateTime.Now.AddDays(expireTime),
                 signingCredentials: creds
             );
             return new JwtSecurityTokenHandler().WriteToken(jwtsecuritytoken);
@@ -49,7 +48,8 @@ namespace Capstone.Application.Common.Jwt
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = issuer,
                 ValidAudience = issuer,
-                IssuerSigningKey = new SymmetricSecurityKey(key)
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                 ClockSkew = TimeSpan.Zero
             };
 
             try
@@ -73,9 +73,9 @@ namespace Capstone.Application.Common.Jwt
                     return null;
                 return acc;
             }
-            catch (Exception ex)
+            catch 
             {
-                throw new SecurityTokenException("Token validation failed", ex);
+                return null;
             }
         }
     }
