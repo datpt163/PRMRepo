@@ -42,7 +42,7 @@ namespace Capstone.Api.Module.Account.Controllers
         public async Task<IActionResult> ChangePassword([FromBody]ChangePassRequest request)
         {
             string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            var result = await _mediator.Send(new ChangePasswordCommand() { token = token, NewPassword = request.NewPassword, OldPassword = request.OldPassword});
+            var result = await _mediator.Send(new ChangePasswordCommand() { Token = token, NewPassword = request.NewPassword, OldPassword = request.OldPassword});
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseNoContent();
             return ResponseBadRequest(messageResponse: result.ErrorMessage);

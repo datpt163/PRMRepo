@@ -28,13 +28,13 @@ namespace Capstone.Application.Module.Account.CommandHandle
             if (string.IsNullOrEmpty(request.NewPassword))
                 return new ResponseMediator("NewPassword is empty", null);
 
-            if (string.IsNullOrEmpty(request.token))
+            if (string.IsNullOrEmpty(request.Token))
                 return new ResponseMediator("Token is empty", null);
 
             if (request.NewPassword.Equals(request.OldPassword))
                 return new ResponseMediator("New password is the same as the old password", null);
 
-            var ac = await _jwtService.VerifyToken(request.token);
+            var ac = await _jwtService.VerifyToken(request.Token);
 
             if(ac == null || ac.Password is null)
                 return new ResponseMediator("Account is invalid", null);
