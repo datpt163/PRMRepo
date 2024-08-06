@@ -29,14 +29,14 @@ namespace Capstone.Application.Module.Account.QueryHandle
 
             if (string.IsNullOrEmpty(request.Password))
                 return new ResponseMediator("password is empty", null);
-            //var ac = _unitofwork.Users.FindByCondition(s => s.Email.Equals(request.email) && s.Password.Equals(request.password)).Include(s => s.Role).FirstOrDefault();
+            //var ac = await _unitofwork.Users.FindByCondition(s => s.Email.Equals(request.email) && s.Password.Equals(request.password)).Include(s => s.Role).FirstOrDefault();
             var account = MyDbContext.Users.FirstOrDefault(a => (a.Email.Equals(request.Email) && a.Password.Equals(request.Password)));
 
             if (account is null)
             {
                 return new ResponseMediator("account is not found", null);
             }
-            var accessToken = await _jwtService.GenerateJwtToken(account);
+            var accessToken =  _jwtService.GenerateJwtToken(account);
             var refreshToken = "";
             return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken } );
         }

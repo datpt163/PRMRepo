@@ -10,9 +10,9 @@ namespace Capstone.Application.Common.ResponseMediator
     {
         public string? ErrorMessage { get; set; }
 
-        public Object Data { get; set; }
+        public Object? Data { get; set; }
 
-        public ResponseMediator(string errorMessage, Object data)
+        public ResponseMediator(string errorMessage, Object? data)
         {
             ErrorMessage = errorMessage;
             Data = data;
