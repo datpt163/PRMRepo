@@ -21,7 +21,7 @@ namespace Capstone.Application.Common.Jwt
             _jwtSettings = jwtSettings.Value;
         }
 
-        public async Task<string> GenerateJwtToken(User account, int expireTime = 30)
+        public string GenerateJwtToken(User account, int expireTime = 30)
         {
             List<Claim> claims = new()
             {
