@@ -1,3 +1,4 @@
+using Capstone.Api;
 using Capstone.Application;
 using Capstone.Application.Common.Email;
 using Capstone.Application.Common.Jwt;
@@ -10,10 +11,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
 #region Add Swagger
@@ -54,11 +52,11 @@ builder.Services.AddSwaggerGen(c =>
 
 #endregion
 
-#region register jwt author service
+#region Register Jwt Author Service
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-string secretKey = jwtSettings["SecretKey"];
-string issuer = jwtSettings["Issuer"];
-string audience = jwtSettings["Audience"];
+string secretKey = jwtSettings["SecretKey"] ?? string.Empty;
+string issuer = jwtSettings["Issuer"] ?? string.Empty;
+string audience = jwtSettings["Audience"] ?? string.Empty;
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -87,10 +85,9 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AssemblyReference.Assembly));
 builder.Services.AddScoped<MyDbContext, MyDbContext>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
-builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddGreetingService();
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -102,5 +99,13 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+#region MigrateDbContext
+//using (var scope = app.Services.CreateScope())
+//{
+//    var dbContext = scope.ServiceProvider.GetRequiredService<ManageEmployeeDbContext>();
+//    dbContext.Database.Migrate();
+//}
+#endregion
 
 app.Run();

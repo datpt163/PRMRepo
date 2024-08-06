@@ -21,7 +21,7 @@ namespace Capstone.Application.Common.Jwt
             _jwtSettings = jwtSettings.Value;
         }
 
-        public async Task<string> generatejwttokentw(User account, int expireTime = 30)
+        public async Task<string> GenerateJwtToken(User account, int expireTime = 30)
         {
             List<Claim> claims = new()
             {
@@ -41,10 +41,10 @@ namespace Capstone.Application.Common.Jwt
             return new JwtSecurityTokenHandler().WriteToken(jwtsecuritytoken);
         }
 
-        public async Task<User> VerifyToken(string token)
+        public async Task<User?> VerifyToken(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_jwtSettings.SecretKey);
+            var keyJwt = Encoding.UTF8.GetBytes(_jwtSettings.SecretKey);
 
             var validationParameters = new TokenValidationParameters
             {
@@ -54,18 +54,14 @@ namespace Capstone.Application.Common.Jwt
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = _jwtSettings.Issuer,
                 ValidAudience = _jwtSettings.Audience,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
+                IssuerSigningKey = new SymmetricSecurityKey(keyJwt),
                  ClockSkew = TimeSpan.Zero
             };
 
             try
             {
-                // Validate token and get principal
                 var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
-
-                // Get claims from principal
                 var userIdClaim = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-                //var roleClaim = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
 
                 if (userIdClaim == null)
                 {
@@ -73,15 +69,13 @@ namespace Capstone.Application.Common.Jwt
                 }
 
                 var userId = Guid.Parse(userIdClaim.Value);
-                var acc = MyDbContext.Users.FirstOrDefault(s => s.Id == userId);
-
-                if (acc == null)
-                    return null;
-                return acc;
+                var account = MyDbContext.Users.FirstOrDefault(s => s.Id == userId);
+       
+                return account;
             }
             catch 
             {
-                return null;
+                throw new UnauthorizedAccessException("Verify token fail!");
             }
         }
     }
