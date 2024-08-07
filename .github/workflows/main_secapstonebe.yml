@@ -37,15 +37,14 @@ jobs:
     - name: Login to Azure
       uses: azure/login@v2
       with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_EF2C0FDD1EDA447D91CE12F2B79F7792 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A64CD2A5F7BF4F34B161FB029FA8B13B }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1C27DEC71EFF4D0BAA4A8DC8037768C2 }}
+        client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_EF2C0FDD1EDA447D91CE12F2B79F7792 }}
+        tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A64CD2A5F7BF4F34B161FB029FA8B13B }}
+        subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1C27DEC71EFF4D0BAA4A8DC8037768C2 }}
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: 'SECapstoneBE'
-          slot-name: 'Production'
-          package: .
-          
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: 'SECapstoneBE'
+        slot-name: 'Production'
+        package: ${{ github.workspace }}/myapp
