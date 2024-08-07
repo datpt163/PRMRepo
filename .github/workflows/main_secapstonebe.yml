@@ -27,8 +27,13 @@ jobs:
       - name: Display working directory before build
         run: pwd
 
-      - name: Build with dotnet
-        run: dotnet build ./Se_Capstone_Backend/Capstone.Api/Capstone.Api.csproj --configuration Release --no-restore
+      - name: Run SonarCloud Scanner
+        run: |
+          export PATH="$PATH:/home/runner/.dotnet/tools"
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet sonarscanner begin /k:"SE-Capstone_BE" /o:"se-capstone" /d:sonar.login="811e67a45699f27c738f66a7e9b00d2ef5203af1"
+          dotnet build ./Se_Capstone_Backend/Capstone.Api/Capstone.Api.csproj --configuration Release --no-restore
+          dotnet sonarscanner end /d:sonar.login="811e67a45699f27c738f66a7e9b00d2ef5203af1"
 
       - name: Display working directory before publish
         run: pwd
