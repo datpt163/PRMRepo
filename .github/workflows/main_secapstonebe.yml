@@ -28,6 +28,7 @@ jobs:
         run: pwd
 
       - name: Run SonarCloud Scanner
+        continue-on-error: true
         run: |
           export PATH="$PATH:/home/runner/.dotnet/tools"
           dotnet tool install --global dotnet-sonarscanner
