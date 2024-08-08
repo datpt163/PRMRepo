@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Capstone.Api.Module.Shopee.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -13,17 +13,17 @@ namespace Capstone.Api.Module.Shopee.Controllers
         }
 
 
-        [HttpGet("GetAuth")]
+        [HttpGet("get-auth")]
         public string GetUrl()
         {
             return ShopAuth.GetLoginLink();
         }
-        [HttpGet("AddItem")]
+        [HttpGet("add-item")]
         public async Task<string> AddItem()
         {
             return await ShopAuth.AddItemAsync();
         }
-        [HttpGet("GetToken")]
+        [HttpGet("get-token")]
         public async Task<string?> GetToken(string code, long shopId)
         {
             return await ShopAuth.GetAccessTokenAsync(code, shopId);
