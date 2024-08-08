@@ -26,7 +26,7 @@ namespace Capstone.Api.Module.Account.Controllers
 
         [SwaggerResponse(200, "Successful", typeof(ResponseSuccess<LoginResponse>))]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [HttpPost("Auth")]
+        [HttpPost("auth")]
         public async Task<IActionResult> Auth([FromBody]LoginQuery loginQuery)
         {
             var result = await _mediator.Send(loginQuery);
@@ -36,7 +36,7 @@ namespace Capstone.Api.Module.Account.Controllers
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
         }
 
-        [HttpPost("ChangePassword")]
+        [HttpPost("change-password")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [Authorize]
         public async Task<IActionResult> ChangePassword([FromBody]ChangePassRequest request)
@@ -48,7 +48,7 @@ namespace Capstone.Api.Module.Account.Controllers
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
         }
 
-        [HttpPost("ForgotPassword")]
+        [HttpPost("forgot-password")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [SwaggerResponse(204, "Success")]
         public async Task<IActionResult> SendEmailForgotPass([FromBody] ForgotPasswordQuery forgotPasswordQuery)
@@ -59,7 +59,7 @@ namespace Capstone.Api.Module.Account.Controllers
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
         }
 
-        [HttpPost("ResetPassword")]
+        [HttpPost("reset-password")]
         [SwaggerResponse(204, "Success")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand resetPasswordCommand)
