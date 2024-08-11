@@ -13,7 +13,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 builder.Services.AddSwaggerService();
 builder.Services.AddAuthSerivce(builder.Configuration);
 builder.Services.AddDataService();
@@ -40,5 +49,6 @@ app.MapControllers();
 //    dbContext.Database.Migrate();
 //}
 #endregion
+app.UseCors("AllowAll");
 
 app.Run();
