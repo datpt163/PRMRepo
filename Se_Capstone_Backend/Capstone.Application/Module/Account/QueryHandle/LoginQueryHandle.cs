@@ -25,16 +25,16 @@ namespace Capstone.Application.Module.Account.QueryHandle
         public async Task<ResponseMediator> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(request.Email))
-                return new ResponseMediator("email is empty", null);
+                return new ResponseMediator("Email is empty", null);
 
             if (string.IsNullOrEmpty(request.Password))
-                return new ResponseMediator("password is empty", null);
+                return new ResponseMediator("Password is empty", null);
             //var ac = await _unitofwork.Users.FindByCondition(s => s.Email.Equals(request.email) && s.Password.Equals(request.password)).Include(s => s.Role).FirstOrDefault();
             var account = MyDbContext.Users.FirstOrDefault(a => (a.Email.Equals(request.Email) && a.Password.Equals(request.Password)));
 
             if (account is null)
             {
-                return new ResponseMediator("account is not found", null);
+                return new ResponseMediator("Account is not found", null);
             }
             var accessToken =  _jwtService.GenerateJwtToken(account);
             var refreshToken = "";

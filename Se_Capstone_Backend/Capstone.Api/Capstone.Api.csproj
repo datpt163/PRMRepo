@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Capstone.Application\Capstone.Application.csproj" />
+    <ProjectReference Include="..\Capstone.Infrastructure\Capstone.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

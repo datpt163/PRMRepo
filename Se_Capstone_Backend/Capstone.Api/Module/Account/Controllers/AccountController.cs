@@ -5,6 +5,7 @@ using Capstone.Application.Module.Account.Command;
 using Capstone.Application.Module.Account.Query;
 using Capstone.Application.Module.Account.Response;
 using Capstone.Domain.Entities;
+using Capstone.Infrastructure.DbContext;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -68,6 +69,35 @@ namespace Capstone.Api.Module.Account.Controllers
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseNoContent();
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
+        }
+        [HttpPost("register")]
+        [SwaggerResponse(204, "Success")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        public async Task<IActionResult> Register([FromBody] RegisterQuery registerCommand)
+        {
+            var result = await _mediator.Send(registerCommand);
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseNoContent();
+            return ResponseBadRequest(messageResponse: result.ErrorMessage);
+        }
+
+        [HttpPost("verify-otp-register")]
+        [SwaggerResponse(204, "Success")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        public async Task<IActionResult> VerifyOtpRegister([FromBody] VerifyOtpRegisterQuery verifyOtpRegisterQuery)
+        {
+            var result = await _mediator.Send(verifyOtpRegisterQuery);
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseNoContent();
+            return ResponseBadRequest(messageResponse: result.ErrorMessage);
+        }
+
+        [HttpPost("test-list-user")]
+        [SwaggerResponse(204, "Success")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        public async Task<IActionResult> Getall()
+        {
+            return Ok(MyDbContext.Users);
         }
     }
 }
