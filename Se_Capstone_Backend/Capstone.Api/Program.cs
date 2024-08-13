@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +33,13 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AssemblyRe
 builder.Services.AddControllers()
     .AddFluentValidation(fv =>
         fv.RegisterValidatorsFromAssemblyContaining<UpdateUserValidator>());
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var configuration = ConfigurationOptions.Parse(
+    builder.Configuration.GetConnectionString("Redis"), true);
+    configuration.ResolveDns = true;
+    return ConnectionMultiplexer.Connect(configuration);
+});
 builder.Services.AddGreetingService(builder.Configuration);
 var app = builder.Build();
 

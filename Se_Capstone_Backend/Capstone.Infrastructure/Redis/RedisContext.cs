@@ -13,9 +13,8 @@ namespace Capstone.Infrastructure.Redis
     public class RedisContext 
     {
         private IDatabase _cacheDb;
-        public RedisContext(IOptions<RedisSettings> settings)
+        public RedisContext(IConnectionMultiplexer redis)
         {
-            var redis = ConnectionMultiplexer.Connect(settings.Value.ConnectionStrings);
             _cacheDb = redis.GetDatabase();
         }
 
