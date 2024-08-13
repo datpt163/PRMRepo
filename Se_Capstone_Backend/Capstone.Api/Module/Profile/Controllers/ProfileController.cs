@@ -4,6 +4,8 @@ using Capstone.Api.Module.Profile.Request;
 using Capstone.Application.Module.Account.Query;
 using Capstone.Application.Module.Account.Response;
 using Capstone.Application.Module.Profile.Command;
+using Capstone.Infrastructure.DbContexts;
+using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +18,12 @@ namespace Capstone.Api.Module.Profile.Controllers
     public class ProfileController : BaseController
     {
         private readonly IMediator _mediator;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ProfileController(IMediator mediator)
+        public ProfileController(IMediator mediator, IUnitOfWork unitOfWork)
         {
             _mediator = mediator;
+            _unitOfWork = unitOfWork;
         }
 
         [SwaggerResponse(200, "Successful", typeof(ResponseSuccess<LoginResponse>))]

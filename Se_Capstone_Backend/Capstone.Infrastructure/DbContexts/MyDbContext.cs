@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Capstone.Infrastructure.DbContext
+namespace Capstone.Infrastructure.DbContexts
 {
     public class MyDbContext
     {

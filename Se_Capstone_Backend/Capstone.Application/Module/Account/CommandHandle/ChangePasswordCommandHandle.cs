@@ -1,7 +1,7 @@
 ﻿using Capstone.Application.Common.Jwt;
 using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Account.Command;
-using Capstone.Infrastructure.DbContext;
+using Capstone.Infrastructure.DbContexts;
 using MediatR;
 using System;
 using System.Collections.Generic;

@@ -3,7 +3,7 @@ using Capstone.Api.Module.Profile.Validator;
 using Capstone.Application;
 using Capstone.Application.Common.Email;
 using Capstone.Application.Common.Jwt;
-using Capstone.Infrastructure.DbContext;
+using Capstone.Infrastructure.DbContexts;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +27,7 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddSwaggerService();
 builder.Services.AddAuthSerivce(builder.Configuration);
-builder.Services.AddDataService();
+builder.Services.AddDataService(builder.Configuration);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AssemblyReference.Assembly));
 builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<UpdateUserValidator>());
 builder.Services.AddGreetingService(builder.Configuration);

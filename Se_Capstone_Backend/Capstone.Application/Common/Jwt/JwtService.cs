@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Capstone.Application.Common.Email;
 using Capstone.Domain.Entities;
-using Capstone.Infrastructure.DbContext;
+using Capstone.Infrastructure.DbContexts;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 namespace Capstone.Application.Common.Jwt

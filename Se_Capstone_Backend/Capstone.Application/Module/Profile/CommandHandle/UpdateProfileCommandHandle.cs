@@ -1,7 +1,7 @@
 ﻿using Capstone.Application.Common.Jwt;
 using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Profile.Command;
-using Capstone.Infrastructure.DbContext;
+using Capstone.Infrastructure.DbContexts;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -14,10 +14,12 @@ namespace Capstone.Application.Module.Profile.CommandHandle
     public class UpdateProfileCommandHandle : IRequestHandler<UpdateProfileCommand, ResponseMediator>
     {
         private readonly IJwtService _jwtService;
+        private readonly SeCapstoneContext _ct;
 
-        public UpdateProfileCommandHandle(IJwtService jwtService)
+        public UpdateProfileCommandHandle(IJwtService jwtService, SeCapstoneContext ct)
         {
             _jwtService = jwtService;
+            _ct = ct;   
         }
         public async Task<ResponseMediator> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
         {
@@ -29,8 +31,7 @@ namespace Capstone.Application.Module.Profile.CommandHandle
             {
                 if(acc.Id == account.Id)
                 {
-                    acc.FirstName = request.FirstName;
-                    acc.LastName = request.LastName;
+                    acc.Fullname = request.FirstName;
                 }
             }
             return new ResponseMediator("", null);
