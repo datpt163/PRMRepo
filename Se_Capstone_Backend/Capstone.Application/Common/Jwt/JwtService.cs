@@ -9,6 +9,7 @@ using Capstone.Application.Common.Email;
 using Capstone.Domain.Entities;
 using Capstone.Infrastructure.DbContexts;
 using Capstone.Infrastructure.Repository;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 namespace Capstone.Application.Common.Jwt
@@ -71,7 +72,7 @@ namespace Capstone.Application.Common.Jwt
                     throw new SecurityTokenException("Invalid token");
                 }
                 var userId = Guid.Parse(userIdClaim.Value);
-                var account = _unitOfWork.Users.Find(s => s.Id == userId).FirstOrDefault();
+                var account = await _unitOfWork.Users.Find(s => s.Id == userId).FirstOrDefaultAsync();
        
                 return account;
             }

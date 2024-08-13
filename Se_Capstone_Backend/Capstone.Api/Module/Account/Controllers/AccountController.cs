@@ -99,13 +99,6 @@ namespace Capstone.Api.Module.Account.Controllers
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
         }
 
-        [HttpPost("test-list-user")]
-        [SwaggerResponse(204, "Success")]
-        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        public async Task<IActionResult> Getall()
-        {
-            return Ok(MyDbContext.Users);
-        }
 
         [SwaggerResponse(200, "Successful", typeof(ResponseSuccess<UpdateUserResponse>))]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
