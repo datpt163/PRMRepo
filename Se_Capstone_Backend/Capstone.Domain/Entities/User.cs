@@ -1,20 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Capstone.Domain.Entities
+namespace Capstone.Domain.Entities;
+
+public partial class User
 {
-    public class User
+    public Guid Id { get; set; }
+    public string Email { get; set; } = null!;
+    public string Password { get; set; } = null!;
+    public string Phone { get; set; } = null!;
+    public string FullName { get; set; } = null!;
+    public string Avatar { get; set; } = null!;
+    public DateOnly CreateDate { get; set; }
+
+    public User() { }
+    public User(string email, string password, string phone, string fullname, string avatar)
     {
-        public Guid Id { get;  set; }
-        public string Email { get;  set; } = string.Empty;
-        public string Password { get;  set; } = string.Empty;
-        public string Avatar { get; set; } = string.Empty;
-        public string FirstName { get;  set; } = string.Empty;
-        public string LastName { get;  set; } = string.Empty;
-        public Guid RoleId { get; private set; }
+        Email = email;
+        Password = password;
+        Phone = phone;
+        FullName = fullname;
+        Avatar = avatar;
+        CreateDate = DateOnly.FromDateTime(DateTime.Now);
     }
 }

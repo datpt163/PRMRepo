@@ -4,8 +4,11 @@ using Capstone.Api.Module.Account.Request;
 using Capstone.Application.Module.Account.Command;
 using Capstone.Application.Module.Account.Query;
 using Capstone.Application.Module.Account.Response;
+using Capstone.Application.Module.Profile.Command;
+using Capstone.Application.Module.Profile.Query;
+using Capstone.Application.Module.Profile.Response;
 using Capstone.Domain.Entities;
-using Capstone.Infrastructure.DbContext;
+using Capstone.Infrastructure.DbContexts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +17,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Capstone.Api.Module.Account.Controllers
 {
-    [Route("api/account")]
+    [Route("api/user")]
     [ApiController]
     public class AccountController : BaseController
     {
@@ -30,6 +33,10 @@ namespace Capstone.Api.Module.Account.Controllers
         [HttpPost("auth")]
         public async Task<IActionResult> Auth([FromBody]LoginQuery loginQuery)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var result = await _mediator.Send(loginQuery);
 
             if (string.IsNullOrEmpty(result.ErrorMessage))
@@ -98,6 +105,35 @@ namespace Capstone.Api.Module.Account.Controllers
         public async Task<IActionResult> Getall()
         {
             return Ok(MyDbContext.Users);
+        }
+
+        [SwaggerResponse(200, "Successful", typeof(ResponseSuccess<UpdateUserResponse>))]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [HttpPut("profile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserRequest updateUserRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var updateProfileCommand = new UpdateProfileCommand(token, updateUserRequest.FullName, updateUserRequest.Phone, updateUserRequest.Avatar);
+            var result = await _mediator.Send(updateProfileCommand);
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(dataResponse: result.Data);
+            return ResponseBadRequest(messageResponse: result.ErrorMessage);
+        }
+
+        [SwaggerResponse(200, "Successful", typeof(ResponseSuccess<UpdateUserResponse>))]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetProfile()
+        {
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var result = await _mediator.Send(new GetProfileQuery() { Token = token});
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(dataResponse: result.Data);
+            return ResponseBadRequest(messageResponse: result.ErrorMessage);
         }
     }
 }

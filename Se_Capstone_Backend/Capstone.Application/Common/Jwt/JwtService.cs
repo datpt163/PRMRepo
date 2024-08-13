@@ -7,7 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Capstone.Application.Common.Email;
 using Capstone.Domain.Entities;
-using Capstone.Infrastructure.DbContext;
+using Capstone.Infrastructure.DbContexts;
+using Capstone.Infrastructure.Repository;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 namespace Capstone.Application.Common.Jwt
@@ -15,10 +16,12 @@ namespace Capstone.Application.Common.Jwt
     public class JwtService : IJwtService
     {
         private readonly JwtSettings _jwtSettings;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public JwtService(IOptions<JwtSettings> jwtSettings)
+        public JwtService(IOptions<JwtSettings> jwtSettings, IUnitOfWork unitOfWork)
         {
             _jwtSettings = jwtSettings.Value;
+            _unitOfWork = unitOfWork;
         }
 
         public string GenerateJwtToken(User account, int expireTime = 30)
@@ -67,9 +70,8 @@ namespace Capstone.Application.Common.Jwt
                 {
                     throw new SecurityTokenException("Invalid token");
                 }
-
                 var userId = Guid.Parse(userIdClaim.Value);
-                var account = MyDbContext.Users.FirstOrDefault(s => s.Id == userId);
+                var account = _unitOfWork.Users.Find(s => s.Id == userId).FirstOrDefault();
        
                 return account;
             }

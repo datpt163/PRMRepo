@@ -10,15 +10,17 @@ namespace Capstone.Application.Module.Account.Model
     {
         public int Otp { get; set; }
         public string Password { get; set; } = string.Empty;
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string Fullname { get; set; } = string.Empty;
+        public string Avatar { get; set; } = string.Empty;
 
-        public RegisterRedisData(int otp, string password, string firstName, string lastName)
+        public RegisterRedisData(int otp, string password, string phone, string fullname, string avatar)
         {
             Otp = otp;
             Password = password;
-            FirstName = firstName;
-            LastName = lastName;
+            Phone = phone;
+            Fullname = fullname;
+            Avatar = avatar;
         }
     }
 }

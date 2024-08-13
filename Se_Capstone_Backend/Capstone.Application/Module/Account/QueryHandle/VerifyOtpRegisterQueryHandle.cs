@@ -2,8 +2,9 @@
 using Capstone.Application.Module.Account.Model;
 using Capstone.Application.Module.Account.Query;
 using Capstone.Domain.Entities;
-using Capstone.Infrastructure.DbContext;
+using Capstone.Infrastructure.DbContexts;
 using Capstone.Infrastructure.Redis;
+using Capstone.Infrastructure.Repository;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,12 @@ namespace Capstone.Application.Module.Account.QueryHandle
     public class VerifyOtpRegisterQueryHandle : IRequestHandler<VerifyOtpRegisterQuery, ResponseMediator>
     {
         private readonly RedisContext _redisContext;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public VerifyOtpRegisterQueryHandle(RedisContext redisContext)
+        public VerifyOtpRegisterQueryHandle(RedisContext redisContext, IUnitOfWork unitOfWork)
         {
             _redisContext = redisContext;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResponseMediator> Handle(VerifyOtpRegisterQuery request, CancellationToken cancellationToken)
@@ -33,7 +36,9 @@ namespace Capstone.Application.Module.Account.QueryHandle
             if (infor.Otp != request.Otp)
                 return new ResponseMediator("Otp is not correct", null);
 
-            MyDbContext.Users.Add(new User() { Email = request.Email, Password = infor.Password, FirstName = infor.FirstName, LastName = infor.LastName });
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(infor.Password);
+            _unitOfWork.Users.Add(new User(request.Email, hashedPassword, infor.Phone, infor.Fullname, infor.Avatar ));
+            await _unitOfWork.SaveChangesAsync();
             return new ResponseMediator("", null);
         }
     }

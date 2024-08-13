@@ -1,8 +1,10 @@
 using Capstone.Api.Common.ConfigureService;
+using Capstone.Api.Module.Account.Validator;
 using Capstone.Application;
 using Capstone.Application.Common.Email;
 using Capstone.Application.Common.Jwt;
-using Capstone.Infrastructure.DbContext;
+using Capstone.Infrastructure.DbContexts;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -25,8 +27,9 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddSwaggerService();
 builder.Services.AddAuthSerivce(builder.Configuration);
-builder.Services.AddDataService();
+builder.Services.AddDataService(builder.Configuration);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AssemblyReference.Assembly));
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<UpdateUserValidator>());
 builder.Services.AddGreetingService(builder.Configuration);
 var app = builder.Build();
 

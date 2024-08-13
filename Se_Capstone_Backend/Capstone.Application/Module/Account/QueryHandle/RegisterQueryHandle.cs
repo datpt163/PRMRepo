@@ -3,8 +3,9 @@ using Capstone.Application.Common.Jwt;
 using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Account.Model;
 using Capstone.Application.Module.Account.Query;
-using Capstone.Infrastructure.DbContext;
+using Capstone.Infrastructure.DbContexts;
 using Capstone.Infrastructure.Redis;
+using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Identity.Data;
 using System;
@@ -19,24 +20,18 @@ namespace Capstone.Application.Module.Account.QueryHandle
     {
         private readonly IEmailService _emailService;
         private readonly RedisContext _redisContext;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterQueryHandle(IEmailService emailService, RedisContext redisContext)
+        public RegisterQueryHandle(IEmailService emailService, RedisContext redisContext, IUnitOfWork unitOfWork)
         {
             _emailService = emailService;
             _redisContext = redisContext;
+            _unitOfWork = unitOfWork;
         }
         public async Task<ResponseMediator> Handle(RegisterQuery request, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(request.Email))
-                return new ResponseMediator("Email is empty", null);
-            if (string.IsNullOrEmpty(request.Password))
-                return new ResponseMediator("Password is empty", null);
-            if (string.IsNullOrEmpty(request.FirstName))
-                return new ResponseMediator("FirstName is empty", null);
-            if (string.IsNullOrEmpty(request.LastName))
-                return new ResponseMediator("LastName is empty", null);
-            var acc = MyDbContext.Users.FirstOrDefault(s => s.Email.Equals(request.Email));
-            if(acc != null)
+            var acccount = _unitOfWork.Users.Find(s => s.Email.Equals(request.Email)).FirstOrDefault();
+            if(acccount != null)
                 return new ResponseMediator("Account is already exists ", null);
 
             Random random = new Random();
@@ -46,7 +41,7 @@ namespace Capstone.Application.Module.Account.QueryHandle
             {
                 return new ResponseMediator("message", null);
             }
-            _redisContext.SetData("OtpRegister-" + request.Email, new RegisterRedisData( randomNumber,request.Password,request.FirstName,request.LastName), DateTime.Now.AddMinutes(5));
+            _redisContext.SetData("OtpRegister-" + request.Email, new RegisterRedisData( randomNumber,request.Password,request.Phone,request.FullName, request.Avatar + "_" + Guid.NewGuid() ), DateTime.Now.AddMinutes(5));
             return new ResponseMediator("", null);
         }
     }
