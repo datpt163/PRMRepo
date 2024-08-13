@@ -34,7 +34,8 @@ namespace Capstone.Application.Module.Account.CommandHandle
                 if (account == null)
                     return new ResponseMediator("Account not found", null);
 
-                account.Password = request.NewPassword;
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+                account.Password = hashedPassword;
                 _unitOfWork.Users.Update(account);
                 await _unitOfWork.SaveChangesAsync();
                 return new ResponseMediator("", null);

@@ -26,12 +26,6 @@ namespace Capstone.Application.Module.Account.CommandHandle
 
         public async Task<ResponseMediator> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(request.OldPassword))
-                return new ResponseMediator("OldPassword is empty", null);
-
-            if (string.IsNullOrEmpty(request.NewPassword))
-                return new ResponseMediator("NewPassword is empty", null);
-
             if (string.IsNullOrEmpty(request.Token))
                 return new ResponseMediator("Token is empty", null);
 

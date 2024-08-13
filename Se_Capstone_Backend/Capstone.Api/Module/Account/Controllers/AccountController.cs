@@ -41,6 +41,7 @@ namespace Capstone.Api.Module.Account.Controllers
         }
 
         [HttpPost("change-password")]
+        [SwaggerResponse(204, "Success")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [Authorize]
         public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordRequest request)
