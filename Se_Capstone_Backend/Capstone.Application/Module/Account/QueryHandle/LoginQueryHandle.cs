@@ -35,8 +35,8 @@ namespace Capstone.Application.Module.Account.QueryHandle
             {
                 return new ResponseMediator("Wrong password", null);
             }
-            var accessToken =  _jwtService.GenerateJwtToken(account);
-            var refreshToken = _jwtService.GenerateJwtToken(account, 15);
+            var accessToken =  _jwtService.GenerateJwtToken(account, DateTime.Now.AddDays(15));
+            var refreshToken = _jwtService.GenerateJwtToken(account, DateTime.Now.AddDays(30));
             return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken } );
         }
     }

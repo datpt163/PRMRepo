@@ -33,10 +33,6 @@ namespace Capstone.Api.Module.Account.Controllers
         [HttpPost("auth")]
         public async Task<IActionResult> Auth([FromBody]LoginQuery loginQuery)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var result = await _mediator.Send(loginQuery);
 
             if (string.IsNullOrEmpty(result.ErrorMessage))
@@ -47,7 +43,7 @@ namespace Capstone.Api.Module.Account.Controllers
         [HttpPost("change-password")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [Authorize]
-        public async Task<IActionResult> ChangePassword([FromBody]ChangePassRequest request)
+        public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordRequest request)
         {
             string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var result = await _mediator.Send(new ChangePasswordCommand() { Token = token, NewPassword = request.NewPassword, OldPassword = request.OldPassword});
@@ -102,13 +98,10 @@ namespace Capstone.Api.Module.Account.Controllers
 
         [SwaggerResponse(200, "Successful", typeof(ResponseSuccess<UpdateUserResponse>))]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize]
         [HttpPut("profile")]
         public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserRequest updateUserRequest)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var updateProfileCommand = new UpdateProfileCommand(token, updateUserRequest.FullName, updateUserRequest.Phone, updateUserRequest.Avatar);
             var result = await _mediator.Send(updateProfileCommand);
@@ -119,6 +112,7 @@ namespace Capstone.Api.Module.Account.Controllers
 
         [SwaggerResponse(200, "Successful", typeof(ResponseSuccess<UpdateUserResponse>))]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize]
         [HttpGet("profile")]
         public async Task<IActionResult> GetProfile()
         {

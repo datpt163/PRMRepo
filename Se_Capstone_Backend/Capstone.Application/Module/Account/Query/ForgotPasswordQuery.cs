@@ -10,6 +10,6 @@ namespace Capstone.Application.Module.Account.Query
 {
     public class ForgotPasswordQuery : IRequest<ResponseMediator>
     {
-        public string? Email { get; set; }  
+        public string Email { get; set; }  = string.Empty;
     }
 }

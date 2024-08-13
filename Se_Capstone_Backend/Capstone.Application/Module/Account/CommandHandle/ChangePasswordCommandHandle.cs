@@ -45,8 +45,8 @@ namespace Capstone.Application.Module.Account.CommandHandle
 
             if (!BCrypt.Net.BCrypt.Verify(request.OldPassword, user.Password))
             {
-                    return new ResponseMediator("Old password not correct", null);
-                }
+                return new ResponseMediator("Old password not correct", null);
+            }
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
             user.Password = hashedPassword;

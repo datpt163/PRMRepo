@@ -27,12 +27,9 @@ namespace Capstone.Application.Module.Account.QueryHandle
 
         public async Task<ResponseMediator> Handle(VerifyOtpRegisterQuery request, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(request.Email))
-                return new ResponseMediator("Email is empty", null);
-
             var infor = _redisContext.GetData<RegisterRedisData>("OtpRegister-" + request.Email);
             if (infor == null)
-                return new ResponseMediator("Otp is expire", null);
+                return new ResponseMediator("Otp expired or not sent", null);
             if (infor.Otp != request.Otp)
                 return new ResponseMediator("Otp is not correct", null);
 

@@ -25,7 +25,7 @@ namespace Capstone.Application.Common.Jwt
             _unitOfWork = unitOfWork;
         }
 
-        public string GenerateJwtToken(User account, int expireTime = 30)
+        public string GenerateJwtToken(User account, DateTime expireTime)
         {
             List<Claim> claims = new()
             {
@@ -39,7 +39,7 @@ namespace Capstone.Application.Common.Jwt
                 issuer: _jwtSettings.Issuer,
                 audience: _jwtSettings.Audience,
                 claims: claims,
-                expires: DateTime.Now.AddDays(expireTime),
+                expires: expireTime,
                 signingCredentials: creds
             );
             return new JwtSecurityTokenHandler().WriteToken(jwtsecuritytoken);
@@ -76,9 +76,13 @@ namespace Capstone.Application.Common.Jwt
        
                 return account;
             }
-            catch 
+            catch (SecurityTokenExpiredException ex)
             {
-                throw new UnauthorizedAccessException("Verify token fail!");
+                throw new SecurityTokenExpiredException("Token has expired.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new UnauthorizedAccessException("Token verification failed.", ex);
             }
         }
     }
