@@ -4,7 +4,11 @@ using Capstone.Api.Module.Account.Request;
 using Capstone.Application.Module.Account.Command;
 using Capstone.Application.Module.Account.Query;
 using Capstone.Application.Module.Account.Response;
+using Capstone.Application.Module.Profile.Command;
+using Capstone.Application.Module.Profile.Query;
+using Capstone.Application.Module.Profile.Response;
 using Capstone.Domain.Entities;
+using Capstone.Infrastructure.DbContexts;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +17,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Capstone.Api.Module.Account.Controllers
 {
-    [Route("api/account")]
+    [Route("api/user")]
     [ApiController]
     public class AccountController : BaseController
     {
@@ -37,9 +41,10 @@ namespace Capstone.Api.Module.Account.Controllers
         }
 
         [HttpPost("change-password")]
+        [SwaggerResponse(204, "Success")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [Authorize]
-        public async Task<IActionResult> ChangePassword([FromBody]ChangePassRequest request)
+        public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordRequest request)
         {
             string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var result = await _mediator.Send(new ChangePasswordCommand() { Token = token, NewPassword = request.NewPassword, OldPassword = request.OldPassword});
@@ -67,6 +72,55 @@ namespace Capstone.Api.Module.Account.Controllers
             var result = await _mediator.Send(resetPasswordCommand);
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseNoContent();
+            return ResponseBadRequest(messageResponse: result.ErrorMessage);
+        }
+        [HttpPost("register")]
+        [SwaggerResponse(204, "Success")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        public async Task<IActionResult> Register([FromBody] RegisterQuery registerCommand)
+        {
+            var result = await _mediator.Send(registerCommand);
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseNoContent();
+            return ResponseBadRequest(messageResponse: result.ErrorMessage);
+        }
+
+        [HttpPost("verify-otp-register")]
+        [SwaggerResponse(204, "Success")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        public async Task<IActionResult> VerifyOtpRegister([FromBody] VerifyOtpRegisterQuery verifyOtpRegisterQuery)
+        {
+            var result = await _mediator.Send(verifyOtpRegisterQuery);
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseNoContent();
+            return ResponseBadRequest(messageResponse: result.ErrorMessage);
+        }
+
+
+        [SwaggerResponse(200, "Successful", typeof(ResponseSuccess<UpdateUserResponse>))]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize]
+        [HttpPut("profile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateUserRequest updateUserRequest)
+        {
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var updateProfileCommand = new UpdateProfileCommand(token, updateUserRequest.FullName, updateUserRequest.Phone, updateUserRequest.Avatar);
+            var result = await _mediator.Send(updateProfileCommand);
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(dataResponse: result.Data);
+            return ResponseBadRequest(messageResponse: result.ErrorMessage);
+        }
+
+        [SwaggerResponse(200, "Successful", typeof(ResponseSuccess<UpdateUserResponse>))]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize]
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetProfile()
+        {
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var result = await _mediator.Send(new GetProfileQuery() { Token = token});
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(dataResponse: result.Data);
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
         }
     }

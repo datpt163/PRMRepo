@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Capstone.Application.Module.Account.Query
+namespace Capstone.Application.Module.Profile.Query
 {
-    public class ForgotPasswordQuery : IRequest<ResponseMediator>
+    public class GetProfileQuery : IRequest<ResponseMediator>
     {
-        public string Email { get; set; }  = string.Empty;
+        public string Token { get; set; } = string.Empty;
     }
 }

@@ -10,8 +10,8 @@ namespace Capstone.Application.Module.Account.Command
 {
     public class ChangePasswordCommand : IRequest<ResponseMediator>
     {
-        public string? Token { get; set; }
-        public string? OldPassword { get; set; }
-        public string? NewPassword { get; set; }
+        public string Token { get; set; } = string.Empty;
+        public string OldPassword { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
     }
 }
