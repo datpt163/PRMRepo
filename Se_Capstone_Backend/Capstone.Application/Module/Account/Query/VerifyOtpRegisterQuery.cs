@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Account.Query
 {
-    public class ForgotPasswordQuery : IRequest<ResponseMediator>
+    public class VerifyOtpRegisterQuery : IRequest<ResponseMediator>
     {
-        public string Email { get; set; }  = string.Empty;
+        public int Otp { get; set; }
+        public string Email { get; set; } = string.Empty;
     }
 }

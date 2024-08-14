@@ -8,36 +8,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Capstone.Domain.Entities;
-using Capstone.Infrastructure.DbContext;
+using Capstone.Infrastructure.DbContexts;
 using Capstone.Application.Module.Account.Response;
+using Capstone.Infrastructure.Repository;
+using Microsoft.EntityFrameworkCore;
 namespace Capstone.Application.Module.Account.QueryHandle
 {
     public class LoginQueryHandle : IRequestHandler<LoginQuery, ResponseMediator>
     {
-        //private readonly IUnitOfWork _unitofwork;
+        private readonly IUnitOfWork _unitofwork;
         private readonly IJwtService _jwtService;
 
-        public LoginQueryHandle(IJwtService jwtService)
+        public LoginQueryHandle(IJwtService jwtService, IUnitOfWork unitOfWork)
         {
-            //_unitofwork = unitofwork;
+            _unitofwork = unitOfWork;
             _jwtService = jwtService;
         }
         public async Task<ResponseMediator> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(request.Email))
-                return new ResponseMediator("email is empty", null);
-
-            if (string.IsNullOrEmpty(request.Password))
-                return new ResponseMediator("password is empty", null);
-            //var ac = await _unitofwork.Users.FindByCondition(s => s.Email.Equals(request.email) && s.Password.Equals(request.password)).Include(s => s.Role).FirstOrDefault();
-            var account = MyDbContext.Users.FirstOrDefault(a => (a.Email.Equals(request.Email) && a.Password.Equals(request.Password)));
-
+            var account = await _unitofwork.Users.Find(s => s.Email.Equals(request.Email)).FirstOrDefaultAsync();
             if (account is null)
             {
-                return new ResponseMediator("account is not found", null);
+                return new ResponseMediator("Account is not found", null);
             }
-            var accessToken =  _jwtService.GenerateJwtToken(account);
-            var refreshToken = "";
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, account.Password))
+            {
+                return new ResponseMediator("Wrong password", null);
+            }
+            var accessToken =  _jwtService.GenerateJwtToken(account, DateTime.Now.AddDays(15));
+            var refreshToken = _jwtService.GenerateJwtToken(account, DateTime.Now.AddDays(30));
             return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken } );
         }
     }

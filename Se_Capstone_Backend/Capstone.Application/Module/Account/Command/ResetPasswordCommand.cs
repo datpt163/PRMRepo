@@ -10,7 +10,7 @@ namespace Capstone.Application.Module.Account.Command
 {
     public class ResetPasswordCommand : IRequest<ResponseMediator>
     {
-        public string? Code { get; set; }
-        public string? NewPassword { get; set; }
+        public string Code { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
     }
 }
