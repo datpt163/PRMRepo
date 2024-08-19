@@ -40,5 +40,9 @@ namespace Capstone.Api.Common.ResponseApi.Controllers
         {
             return StatusCode((int)HttpStatusCode.InternalServerError, new { message = messageResponse, code = codeResponse, statusCode = (int)HttpStatusCode.InternalServerError });
         }
+        protected IActionResult ResponseNotFound(string? messageResponse = null)
+        {
+            return StatusCode((int)HttpStatusCode.NotFound, new ResponseFail() { Message = messageResponse, StatusCode = (int)HttpStatusCode.NotFound });
+        }
     }
 }

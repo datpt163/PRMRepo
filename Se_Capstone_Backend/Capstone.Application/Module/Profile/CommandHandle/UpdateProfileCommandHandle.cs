@@ -33,12 +33,12 @@ namespace Capstone.Application.Module.Profile.CommandHandle
                 return new ResponseMediator("Token wrongs", null);
 
             account.FullName = request.FullName;
-            account.Phone = request.Phone;
+            account.PhoneNumber = request.Phone;
             account.Avatar = request.Avatar + "_" + Guid.NewGuid();
 
             _unitOfWork.Users.Update(account);
             await _unitOfWork.SaveChangesAsync();
-            return new ResponseMediator("", new UpdateUserResponse(account.Id, account.Email, account.Phone, account.FullName, account.Avatar, account.CreateDate));
+            return new ResponseMediator("", new UpdateUserResponse(account.Id, account.Email, account.PhoneNumber, account.FullName, account.Avatar, account.CreateDate));
         }
     }
 }
