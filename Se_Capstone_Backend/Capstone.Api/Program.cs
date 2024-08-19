@@ -1,5 +1,4 @@
 using Capstone.Api.Common.ConfigureService;
-using Capstone.Api.Module.Account.Validator;
 using Capstone.Application;
 using Capstone.Application.Common.Email;
 using Capstone.Application.Common.Jwt;
@@ -30,9 +29,9 @@ builder.Services.AddSwaggerService();
 builder.Services.AddAuthSerivce(builder.Configuration);
 builder.Services.AddDataService(builder.Configuration);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AssemblyReference.Assembly));
-builder.Services.AddControllers()
-    .AddFluentValidation(fv =>
-        fv.RegisterValidatorsFromAssemblyContaining<UpdateUserValidator>());
+//builder.Services.AddControllers()
+//    .AddFluentValidation(fv =>
+//        fv.RegisterValidatorsFromAssemblyContaining<UpdateUserValidator>());
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
     var configuration = ConfigurationOptions.Parse(

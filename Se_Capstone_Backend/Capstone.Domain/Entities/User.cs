@@ -5,23 +5,19 @@ namespace Capstone.Domain.Entities
 {
     public partial class User : IdentityUser<Guid>
     {
-        public string FullName { get; set; } = null!;
-        public string Avatar { get; set; } = null!;
+        public string Avatar { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
+        public int Status { get; set; }
+        public string Gender { get; set; } = string.Empty;
+        public DateTime Dob { get; set; }
+        public string BankAccount { get; set; }
         public DateOnly CreateDate { get; set; }
+        public DateOnly Updatedate { get; set; }
+        public DateOnly DeleteDate { get; set; }
+        public Staff Staff { get; set; } = new Staff();
 
         public User() : base()
         {
-            CreateDate = DateOnly.FromDateTime(DateTime.Now);
-        }
-
-        public User(string email, string password, string phone, string fullName, string avatar) : base()
-        {
-            Email = email;
-            PasswordHash = new PasswordHasher<User>().HashPassword(this, password);
-            PhoneNumber = phone;
-            UserName = email;
-            FullName = fullName;
-            Avatar = avatar;
             CreateDate = DateOnly.FromDateTime(DateTime.Now);
         }
     }
