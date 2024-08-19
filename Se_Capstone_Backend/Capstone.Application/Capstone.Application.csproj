@@ -23,9 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Common\Shopee\" />
-    <Folder Include="Module\Profile\CommandHandle\" />
-    <Folder Include="Module\Users\Command\" />
-    <Folder Include="Module\Users\CommandHandle\" />
+    <Folder Include="Module\" />
   </ItemGroup>
 
 </Project>
