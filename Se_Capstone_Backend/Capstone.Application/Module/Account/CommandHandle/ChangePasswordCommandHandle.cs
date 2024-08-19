@@ -34,16 +34,16 @@ namespace Capstone.Application.Module.Account.CommandHandle
 
             var user = await _jwtService.VerifyToken(request.Token);
 
-            if(user == null || user.Password is null)
+            if(user == null || user.PasswordHash is null)
                 return new ResponseMediator("Account is invalid", null);
 
-            if (!BCrypt.Net.BCrypt.Verify(request.OldPassword, user.Password))
+            if (!BCrypt.Net.BCrypt.Verify(request.OldPassword, user.PasswordHash))
             {
                 return new ResponseMediator("Old password not correct", null);
             }
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
-            user.Password = hashedPassword;
+            user.PasswordHash = hashedPassword;
             _unitOfWork.Users.Update(user);
             await _unitOfWork.SaveChangesAsync();
             return new ResponseMediator("", null);

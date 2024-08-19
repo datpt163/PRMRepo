@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Capstone.Domain.Entities;
-using Capstone.Infrastructure.DbContexts;
 using Capstone.Application.Module.Account.Response;
 using Capstone.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +30,7 @@ namespace Capstone.Application.Module.Account.QueryHandle
             {
                 return new ResponseMediator("Account is not found", null);
             }
-            if (!BCrypt.Net.BCrypt.Verify(request.Password, account.Password))
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, account.PasswordHash))
             {
                 return new ResponseMediator("Wrong password", null);
             }

@@ -13,6 +13,7 @@ namespace Capstone.Api.Common.ConfigureService
     {
         public static void AddDataService(this IServiceCollection services, IConfiguration configuration)
         {
+            var dbConnectionString = configuration.GetConnectionString("value");
             services.AddDbContext<SeCapstoneContext>(options => options.UseNpgsql(configuration.GetConnectionString("value")));
             services.AddScoped<IRepository<User>, Repository<User>>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
