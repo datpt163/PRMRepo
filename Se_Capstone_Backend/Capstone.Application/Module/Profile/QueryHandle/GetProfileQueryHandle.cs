@@ -25,7 +25,7 @@ namespace Capstone.Application.Module.Profile.QueryHandle
             if (account == null)
                 return new ResponseMediator("Token wrongs", null);
 
-            return new ResponseMediator("", new UpdateUserResponse(account.Id, account.Email, account.Phone, account.FullName, account.Avatar, account.CreateDate));
+            return new ResponseMediator("", new UpdateUserResponse(account.Id, account.Email, account.PhoneNumber, account.FullName, account.Avatar, account.CreateDate));
         }
     }
 }
