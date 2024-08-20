@@ -22,7 +22,7 @@ namespace Capstone.Application.Module.Users.CommandHandle
 
         public async Task<UserDto?> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            var user = _userRepository.GetQuery().FirstOrDefault(x=> x.Id == request.UserId);
+            var user = _userRepository.GetQuery().FirstOrDefault(x=> x.Id == request.Id);
             if (user == null)
             {
                 return null; 
