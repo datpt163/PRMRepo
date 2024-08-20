@@ -1,4 +1,5 @@
 ﻿using Capstone.Api.Common.ResponseApi.Controllers;
+using Capstone.Api.Module.Users.Models;
 using Capstone.Application.Module.Users.Command;
 using Capstone.Application.Module.Users.Query;
 using MediatR;
@@ -21,16 +22,15 @@ namespace Capstone.Api.Module.Users.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
+        [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromBody]GetUserListQuery query)
         {
-            var query = new GetUserListQuery();
             var users = await _mediator.Send(query);
             return ResponseOk(dataResponse: users);
         }
 
-        [HttpGet("detail/{id:guid}")]
+        [HttpGet("{id:guid}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetUserDetail(Guid id)
         {
@@ -43,11 +43,16 @@ namespace Capstone.Api.Module.Users.Controllers
             return ResponseOk(dataResponse: user);
         }
 
-        [HttpPut("{userId:guid}")]
-        public async Task<IActionResult> UpdateUser(Guid userId, [FromForm] UpdateUserCommand command, IFormFile AvatarFileRequest)
+        [HttpPut]
+        public async Task<IActionResult> UpdateUser([FromForm]UpdateUserRequest request)
         {
-            command.Id = userId;
-            command.AvatarFile = AvatarFileRequest;
+            var command = new UpdateUserCommand {
+            Id =request.Id,
+            Avatar = request.Avatar,
+            AvatarFile = request.AvatarFile,
+            FullName = request.FullName,
+            Phone = request.Phone};
+
             var updatedUser = await _mediator.Send(command);
 
             if (updatedUser == null)
