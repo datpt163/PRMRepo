@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Capstone.Infrastructure.Migrations
 {
     [DbContext(typeof(SeCapstoneContext))]
-    [Migration("20240820055416_fistCommitDb")]
-    partial class fistCommitDb
+    [Migration("20240820113015_firstCommitDb")]
+    partial class firstCommitDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,8 +33,8 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("CreatedAt")
+                        .HasColumnType("date")
                         .HasColumnName("createdAt");
 
                     b.Property<string>("CreatedBy")
@@ -79,12 +79,12 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("staffId");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date")
                         .HasColumnName("startDate");
 
-                    b.Property<DateTime>("UpdateAt")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("UpdateAt")
+                        .HasColumnType("date")
                         .HasColumnName("updateAt");
 
                     b.Property<string>("UpdatedBy")
@@ -108,8 +108,8 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("CreateAt")
+                        .HasColumnType("date")
                         .HasColumnName("createAt");
 
                     b.Property<bool>("IsCheckIn")
@@ -128,8 +128,8 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("staffId");
 
-                    b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("TimeStamp")
+                        .HasColumnType("date")
                         .HasColumnName("timeStamp");
 
                     b.HasKey("Id");
@@ -157,8 +157,8 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("description");
 
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("DueDate")
+                        .HasColumnType("date")
                         .HasColumnName("dueDate");
 
                     b.Property<int>("EstimatedTime")
@@ -185,8 +185,8 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("projectId");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date")
                         .HasColumnName("startDate");
 
                     b.Property<Guid>("StatusId")
@@ -218,8 +218,8 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("CreatedAt")
+                        .HasColumnType("date")
                         .HasColumnName("createdAt");
 
                     b.Property<string>("CreatedBy")
@@ -244,8 +244,8 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("title");
 
-                    b.Property<DateTime>("UpdateAt")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("UpdateAt")
+                        .HasColumnType("date")
                         .HasColumnName("updateAt");
 
                     b.Property<string>("UpdatedBy")
@@ -296,12 +296,12 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("CreatedAt")
+                        .HasColumnType("date")
                         .HasColumnName("createdAt");
 
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("EndTime")
+                        .HasColumnType("date")
                         .HasColumnName("endTime");
 
                     b.Property<bool>("IsApprove")
@@ -334,8 +334,8 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("staffId");
 
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("StartTime")
+                        .HasColumnType("date")
                         .HasColumnName("startTime");
 
                     b.Property<string>("Title")
@@ -359,8 +359,8 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("CreateAt")
+                        .HasColumnType("date")
                         .HasColumnName("createAt");
 
                     b.Property<string>("ErrorMessage")
@@ -392,8 +392,8 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("CreatedAt")
+                        .HasColumnType("date")
                         .HasColumnName("createdAt");
 
                     b.Property<string>("Description")
@@ -419,8 +419,8 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("title");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("UpdatedAt")
+                        .HasColumnType("date")
                         .HasColumnName("updatedAt");
 
                     b.HasKey("Id");
@@ -461,8 +461,8 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("code");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("CreatedAt")
+                        .HasColumnType("date")
                         .HasColumnName("createdAt");
 
                     b.Property<string>("Description")
@@ -471,8 +471,8 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("description");
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date")
                         .HasColumnName("endDate");
 
                     b.Property<string>("Name")
@@ -481,16 +481,16 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("name");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date")
                         .HasColumnName("startDate");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer")
                         .HasColumnName("status");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("UpdatedAt")
+                        .HasColumnType("date")
                         .HasColumnName("updatedAt");
 
                     b.HasKey("Id");
@@ -537,8 +537,8 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("createdBy");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date")
                         .HasColumnName("startDate");
 
                     b.Property<string>("UpdateBy")
@@ -623,8 +623,8 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("date")
                         .HasColumnName("deleteDate");
 
-                    b.Property<DateTime>("Dob")
-                        .HasColumnType("timestamp with time zone")
+                    b.Property<DateOnly>("Dob")
+                        .HasColumnType("date")
                         .HasColumnName("dob");
 
                     b.Property<string>("Email")
@@ -635,6 +635,12 @@ namespace Capstone.Infrastructure.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean")
                         .HasColumnName("emailConfirmed");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("fullName");
 
                     b.Property<string>("Gender")
                         .IsRequired()
@@ -1184,8 +1190,7 @@ namespace Capstone.Infrastructure.Migrations
 
             modelBuilder.Entity("Capstone.Domain.Entities.User", b =>
                 {
-                    b.Navigation("Staff")
-                        .IsRequired();
+                    b.Navigation("Staff");
                 });
 #pragma warning restore 612, 618
         }

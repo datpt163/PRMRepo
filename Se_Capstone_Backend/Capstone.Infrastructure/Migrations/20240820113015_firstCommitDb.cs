@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Capstone.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class fistCommitDb : Migration
+    public partial class firstCommitDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,8 +19,8 @@ namespace Capstone.Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    createdAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    createdAt = table.Column<DateOnly>(type: "date", nullable: false),
+                    updateAt = table.Column<DateOnly>(type: "date", nullable: false),
                     isDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     createdBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     updatedBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
@@ -51,7 +51,7 @@ namespace Capstone.Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     errorMessage = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    createAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    createAt = table.Column<DateOnly>(type: "date", nullable: false),
                     isChecked = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -68,8 +68,8 @@ namespace Capstone.Infrastructure.Migrations
                     description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     detail = table.Column<string>(type: "text", nullable: false),
                     image = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    createdAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    createdAt = table.Column<DateOnly>(type: "date", nullable: false),
+                    updatedAt = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -96,11 +96,11 @@ namespace Capstone.Infrastructure.Migrations
                     name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     code = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    startDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    endDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    startDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    endDate = table.Column<DateOnly>(type: "date", nullable: false),
                     status = table.Column<int>(type: "integer", nullable: false),
-                    createdAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    createdAt = table.Column<DateOnly>(type: "date", nullable: false),
+                    updatedAt = table.Column<DateOnly>(type: "date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -158,7 +158,8 @@ namespace Capstone.Infrastructure.Migrations
                     address = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     status = table.Column<int>(type: "integer", nullable: false),
                     gender = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
-                    dob = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    dob = table.Column<DateOnly>(type: "date", nullable: false),
+                    fullName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     bankAccount = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     createDate = table.Column<DateOnly>(type: "date", nullable: false),
                     updateDate = table.Column<DateOnly>(type: "date", nullable: false),
@@ -259,8 +260,8 @@ namespace Capstone.Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     subject = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    startDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    dueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    startDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    dueDate = table.Column<DateOnly>(type: "date", nullable: false),
                     percentage = table.Column<int>(type: "integer", nullable: false),
                     priority = table.Column<int>(type: "integer", nullable: false),
                     estimatedTime = table.Column<int>(type: "integer", nullable: false),
@@ -298,7 +299,7 @@ namespace Capstone.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    startDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    startDate = table.Column<DateOnly>(type: "date", nullable: false),
                     createdBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     updateBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
                 },
@@ -429,11 +430,11 @@ namespace Capstone.Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    startDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    startDate = table.Column<DateOnly>(type: "date", nullable: false),
                     phoneNumber = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     cvLink = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    createdAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    createdAt = table.Column<DateOnly>(type: "date", nullable: false),
+                    updateAt = table.Column<DateOnly>(type: "date", nullable: false),
                     isDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     isOnBoard = table.Column<bool>(type: "boolean", nullable: false),
                     createdBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
@@ -457,8 +458,8 @@ namespace Capstone.Infrastructure.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     isCheckIn = table.Column<bool>(type: "boolean", nullable: false),
-                    timeStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    createAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    timeStamp = table.Column<DateOnly>(type: "date", nullable: false),
+                    createAt = table.Column<DateOnly>(type: "date", nullable: false),
                     isChecked = table.Column<bool>(type: "boolean", nullable: false),
                     isDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     staffId = table.Column<Guid>(type: "uuid", nullable: false)
@@ -484,9 +485,9 @@ namespace Capstone.Infrastructure.Migrations
                     isFullDay = table.Column<bool>(type: "boolean", nullable: false),
                     isPaid = table.Column<bool>(type: "boolean", nullable: false),
                     isApprove = table.Column<bool>(type: "boolean", nullable: false),
-                    startTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    endTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    createdAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    startTime = table.Column<DateOnly>(type: "date", nullable: false),
+                    endTime = table.Column<DateOnly>(type: "date", nullable: false),
+                    createdAt = table.Column<DateOnly>(type: "date", nullable: false),
                     isChecked = table.Column<bool>(type: "boolean", nullable: false),
                     isDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     staffId = table.Column<Guid>(type: "uuid", nullable: false)

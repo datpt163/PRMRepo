@@ -15,7 +15,7 @@ namespace Capstone.Domain.Entities
         public string Detail { get; set; } = string.Empty;
         [MaxLength(100)]
         public string Image { get; set; } = string.Empty;
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateOnly CreatedAt { get; set; }
+        public DateOnly UpdatedAt { get; set; }
     }
 }

@@ -23,8 +23,6 @@
 
   <ItemGroup>
     <Folder Include="Common\Shopee\" />
-    <Folder Include="Module\" />
-    <Folder Include="Module\" />
   </ItemGroup>
 
 </Project>

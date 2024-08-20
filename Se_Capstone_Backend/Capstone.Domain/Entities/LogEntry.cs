@@ -12,7 +12,7 @@ namespace Capstone.Domain.Entities
         public string Title { get; set; } = string.Empty;
         [MaxLength(100)]
         public string ErrorMessage { get; set; } = string.Empty;
-        public DateTime CreateAt { get; set; }
+        public DateOnly CreateAt { get; set; }
         public bool IsChecked { get; set; }
     }
 }

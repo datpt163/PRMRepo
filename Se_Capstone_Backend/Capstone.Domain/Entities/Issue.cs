@@ -17,8 +17,8 @@ namespace Capstone.Domain.Entities
         public string Subject { get; set; } = string.Empty;
         [MaxLength(100)]
         public string Description { get; set; } = string.Empty;
-        public DateTime StartDate { get; set; }
-        public DateTime DueDate { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly DueDate { get; set; }
         public int Percentage { get; set; } = 0;
         public int Priority { get; set; }
         public int EstimatedTime { get; set; }
@@ -28,11 +28,11 @@ namespace Capstone.Domain.Entities
         public Guid StatusId { get; set; }
         public Guid LabelId { get; set; }
 
-        public Label Label { get; set; } = new Label();
+        public Label? Label { get; set; } 
 
-        public Status Status { get; set; } = new Status();
+        public Status? Status { get; set; } 
 
-        public Project Project { get; set; } = new Project();
+        public Project? Project { get; set; }
 
         public ICollection<Sprint> Sprints { get; } = new List<Sprint>();
     }
