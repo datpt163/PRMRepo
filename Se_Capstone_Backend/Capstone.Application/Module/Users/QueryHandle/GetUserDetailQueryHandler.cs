@@ -1,6 +1,8 @@
 ﻿using Capstone.Application.Module.Users.Query;
 using Capstone.Application.Module.Users.Response;
+using Capstone.Domain.Entities;
 using Capstone.Infrastructure.DbContexts;
+using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,15 +16,16 @@ namespace Capstone.Application.Module.Users.QueryHandle
     public class GetUserDetailQueryHandler : IRequestHandler<GetUserDetailQuery, UserDto>
     {
         private readonly SeCapstoneContext _context;
+        private readonly IRepository<User> _userRepository;
 
-        public GetUserDetailQueryHandler(SeCapstoneContext context)
+        public GetUserDetailQueryHandler(IRepository<User> userRepository)
         {
-            _context = context;
+            _userRepository = userRepository;
         }
 
         public async Task<UserDto?> Handle(GetUserDetailQuery query, CancellationToken cancellationToken)
         {
-            var user = await _context.Users
+            var user = await _userRepository.GetQueryNoTracking()
                 .Where(u => u.Id == query.UserId)
                 .Select(u => new UserDto
                 {

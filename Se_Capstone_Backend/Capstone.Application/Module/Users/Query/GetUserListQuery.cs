@@ -10,5 +10,7 @@ namespace Capstone.Application.Module.Users.Query
 {
     public class GetUserListQuery : IRequest<List<UserDto>>
     {
+        public string FullName { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
     }
 }

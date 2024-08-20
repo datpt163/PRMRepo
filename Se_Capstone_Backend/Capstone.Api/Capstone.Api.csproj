@@ -19,8 +19,4 @@
     <ProjectReference Include="..\Capstone.Application\Capstone.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Module\Users\Models\" />
-  </ItemGroup>
-
 </Project>
