@@ -27,9 +27,11 @@ namespace Capstone.Application.Common.Jwt
 
         public string GenerateJwtToken(User account, DateTime expireTime)
         {
+            var accountId = account.Id + "";
+
             List<Claim> claims = new()
             {
-                new Claim(ClaimTypes.NameIdentifier, account.Id + ""),
+                new Claim(ClaimTypes.NameIdentifier, accountId),
             };
             // add role into claim
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
@@ -45,7 +47,7 @@ namespace Capstone.Application.Common.Jwt
             return new JwtSecurityTokenHandler().WriteToken(jwtsecuritytoken);
         }
 
-        public async Task<User?> VerifyToken(string token)
+        public async Task<User?> VerifyTokenAsync(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var keyJwt = Encoding.UTF8.GetBytes(_jwtSettings.SecretKey);
@@ -59,7 +61,7 @@ namespace Capstone.Application.Common.Jwt
                 ValidIssuer = _jwtSettings.Issuer,
                 ValidAudience = _jwtSettings.Audience,
                 IssuerSigningKey = new SymmetricSecurityKey(keyJwt),
-                 ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.Zero
             };
 
             try
@@ -73,7 +75,7 @@ namespace Capstone.Application.Common.Jwt
                 }
                 var userId = Guid.Parse(userIdClaim.Value);
                 var account = await _unitOfWork.Users.Find(s => s.Id == userId).FirstOrDefaultAsync();
-       
+
                 return account;
             }
             catch (SecurityTokenExpiredException ex)
