@@ -37,10 +37,72 @@ namespace Capstone.Infrastructure.DbContexts
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Issue> Issues { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Applicant>()
+                .Property(e => e.Id)
+                .HasDefaultValueSql("gen_random_uuid()");
+            modelBuilder.Entity<Permission>()
+              .Property(e => e.Id)
+              .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<Attendance>()
+               .Property(e => e.Id)
+               .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<Issue>()
+               .Property(e => e.Id)
+               .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<Job>()
+               .Property(e => e.Id)
+               .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<Label>()
+               .Property(e => e.Id)
+               .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<LeaveLog>()
+               .Property(e => e.Id)
+               .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<LogEntry>()
+               .Property(e => e.Id)
+               .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<New>()
+               .Property(e => e.Id)
+               .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<Project>()
+               .Property(e => e.Id)
+               .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<Sprint>()
+              .Property(e => e.Id)
+              .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<Staff>()
+              .Property(e => e.Id)
+              .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<Status>()
+              .Property(e => e.Id)
+              .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<Attendance>()
+            .HasOne(a => a.Staff)
+            .WithMany(s => s.Attendances)
+            .HasForeignKey(a => a.StaffId);
+
+            modelBuilder.Entity<LeaveLog>()
+             .HasOne(l => l.Staff)
+             .WithMany(s => s.LeaveLogs)
+             .HasForeignKey(l => l.StaffId);
 
             modelBuilder.Entity<Issue>()
               .HasOne(a => a.Label)
@@ -62,11 +124,17 @@ namespace Capstone.Infrastructure.DbContexts
                 .WithMany(s => s.Applicants)
                 .HasForeignKey(a => a.StaffId);
 
+            modelBuilder.Entity<User>()
+            .HasOne(u => u.Staff)
+            .WithOne(s => s.User) 
+            .HasForeignKey<Staff>(s => s.Id)
+            .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Applicant>()
               .HasMany(a => a.Jobs)
               .WithMany(j => j.Applicants)
               .UsingEntity<Dictionary<string, object>>(
-                  "ApplicantJob",
+                  "applicantJobs",
                   j => j.HasOne<Job>().WithMany().HasForeignKey("JobId"),
                   a => a.HasOne<Applicant>().WithMany().HasForeignKey("ApplicantId"));
 
@@ -74,7 +142,7 @@ namespace Capstone.Infrastructure.DbContexts
              .HasMany(a => a.Staffs)
              .WithMany(j => j.Projects)
              .UsingEntity<Dictionary<string, object>>(
-                 "ApplicantJob",
+                 "projectStaffs",
                  j => j.HasOne<Staff>().WithMany().HasForeignKey("StaffId"),
                  a => a.HasOne<Project>().WithMany().HasForeignKey("ProjectId"));
 
@@ -82,7 +150,7 @@ namespace Capstone.Infrastructure.DbContexts
             .HasMany(a => a.Sprints)
             .WithMany(j => j.Projects)
             .UsingEntity<Dictionary<string, object>>(
-                "ApplicantJob",
+                "projectSprints",
                 j => j.HasOne<Sprint>().WithMany().HasForeignKey("SprintId"),
                 a => a.HasOne<Project>().WithMany().HasForeignKey("ProjectId"));
 
@@ -90,21 +158,40 @@ namespace Capstone.Infrastructure.DbContexts
            .HasMany(a => a.Issues)
            .WithMany(j => j.Sprints)
            .UsingEntity<Dictionary<string, object>>(
-            "ApplicantJob",
-               j => j.HasOne<Capstone.Domain.Entities.Issue>().WithMany().HasForeignKey("IssueId"),
+            "sprintIssues",
+               j => j.HasOne<Issue>().WithMany().HasForeignKey("IssueId"),
                a => a.HasOne<Sprint>().WithMany().HasForeignKey("SprintId"));
 
-            modelBuilder.Entity<Attendance>()
-                .HasOne(a => a.Staff)
-                .WithMany(s => s.Attendances)
-                .HasForeignKey(a => a.StaffId);
+            modelBuilder.Entity<Permission>()
+          .HasMany(a => a.Roles)
+          .WithMany(j => j.Permissions)
+          .UsingEntity<Dictionary<string, object>>(
+           "rolePermissions",
+              j => j.HasOne<Role>().WithMany().HasForeignKey("RoleId"),
+              a => a.HasOne<Permission>().WithMany().HasForeignKey("PermissionId"));
 
-            modelBuilder.Entity<LeaveLog>()
-             .HasOne(l => l.Staff)
-             .WithMany(s => s.LeaveLogs)
-             .HasForeignKey(l => l.StaffId);
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var tableName = entityType.GetTableName();
+                if (tableName != null && tableName.StartsWith("AspNet"))
+                {
+                    string tableNameSub = tableName.Substring(6);
+                    if (tableNameSub.Length > 0)
+                    {
+                        tableNameSub = char.ToLower(tableNameSub[0]) + tableNameSub.Substring(1);
+                    }
+                    entityType.SetTableName(tableNameSub);
+                }
+            }
 
-        
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties())
+                {
+                    var columnName = char.ToLower(property.Name[0]) + property.Name.Substring(1);
+                    property.SetColumnName(columnName);
+                }
+            }
         }
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }

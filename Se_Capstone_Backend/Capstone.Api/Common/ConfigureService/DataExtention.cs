@@ -1,4 +1,5 @@
-﻿using Capstone.Application.Common.Jwt;
+﻿using Capstone.Application.Common.Cloudinaries;
+using Capstone.Application.Common.Jwt;
 using Capstone.Domain.Entities;
 using Capstone.Infrastructure.DbContexts;
 using Capstone.Infrastructure.Repository;
@@ -16,6 +17,7 @@ namespace Capstone.Api.Common.ConfigureService
             var dbConnectionString = configuration.GetConnectionString("value");
             services.AddDbContext<SeCapstoneContext>(options => options.UseNpgsql(configuration.GetConnectionString("value")));
             services.AddScoped<IRepository<User>, Repository<User>>();
+            services.AddSingleton<CloudinaryService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }

@@ -8,6 +8,6 @@ namespace Capstone.Application.Common.Email
 {
     public interface IEmailService
     {
-        Task<(bool, string)> SendEmailAsync(string email, string subject, string body);
+        Task<(bool, string)> SendEmailAsync(string ToEmail, string subject, string body);
     }
 }
