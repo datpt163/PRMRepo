@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Capstone.Domain.Entities
 {
+    [Table("staffs")]
     public class Staff
     {
         public Guid Id { get; set; }
-        public DateTime StartDate { get; set; } 
-        public String CreatedBy { get; set; } = String.Empty;
-        public String UpdateBy { get; set; } = String.Empty;
-        public Guid UserId { get; set; }
+        public DateTime StartDate { get; set; }
+        [MaxLength(100)]
+        public string CreatedBy { get; set; } = string.Empty;
+        [MaxLength(100)]
+        public string UpdateBy { get; set; } = string.Empty;
         public User User { get; set; } = new User();
         public ICollection<Project> Projects { get; set; } = new List<Project>();
         public ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
