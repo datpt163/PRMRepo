@@ -11,7 +11,7 @@ namespace Capstone.Application.Module.Users.Command
 {
     public class UpdateUserCommand : IRequest<UserDto?>
     {
-        public Guid? UserId { get; set; }
+        public Guid? Id { get; set; }
         public string? FullName { get; set; } = string.Empty;
         public string? Phone { get; set; } = string.Empty;
         public string? Avatar { get; set; } = string.Empty;

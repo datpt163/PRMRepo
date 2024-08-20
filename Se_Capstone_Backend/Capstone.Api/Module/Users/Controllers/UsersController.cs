@@ -43,11 +43,11 @@ namespace Capstone.Api.Module.Users.Controllers
             return ResponseOk(dataResponse: user);
         }
 
-        [HttpPut("{id:guid}")]
-        public async Task<IActionResult> UpdateUser(Guid id, [FromForm] UpdateUserCommand command, IFormFile avatarFile)
+        [HttpPut("{userId:guid}")]
+        public async Task<IActionResult> UpdateUser(Guid userId, [FromForm] UpdateUserCommand command, IFormFile AvatarFileRequest)
         {
-            command.UserId = id;
-            command.AvatarFile = avatarFile;
+            command.Id = userId;
+            command.AvatarFile = AvatarFileRequest;
             var updatedUser = await _mediator.Send(command);
 
             if (updatedUser == null)
