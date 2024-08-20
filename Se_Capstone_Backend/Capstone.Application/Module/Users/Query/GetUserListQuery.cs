@@ -1,4 +1,4 @@
-﻿using Capstone.Application.Common.ResponseMediator;
+﻿using Capstone.Application.Module.Users.Response;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Users.Query
 {
-    public class GetProfileQuery : IRequest<ResponseMediator>
+    public class GetUserListQuery : IRequest<List<UserDto>>
     {
-        public string Token { get; set; } = string.Empty;
     }
 }
