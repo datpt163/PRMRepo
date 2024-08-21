@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Capstone.Domain.Entities
 {
-    [Table("news")]
-    public class New
+    [Table("articles")]
+    public class Article
     {
         public Guid Id { get; set; }
         [MaxLength(100)]
@@ -14,8 +14,8 @@ namespace Capstone.Domain.Entities
         public string Description { get; set; } = string.Empty;
         public string Detail { get; set; } = string.Empty;
         [MaxLength(100)]
-        public string Image { get; set; } = string.Empty;
-        public DateOnly CreatedAt { get; set; }
-        public DateOnly UpdatedAt { get; set; }
+        public string? Image { get; set; } 
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }

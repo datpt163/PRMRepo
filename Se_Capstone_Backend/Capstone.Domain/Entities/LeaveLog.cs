@@ -10,15 +10,15 @@ namespace Capstone.Domain.Entities
     {
         public Guid Id { get; set; }
         [MaxLength(100)]
-        public string Title { get; set; } = string.Empty;
+        public string? Title { get; set; } 
         [MaxLength(100)]
-        public string Reason { get; set; } = string.Empty;
+        public string? Reason { get; set; }
         public bool IsFullDay { get; set; }
         public bool IsPaid { get; set; }
         public bool IsApprove { get; set; }
-        public DateOnly StartTime { get; set; }
-        public DateOnly EndTime { get; set; }
-        public DateOnly CreatedAt { get; set; }
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
+        public DateTime CreatedAt { get; set; }
         public bool IsChecked { get; set; }
         public bool IsDeleted { get; set; }
         public Guid StaffId { get; set; }

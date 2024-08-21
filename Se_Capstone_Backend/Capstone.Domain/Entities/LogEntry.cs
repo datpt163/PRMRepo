@@ -9,10 +9,10 @@ namespace Capstone.Domain.Entities
     {
         public Guid Id { get; set; }
         [MaxLength(100)]
-        public string Title { get; set; } = string.Empty;
+        public string? Title { get; set; } 
         [MaxLength(100)]
-        public string ErrorMessage { get; set; } = string.Empty;
-        public DateOnly CreateAt { get; set; }
+        public string? ErrorMessage { get; set; }
+        public DateTime? CreateAt { get; set; }
         public bool IsChecked { get; set; }
     }
 }

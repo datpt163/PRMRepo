@@ -13,7 +13,7 @@ namespace Capstone.Domain.Entities
         public string Name { get; set; } = string.Empty;
         [MaxLength(100)]
         public string Description { get; set; } = string.Empty;
-        public bool IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; }
         public ICollection<Issue> Issues { get; set; } = new List<Issue>();
     }
 }

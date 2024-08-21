@@ -16,19 +16,19 @@ namespace Capstone.Domain.Entities
         public string Name { get; set; } = string.Empty;
         [MaxLength(100)]
         public string Email { get; set; } = string.Empty;
-        public DateOnly StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
         [MaxLength(100)]
         public string PhoneNumber { get; set; } = string.Empty;
         [MaxLength(100)]
         public string CvLink { get; set; } = string.Empty;
-        public DateOnly CreatedAt { get; set; }
-        public DateOnly UpdateAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
-        public bool IsOnBoard { get; set; }
+        public bool? IsOnBoard { get; set; }
         [MaxLength(100)]
         public string CreatedBy { get; set; } = string.Empty;
         [MaxLength(100)]
-        public string UpdatedBy { get; set; } = string.Empty;
+        public string? UpdatedBy { get; set; } 
         public Guid StaffId { get; set; }
         public Staff? Staff { get; set; }
 
