@@ -8,5 +8,7 @@ namespace Capstone.Domain.Enums
 {
     public enum StatusUser
     {
+        Active = 1,
+        Inacitve = 2,
     }
 }

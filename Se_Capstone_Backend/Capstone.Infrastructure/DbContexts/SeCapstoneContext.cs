@@ -89,8 +89,7 @@ namespace Capstone.Infrastructure.DbContexts
               .HasDefaultValueSql("gen_random_uuid()");
 
             modelBuilder.Entity<Staff>()
-              .Property(e => e.Id)
-              .HasDefaultValueSql("gen_random_uuid()");
+              .Property(e => e.Id);
 
             modelBuilder.Entity<Status>()
               .Property(e => e.Id)
@@ -98,15 +97,21 @@ namespace Capstone.Infrastructure.DbContexts
 
             modelBuilder.Entity<User>()
              .Property(e => e.Gender)
-             .HasColumnType("smallint");
+             .HasColumnType("smallint")
+              .HasConversion<int>()
+            .HasDefaultValue(Gender.Male);
 
             modelBuilder.Entity<User>()
             .Property(e => e.Status)
-            .HasColumnType("smallint");
+            .HasColumnType("smallint")
+            .HasConversion<int>()
+            .HasDefaultValue(StatusUser.Active);
 
             modelBuilder.Entity<Issue>()
            .Property(e => e.Priority)
-           .HasColumnType("smallint");
+           .HasColumnType("smallint")
+            .HasConversion<int>()
+            .HasDefaultValue(Priority.Low);
 
             modelBuilder.Entity<Attendance>()
             .HasOne(a => a.Staff)
@@ -145,7 +150,7 @@ namespace Capstone.Infrastructure.DbContexts
 
             modelBuilder.Entity<User>()
             .HasOne(u => u.Staff)
-            .WithOne(s => s.User) 
+            .WithOne(s => s.User)
             .HasForeignKey<Staff>(s => s.Id)
             .OnDelete(DeleteBehavior.Cascade);
 

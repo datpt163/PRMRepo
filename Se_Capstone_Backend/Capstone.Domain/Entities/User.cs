@@ -11,9 +11,9 @@ namespace Capstone.Domain.Entities
         public string? Avatar { get; set; }
         [MaxLength(100)]
         public string? Address { get; set; }
-        public StatusUser Status { get; set; }
+        public StatusUser Status { get; set; } = StatusUser.Active;
         [MaxLength(30)]
-        public Gender? Gender { get; set; } 
+        public Gender Gender { get; set; } 
         public DateTime? Dob { get; set; }
         [MaxLength(100)]
         public string FullName { get; set; } = string.Empty;

@@ -2,9 +2,11 @@
 using Capstone.Application.Common.Jwt;
 using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Auth.Command;
+using Capstone.Application.Module.Auths.Response;
 using Capstone.Domain.Entities;
 using Capstone.Infrastructure.Repository;
 using CloudinaryDotNet.Actions;
+using CloudinaryDotNet.Core;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration.UserSecrets;
@@ -52,11 +54,16 @@ namespace Capstone.Application.Module.Users.CommandHandle
                 var createdUser = await _userManager.FindByNameAsync(request.UserName);
                 if (createdUser != null)
                 {
-                    _unitOfWork.Staffs.Add(new Staff() { CreatedBy = createdUser.UserName ?? ""});
+                    _unitOfWork.Staffs.Add(new Staff() { Id = createdUser.Id, CreatedBy = createdUser.UserName ?? ""});
                     await _unitOfWork.SaveChangesAsync();
                     var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var resultConfirmEmail = await _userManager.ConfirmEmailAsync(user, confirmationToken);
-                    return new ResponseMediator("", createdUser);
+                    var responseSave = await _userManager.FindByNameAsync(request.UserName);
+                    var responseUser = new RegisterResponse(responseSave.Status, responseSave.Email ?? "", responseSave.Id, responseSave.UserName ?? "", responseSave.FullName,  responseSave.PhoneNumber ?? "", responseSave.Avatar ?? "",
+                                             responseSave.Address ?? "" , responseSave.Gender, responseSave.Dob, responseSave.BankAccount, responseSave.BankAccountName,
+                                             responseSave.CreateDate, responseSave.UpdateDate, responseSave.DeleteDate);
+
+                    return new ResponseMediator("", responseUser);
                 }
                 return new ResponseMediator($"User creation failed!", null);
             }

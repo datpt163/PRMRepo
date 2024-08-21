@@ -6,9 +6,9 @@ namespace Capstone.Api.Common.ResponseApi.Controllers
 {
     public class BaseController : ControllerBase
     {
-        protected IActionResult ResponseOk(dynamic? dataResponse = null, bool overrideBody = true)
+        protected IActionResult ResponseOk(dynamic? dataResponse = null, string message = "", bool overrideBody = true)
         {
-            return StatusCode((int)HttpStatusCode.OK, overrideBody ? new { data = dataResponse, statusCode = (int)HttpStatusCode.OK } : dataResponse);
+            return StatusCode((int)HttpStatusCode.OK, overrideBody ? new { data = dataResponse, Message = message, statusCode = (int)HttpStatusCode.OK } : dataResponse);
         }
 
         protected IActionResult ResponseCreated(dynamic? dataResponse = null, string? messageResponse = null)
