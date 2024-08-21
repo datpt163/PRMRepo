@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Capstone.Application.Module.Auth.Response;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Capstone.Infrastructure.Repository;
 
 namespace Capstone.Application.Module.Auth.QueryHandle
 {
@@ -21,10 +22,12 @@ namespace Capstone.Application.Module.Auth.QueryHandle
     {
         private readonly UserManager<User> _userManager;
         private readonly IJwtService _jwtService;
-        public LoginQueryHandle(UserManager<User> userManager, IJwtService jwtService)
+        private readonly IUnitOfWork _unitOfWork;
+        public LoginQueryHandle(UserManager<User> userManager, IJwtService jwtService, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _jwtService = jwtService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResponseMediator> Handle(LoginQuery request, CancellationToken cancellationToken)
@@ -33,11 +36,17 @@ namespace Capstone.Application.Module.Auth.QueryHandle
             if (user != null)
             {
                 var roles = await _userManager.GetRolesAsync(user);
+                var listRole = new List<RoleResponse>();
+                foreach (var role in _unitOfWork.Roles.GetQuery().ToList())
+                    foreach (var roleInfo in roles)
+                        if (roleInfo.ToUpper() == (role.Name ?? "").ToUpper())
+                            listRole.Add(new RoleResponse(role.Id, role.Name ?? ""));
+
                 if (await _userManager.CheckPasswordAsync(user, request.Password))
                 {
                     var accessToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(10));
                     var refreshToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(30));
-                    return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken });
+                    return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken, UserId = user.Id, Roles = listRole });
                 }
                 return new ResponseMediator("Passwork not correct", null);
             }

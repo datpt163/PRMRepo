@@ -5,6 +5,7 @@ using Capstone.Application.Module.Auth.Response;
 using Capstone.Application.Module.Auths.Command;
 using Capstone.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,7 @@ namespace Capstone.Api.Module.Auths.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> CreateRole([FromBody] CreateRoleCommand request)
         {
             var result = await _mediator.Send(request);
@@ -38,6 +40,7 @@ namespace Capstone.Api.Module.Auths.Controllers
         }
 
         [HttpPost("add-role-for-user")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> AddRoleToUser([FromBody] AddRoleForUserCommand request)
         {
             var result = await _mediator.Send(request);
