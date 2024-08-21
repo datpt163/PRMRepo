@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Capstone.Infrastructure.DbContexts
 {
-    public partial class SeCapstoneContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
+    public partial class SeCapstoneContext : IdentityDbContext<User, Role, Guid>
     {
         public SeCapstoneContext()
         {

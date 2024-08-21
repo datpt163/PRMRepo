@@ -9,6 +9,7 @@ using Capstone.Application.Common.Email;
 using Capstone.Domain.Entities;
 using Capstone.Infrastructure.DbContexts;
 using Capstone.Infrastructure.Repository;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -18,14 +19,15 @@ namespace Capstone.Application.Common.Jwt
     {
         private readonly JwtSettings _jwtSettings;
         private readonly IUnitOfWork _unitOfWork;
-
-        public JwtService(IOptions<JwtSettings> jwtSettings, IUnitOfWork unitOfWork)
+        private readonly UserManager<User> _userManager;
+        public JwtService(IOptions<JwtSettings> jwtSettings, IUnitOfWork unitOfWork, UserManager<User> userManager)
         {
             _jwtSettings = jwtSettings.Value;
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
 
-        public string GenerateJwtToken(User account, DateTime expireTime)
+        public async Task<string> GenerateJwtTokenAsync(User account, DateTime expireTime)
         {
             var accountId = account.Id + "";
 
@@ -34,8 +36,14 @@ namespace Capstone.Application.Common.Jwt
                 new Claim(ClaimTypes.NameIdentifier, accountId),
             };
 
+            var user = await _userManager.FindByIdAsync(accountId);
+            var roles = await _userManager.GetRolesAsync(user ?? new User());
 
-            // add role into claim
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role.ToUpper()));
+            }
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

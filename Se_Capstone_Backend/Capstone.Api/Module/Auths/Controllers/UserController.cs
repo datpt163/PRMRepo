@@ -2,6 +2,7 @@
 using Capstone.Api.Common.ResponseApi.Model;
 using Capstone.Application.Module.Auth.Command;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -21,8 +22,9 @@ namespace Capstone.Api.Module.Auths.Controllers
         }
 
         [HttpPost]
-        [SwaggerResponse(204, "Success")]
+        [SwaggerResponse(200, "Success")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles ="ADMIN")]
         public async Task<IActionResult> CreateUser([FromBody] RegisterCommand registerCommand)
         {
             var result = await _mediator.Send(registerCommand);

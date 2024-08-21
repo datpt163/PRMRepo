@@ -36,6 +36,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AssemblyRe
 builder.Services.AddIdentity<User, Capstone.Domain.Entities.Role>()
     .AddEntityFrameworkStores<SeCapstoneContext>()
     .AddDefaultTokenProviders();
+
 builder.Services.AddAuthSerivce(builder.Configuration);
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
