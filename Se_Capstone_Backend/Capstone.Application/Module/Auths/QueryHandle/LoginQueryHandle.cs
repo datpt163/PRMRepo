@@ -36,17 +36,12 @@ namespace Capstone.Application.Module.Auth.QueryHandle
             if (user != null)
             {
                 var roles = await _userManager.GetRolesAsync(user);
-                var listRole = new List<RoleResponse>();
-                foreach (var role in _unitOfWork.Roles.GetQuery().ToList())
-                    foreach (var roleInfo in roles)
-                        if (roleInfo.ToUpper() == (role.Name ?? "").ToUpper())
-                            listRole.Add(new RoleResponse(role.Id, role.Name ?? ""));
 
                 if (await _userManager.CheckPasswordAsync(user, request.Password))
                 {
                     var accessToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(10));
                     var refreshToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(30));
-                    return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken, UserId = user.Id, Roles = listRole });
+                    return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken, UserId = user.Id, Roles = roles });
                 }
                 return new ResponseMediator("Passwork not correct", null);
             }

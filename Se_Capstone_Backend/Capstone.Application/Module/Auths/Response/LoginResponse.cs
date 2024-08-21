@@ -12,18 +12,6 @@ namespace Capstone.Application.Module.Auth.Response
         public string AccessToken { get; set; } = string.Empty;
         public string RefreshToken { get; set; } = string.Empty;
         public Guid UserId { get; set; }
-        public List<RoleResponse> Roles { get; set; } = new List<RoleResponse>();
-    }
-
-    public class RoleResponse
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-
-        public RoleResponse(Guid id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
+        public object? Roles { get; set; }
     }
 }

@@ -26,13 +26,15 @@ namespace Capstone.Application.Module.Users.CommandHandle
         private readonly IEmailService _emailService;
         private readonly IJwtService _jwtService;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly RoleManager<Capstone.Domain.Entities.Role> _roleManager;
 
-        public RegisterCommandHandle(UserManager<User> userManager, IEmailService emailService, IJwtService jwtService, IUnitOfWork unitOfWork)
+        public RegisterCommandHandle(UserManager<User> userManager, IEmailService emailService, IJwtService jwtService, IUnitOfWork unitOfWork, RoleManager<Domain.Entities.Role> roleManager)
         {
             _userManager = userManager;
             _emailService = emailService;
             _jwtService = jwtService;
             _unitOfWork = unitOfWork;
+            _roleManager = roleManager; 
         }
 
         public async Task<ResponseMediator> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -63,6 +65,12 @@ namespace Capstone.Application.Module.Users.CommandHandle
                                              responseSave.Address ?? "" , responseSave.Gender, responseSave.Dob, responseSave.BankAccount, responseSave.BankAccountName,
                                              responseSave.CreateDate, responseSave.UpdateDate, responseSave.DeleteDate);
 
+                    var roleExists = await _roleManager.RoleExistsAsync("EMPLOYEE");
+                    if (!roleExists)
+                    {
+                        return new ResponseMediator("Role Employee not exist", null);
+                    }
+                     await _userManager.AddToRoleAsync(user, "EMPLOYEE");
                     return new ResponseMediator("", responseUser);
                 }
                 return new ResponseMediator($"User creation failed!", null);
