@@ -36,13 +36,8 @@ namespace Capstone.Application.Module.Auths.QueryHandle
             }
 
             var roles = await _userManager.GetRolesAsync(user);
-            var listRole = new List<RoleResponse>();
-            foreach (var role in _unitOfWork.Roles.GetQuery().ToList())
-                foreach (var roleInfo in roles)
-                    if (roleInfo.ToUpper() == (role.Name ?? "").ToUpper())
-                        listRole.Add(new RoleResponse(role.Id, role.Name ?? ""));
 
-            var responseUser = new RegisterResponse(listRole, user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
+            var responseUser = new RegisterResponse(roles, user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
                                           user.Address ?? "", user.Gender, user.Dob, user.BankAccount, user.BankAccountName,
                                           user.CreateDate, user.UpdateDate, user.DeleteDate);
 
