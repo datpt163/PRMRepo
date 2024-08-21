@@ -1,9 +1,10 @@
 ﻿using Capstone.Application.Module.Auth.Command;
+using Capstone.Domain.Enums;
 using FluentValidation;
 
 namespace Capstone.Api.Module.Auth.Validator
 {
-    public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
+    public class RegisterCommandValidator : AbstractValidator<RegisterRequest>
     {
         public RegisterCommandValidator()
         {
@@ -13,9 +14,10 @@ namespace Capstone.Api.Module.Auth.Validator
            .NotEmpty()
            .Matches(@"^\d{8,15}$")
            .WithMessage("Phone number must have 8 to 15 number");
-            //RuleFor(x => x.FullName).NotEmpty();
+            RuleFor(x => x.FullName).NotEmpty();
             RuleFor(x => x.Address).NotEmpty();
-            RuleFor(x => x.Gender).NotEmpty();
+            RuleFor(x => x.Gender)
+             .IsInEnum();
         }
     }
 }

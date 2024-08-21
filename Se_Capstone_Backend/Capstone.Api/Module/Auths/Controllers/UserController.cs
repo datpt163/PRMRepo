@@ -25,7 +25,7 @@ namespace Capstone.Api.Module.Auths.Controllers
         }
 
         [HttpPost]
-        [SwaggerResponse(200, "Success", typeof(RegisterResponse))]
+        [SwaggerResponse(200, "Success", typeof(CreateUserResponse))]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [Authorize(Roles ="ADMIN")]
         public async Task<IActionResult> CreateUser([FromBody] RegisterRequest request)
@@ -49,17 +49,5 @@ namespace Capstone.Api.Module.Auths.Controllers
                 return ResponseOk(result.Data);
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
         }
-        //[SwaggerResponse(200, "Successful", typeof(ResponseSuccess<GetProfileResponse>))]
-        //[SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        //[Authorize]
-        //[HttpGet("profile")]
-        //public async Task<IActionResult> GetProfile()
-        //{
-        //    string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-        //    var result = await _mediator.Send(new GetProfileQuery() { Token = token });
-        //    if (string.IsNullOrEmpty(result.ErrorMessage))
-        //        return ResponseOk(dataResponse: result.Data);
-        //    return ResponseBadRequest(messageResponse: result.ErrorMessage);
-        //}
     }
 }

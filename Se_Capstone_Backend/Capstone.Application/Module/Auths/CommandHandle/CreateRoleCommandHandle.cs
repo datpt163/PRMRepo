@@ -35,7 +35,7 @@ namespace Capstone.Application.Module.Auths.CommandHandle
                 return new ResponseMediator("Role already exists", null);
             }
 
-            var result = await _roleManager.CreateAsync(new Role() { Name = request.RoleName });
+            var result = await _roleManager.CreateAsync(new Role() { Name = request.RoleName.ToUpper()});
 
             if (result.Succeeded)
             {
