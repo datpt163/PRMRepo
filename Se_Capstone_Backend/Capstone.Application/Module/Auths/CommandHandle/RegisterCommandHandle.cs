@@ -1,7 +1,9 @@
 ﻿using Capstone.Application.Common.Email;
+using Capstone.Application.Common.Jwt;
 using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Auth.Command;
 using Capstone.Domain.Entities;
+using Capstone.Infrastructure.Repository;
 using CloudinaryDotNet.Actions;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -20,12 +22,15 @@ namespace Capstone.Application.Module.Users.CommandHandle
     {
         private readonly UserManager<User> _userManager;
         private readonly IEmailService _emailService;
-        private const string UrlConfirmEmail = "";
+        private readonly IJwtService _jwtService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterCommandHandle(UserManager<User> userManager, IEmailService emailService)
+        public RegisterCommandHandle(UserManager<User> userManager, IEmailService emailService, IJwtService jwtService, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _emailService = emailService;
+            _jwtService = jwtService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ResponseMediator> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -38,14 +43,22 @@ namespace Capstone.Application.Module.Users.CommandHandle
             if (existingUserNameAccount != null)
                 return new ResponseMediator("User name is already exists", null);
 
+            var userCreated = await _jwtService.VerifyTokenAsync(request.Token);
             var user = new User(request.Email, request.Address, request.Gender, request.Dob, request.Phone, request.UserName, request.FullName);
             var result = await _userManager.CreateAsync(user, request.Password);
-
+          
             if (result.Succeeded)
             {
-                var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                var resultConfirmEmail = await _userManager.ConfirmEmailAsync(user, confirmationToken);
-                return new ResponseMediator("", null);
+                var createdUser = await _userManager.FindByNameAsync(request.UserName);
+                if (createdUser != null)
+                {
+                    _unitOfWork.Staffs.Add(new Staff() { CreatedBy = createdUser.UserName ?? ""});
+                    await _unitOfWork.SaveChangesAsync();
+                    var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var resultConfirmEmail = await _userManager.ConfirmEmailAsync(user, confirmationToken);
+                    return new ResponseMediator("", createdUser);
+                }
+                return new ResponseMediator($"User creation failed!", null);
             }
             else
             {
