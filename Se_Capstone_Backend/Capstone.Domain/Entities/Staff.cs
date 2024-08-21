@@ -9,15 +9,16 @@ namespace Capstone.Domain.Entities
     public class Staff
     {
         public Guid Id { get; set; }
-        public DateOnly StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
         [MaxLength(100)]
         public string CreatedBy { get; set; } = string.Empty;
         [MaxLength(100)]
-        public string UpdateBy { get; set; } = string.Empty;
+        public string? UpdateBy { get; set; } 
         public User? User { get; set; }
         public ICollection<Project> Projects { get; set; } = new List<Project>();
         public ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
         public ICollection<LeaveLog> LeaveLogs { get; set; } = new List<LeaveLog>();
         public ICollection<Applicant> Applicants { get; set; } = new List<Applicant>();
+        public ICollection<Issue> Issues { get; set; } = new List<Issue>();
     }
 }

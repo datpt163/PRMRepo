@@ -16,7 +16,9 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddFluentValidation(fv =>
+        fv.RegisterValidatorsFromAssemblyContaining<RegisterCommandValidator>());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCors(options =>
 {
@@ -29,20 +31,18 @@ builder.Services.AddCors(options =>
         });
 });
 builder.Services.AddSwaggerService();
-builder.Services.AddAuthSerivce(builder.Configuration);
 builder.Services.AddDataService(builder.Configuration);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AssemblyReference.Assembly));
-
 builder.Services.AddIdentity<User, Capstone.Domain.Entities.Role>()
     .AddEntityFrameworkStores<SeCapstoneContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddAuthSerivce(builder.Configuration);
+
 builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
         options.TokenLifespan = TimeSpan.FromDays(1));
 
-builder.Services.AddControllers()
-    .AddFluentValidation(fv =>
-        fv.RegisterValidatorsFromAssemblyContaining<RegisterCommandValidator>());
+
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
@@ -61,7 +61,7 @@ var app = builder.Build();
 //}
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

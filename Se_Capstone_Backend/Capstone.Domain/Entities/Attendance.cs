@@ -12,10 +12,10 @@ namespace Capstone.Domain.Entities
     {
         public Guid Id { get; set; }
         public bool IsCheckIn { get; set; }
-        public DateOnly TimeStamp { get; set; }
-        public DateOnly CreateAt { get; set; }
+        public DateTime? TimeStamp { get; set; }
+        public DateTime CreateAt { get; set; }
         public bool IsChecked { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool? IsDeleted { get; set; }
         public Guid StaffId { get; set; }
         public Staff? Staff { get; set; }
     }

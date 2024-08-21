@@ -30,12 +30,13 @@ namespace Capstone.Application.Module.Auth.QueryHandle
         public async Task<ResponseMediator> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user != null )
+            if (user != null)
             {
-                if(await _userManager.CheckPasswordAsync(user, request.Password) )
+                var roles = await _userManager.GetRolesAsync(user);
+                if (await _userManager.CheckPasswordAsync(user, request.Password))
                 {
-                    var accessToken = _jwtService.GenerateJwtToken(user, DateTime.Now.AddDays(10));
-                    var refreshToken = _jwtService.GenerateJwtToken(user, DateTime.Now.AddDays(30));
+                    var accessToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(10));
+                    var refreshToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(30));
                     return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken });
                 }
                 return new ResponseMediator("Passwork not correct", null);
