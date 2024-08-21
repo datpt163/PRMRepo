@@ -7,11 +7,28 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Capstone.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class firstCommitDb : Migration
+    public partial class FirstCommitDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "articles",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    detail = table.Column<string>(type: "text", nullable: false),
+                    image = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    createdAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_articles", x => x.id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "jobs",
                 columns: table => new
@@ -19,11 +36,11 @@ namespace Capstone.Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    createdAt = table.Column<DateOnly>(type: "date", nullable: false),
-                    updateAt = table.Column<DateOnly>(type: "date", nullable: false),
+                    createdAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     isDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     createdBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    updatedBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
+                    updatedBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -37,7 +54,7 @@ namespace Capstone.Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    isDeleted = table.Column<bool>(type: "boolean", nullable: false)
+                    isDeleted = table.Column<bool>(type: "boolean", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -49,31 +66,14 @@ namespace Capstone.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    errorMessage = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    createAt = table.Column<DateOnly>(type: "date", nullable: false),
+                    title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    errorMessage = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    createAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     isChecked = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_logEntries", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "news",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    detail = table.Column<string>(type: "text", nullable: false),
-                    image = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    createdAt = table.Column<DateOnly>(type: "date", nullable: false),
-                    updatedAt = table.Column<DateOnly>(type: "date", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_news", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -96,11 +96,11 @@ namespace Capstone.Infrastructure.Migrations
                     name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     code = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    startDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    endDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    startDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    endDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     status = table.Column<int>(type: "integer", nullable: false),
-                    createdAt = table.Column<DateOnly>(type: "date", nullable: false),
-                    updatedAt = table.Column<DateOnly>(type: "date", nullable: false)
+                    createdAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -128,7 +128,7 @@ namespace Capstone.Infrastructure.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
+                    description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -142,7 +142,7 @@ namespace Capstone.Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    isDeleted = table.Column<bool>(type: "boolean", nullable: false)
+                    isDeleted = table.Column<bool>(type: "boolean", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -154,16 +154,17 @@ namespace Capstone.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    avatar = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    address = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    status = table.Column<int>(type: "integer", nullable: false),
-                    gender = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: false),
-                    dob = table.Column<DateOnly>(type: "date", nullable: false),
+                    avatar = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    address = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    status = table.Column<short>(type: "smallint", nullable: false),
+                    gender = table.Column<short>(type: "smallint", maxLength: 30, nullable: true),
+                    dob = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     fullName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    bankAccount = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    createDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    updateDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    deleteDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    bankAccount = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    bankAccountName = table.Column<string>(type: "text", nullable: true),
+                    createDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    deleteDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     userName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     normalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -254,54 +255,13 @@ namespace Capstone.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "issues",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    subject = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    startDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    dueDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    percentage = table.Column<int>(type: "integer", nullable: false),
-                    priority = table.Column<int>(type: "integer", nullable: false),
-                    estimatedTime = table.Column<int>(type: "integer", nullable: false),
-                    percentDone = table.Column<int>(type: "integer", nullable: false),
-                    assignedId = table.Column<Guid>(type: "uuid", nullable: false),
-                    projectId = table.Column<Guid>(type: "uuid", nullable: false),
-                    statusId = table.Column<Guid>(type: "uuid", nullable: false),
-                    labelId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_issues", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_issues_labels_labelId",
-                        column: x => x.labelId,
-                        principalTable: "labels",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_issues_projects_projectId",
-                        column: x => x.projectId,
-                        principalTable: "projects",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_issues_statuses_statusId",
-                        column: x => x.statusId,
-                        principalTable: "statuses",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "staffs",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    startDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    startDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     createdBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    updateBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
+                    updateBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -400,45 +360,21 @@ namespace Capstone.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "sprintIssues",
-                columns: table => new
-                {
-                    issueId = table.Column<Guid>(type: "uuid", nullable: false),
-                    sprintId = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_sprintIssues", x => new { x.issueId, x.sprintId });
-                    table.ForeignKey(
-                        name: "FK_sprintIssues_issues_issueId",
-                        column: x => x.issueId,
-                        principalTable: "issues",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_sprintIssues_sprints_sprintId",
-                        column: x => x.sprintId,
-                        principalTable: "sprints",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "applicants",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    startDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    startDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     phoneNumber = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     cvLink = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    createdAt = table.Column<DateOnly>(type: "date", nullable: false),
-                    updateAt = table.Column<DateOnly>(type: "date", nullable: false),
+                    createdAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updateAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     isDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    isOnBoard = table.Column<bool>(type: "boolean", nullable: false),
+                    isOnBoard = table.Column<bool>(type: "boolean", nullable: true),
                     createdBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    updatedBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    updatedBy = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     staffId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -458,10 +394,10 @@ namespace Capstone.Infrastructure.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     isCheckIn = table.Column<bool>(type: "boolean", nullable: false),
-                    timeStamp = table.Column<DateOnly>(type: "date", nullable: false),
-                    createAt = table.Column<DateOnly>(type: "date", nullable: false),
+                    timeStamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    createAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     isChecked = table.Column<bool>(type: "boolean", nullable: false),
-                    isDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    isDeleted = table.Column<bool>(type: "boolean", nullable: true),
                     staffId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -476,18 +412,65 @@ namespace Capstone.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "issues",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    subject = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    startDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    dueDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    percentage = table.Column<int>(type: "integer", nullable: false),
+                    priority = table.Column<short>(type: "smallint", nullable: false),
+                    estimatedTime = table.Column<int>(type: "integer", nullable: true),
+                    percentDone = table.Column<int>(type: "integer", nullable: false),
+                    assignedId = table.Column<Guid>(type: "uuid", nullable: false),
+                    projectId = table.Column<Guid>(type: "uuid", nullable: false),
+                    statusId = table.Column<Guid>(type: "uuid", nullable: false),
+                    labelId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_issues", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_issues_labels_labelId",
+                        column: x => x.labelId,
+                        principalTable: "labels",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_issues_projects_projectId",
+                        column: x => x.projectId,
+                        principalTable: "projects",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_issues_staffs_assignedId",
+                        column: x => x.assignedId,
+                        principalTable: "staffs",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_issues_statuses_statusId",
+                        column: x => x.statusId,
+                        principalTable: "statuses",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "leave_logs",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
-                    title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    reason = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    reason = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     isFullDay = table.Column<bool>(type: "boolean", nullable: false),
                     isPaid = table.Column<bool>(type: "boolean", nullable: false),
                     isApprove = table.Column<bool>(type: "boolean", nullable: false),
-                    startTime = table.Column<DateOnly>(type: "date", nullable: false),
-                    endTime = table.Column<DateOnly>(type: "date", nullable: false),
-                    createdAt = table.Column<DateOnly>(type: "date", nullable: false),
+                    startTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    endTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    createdAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     isChecked = table.Column<bool>(type: "boolean", nullable: false),
                     isDeleted = table.Column<bool>(type: "boolean", nullable: false),
                     staffId = table.Column<Guid>(type: "uuid", nullable: false)
@@ -551,6 +534,30 @@ namespace Capstone.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "sprintIssues",
+                columns: table => new
+                {
+                    issueId = table.Column<Guid>(type: "uuid", nullable: false),
+                    sprintId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_sprintIssues", x => new { x.issueId, x.sprintId });
+                    table.ForeignKey(
+                        name: "FK_sprintIssues_issues_issueId",
+                        column: x => x.issueId,
+                        principalTable: "issues",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_sprintIssues_sprints_sprintId",
+                        column: x => x.sprintId,
+                        principalTable: "sprints",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_applicantJobs_jobId",
                 table: "applicantJobs",
@@ -565,6 +572,11 @@ namespace Capstone.Infrastructure.Migrations
                 name: "IX_attendances_staffId",
                 table: "attendances",
                 column: "staffId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_issues_assignedId",
+                table: "issues",
+                column: "assignedId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_issues_labelId",
@@ -651,6 +663,9 @@ namespace Capstone.Infrastructure.Migrations
                 name: "applicantJobs");
 
             migrationBuilder.DropTable(
+                name: "articles");
+
+            migrationBuilder.DropTable(
                 name: "attendances");
 
             migrationBuilder.DropTable(
@@ -658,9 +673,6 @@ namespace Capstone.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "logEntries");
-
-            migrationBuilder.DropTable(
-                name: "news");
 
             migrationBuilder.DropTable(
                 name: "projectSprints");
@@ -708,13 +720,13 @@ namespace Capstone.Infrastructure.Migrations
                 name: "roles");
 
             migrationBuilder.DropTable(
-                name: "staffs");
-
-            migrationBuilder.DropTable(
                 name: "labels");
 
             migrationBuilder.DropTable(
                 name: "projects");
+
+            migrationBuilder.DropTable(
+                name: "staffs");
 
             migrationBuilder.DropTable(
                 name: "statuses");

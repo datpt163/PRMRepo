@@ -12,7 +12,7 @@ namespace Capstone.Domain.Entities
         [MaxLength(100)]
         public string Name { get; set; } = string.Empty;
         [MaxLength(100)]
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; } 
         public ICollection<Issue> Issues { get; set; } = new List<Issue>();
         public ICollection<Project> Projects { get; set; } = new List<Project>();
     }

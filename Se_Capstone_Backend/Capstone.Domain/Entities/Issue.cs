@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
-
+using Capstone.Domain.Enums;
 namespace Capstone.Domain.Entities
 {
     [Table("issues")]
@@ -16,12 +16,12 @@ namespace Capstone.Domain.Entities
         [MaxLength(100)]
         public string Subject { get; set; } = string.Empty;
         [MaxLength(100)]
-        public string Description { get; set; } = string.Empty;
-        public DateOnly StartDate { get; set; }
-        public DateOnly DueDate { get; set; }
+        public string? Description { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime DueDate { get; set; }
         public int Percentage { get; set; } = 0;
-        public int Priority { get; set; }
-        public int EstimatedTime { get; set; }
+        public Priority Priority { get; set; }
+        public int? EstimatedTime { get; set; }
         public int PercentDone { get; set; }
         public Guid AssignedId { get; set; }
         public Guid ProjectId { get; set; }
@@ -35,5 +35,6 @@ namespace Capstone.Domain.Entities
         public Project? Project { get; set; }
 
         public ICollection<Sprint> Sprints { get; } = new List<Sprint>();
+        public Staff? Staff { get; set; }
     }
 }

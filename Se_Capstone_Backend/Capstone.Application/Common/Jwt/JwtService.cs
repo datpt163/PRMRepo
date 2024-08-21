@@ -33,6 +33,8 @@ namespace Capstone.Application.Common.Jwt
             {
                 new Claim(ClaimTypes.NameIdentifier, accountId),
             };
+
+
             // add role into claim
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

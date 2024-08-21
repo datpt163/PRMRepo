@@ -1,7 +1,9 @@
 ﻿using Capstone.Domain.Entities;
+using Capstone.Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Threading.Tasks;
 
 namespace Capstone.Infrastructure.DbContexts
@@ -31,7 +33,7 @@ namespace Capstone.Infrastructure.DbContexts
         public DbSet<Label> Labels { get; set; }
         public DbSet<LeaveLog> LeaveLogs { get; set; }
         public DbSet<LogEntry> LogEntries { get; set; }
-        public DbSet<New> News { get; set; }
+        public DbSet<Article> Articles { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
         public DbSet<Staff> Staffs { get; set; }
@@ -74,7 +76,7 @@ namespace Capstone.Infrastructure.DbContexts
                .Property(e => e.Id)
                .HasDefaultValueSql("gen_random_uuid()");
 
-            modelBuilder.Entity<New>()
+            modelBuilder.Entity<Article>()
                .Property(e => e.Id)
                .HasDefaultValueSql("gen_random_uuid()");
 
@@ -94,6 +96,18 @@ namespace Capstone.Infrastructure.DbContexts
               .Property(e => e.Id)
               .HasDefaultValueSql("gen_random_uuid()");
 
+            modelBuilder.Entity<User>()
+             .Property(e => e.Gender)
+             .HasColumnType("smallint");
+
+            modelBuilder.Entity<User>()
+            .Property(e => e.Status)
+            .HasColumnType("smallint");
+
+            modelBuilder.Entity<Issue>()
+           .Property(e => e.Priority)
+           .HasColumnType("smallint");
+
             modelBuilder.Entity<Attendance>()
             .HasOne(a => a.Staff)
             .WithMany(s => s.Attendances)
@@ -103,6 +117,11 @@ namespace Capstone.Infrastructure.DbContexts
              .HasOne(l => l.Staff)
              .WithMany(s => s.LeaveLogs)
              .HasForeignKey(l => l.StaffId);
+
+            modelBuilder.Entity<Issue>()
+            .HasOne(l => l.Staff)
+            .WithMany(s => s.Issues)
+            .HasForeignKey(l => l.AssignedId);
 
             modelBuilder.Entity<Issue>()
               .HasOne(a => a.Label)
@@ -190,6 +209,17 @@ namespace Capstone.Infrastructure.DbContexts
                 {
                     var columnName = char.ToLower(property.Name[0]) + property.Name.Substring(1);
                     property.SetColumnName(columnName);
+                }
+            }
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties())
+                {
+                    if (property.ClrType == typeof(DateTime))
+                    {
+                        property.SetColumnType("timestamp without time zone");
+                    }
                 }
             }
         }

@@ -4,6 +4,7 @@ using Capstone.Application.Module.Auth.Command;
 using Capstone.Application.Module.Auth.Query;
 using Capstone.Application.Module.Auth.Response;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -21,17 +22,6 @@ namespace Capstone.Api.Module.Auth.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost("register")]
-        [SwaggerResponse(204, "Success")]
-        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        public async Task<IActionResult> Register([FromBody] RegisterCommand registerCommand)
-        {
-            var result = await _mediator.Send(registerCommand);
-            if (string.IsNullOrEmpty(result.ErrorMessage))
-                return ResponseNoContent();
-            return ResponseBadRequest(messageResponse: result.ErrorMessage);
-        }
-
         [SwaggerResponse(200, "Successful", typeof(ResponseSuccess<LoginResponse>))]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [HttpPost("login")]
@@ -42,6 +32,13 @@ namespace Capstone.Api.Module.Auth.Controllers
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(dataResponse: result.Data);
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
+        }
+
+        [HttpPost("loginsdddd")]
+        [Authorize]
+        public async Task<IActionResult> Auth()
+        {
+           return Ok();
         }
     }
 }

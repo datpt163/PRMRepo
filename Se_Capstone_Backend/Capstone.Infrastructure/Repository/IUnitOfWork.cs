@@ -16,7 +16,7 @@ namespace Capstone.Infrastructure.Repository
         public IRepository<Label> Labels { get; }
         public IRepository<LeaveLog> LeaveLogs { get; }
         public IRepository<LogEntry> LogEntrys { get; }
-        public IRepository<New> News { get; }
+        public IRepository<Article> Articles { get; }
         public IRepository<Permission> Permissions { get; }
         public IRepository<Project> Projects { get; }
         public IRepository<Role> Roles { get; }

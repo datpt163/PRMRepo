@@ -2,6 +2,7 @@
 using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Auth.Command;
 using Capstone.Domain.Entities;
+using CloudinaryDotNet.Actions;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration.UserSecrets;
@@ -21,7 +22,7 @@ namespace Capstone.Application.Module.Users.CommandHandle
         private readonly IEmailService _emailService;
         private const string UrlConfirmEmail = "";
 
-        public RegisterCommandHandle(UserManager<User> userManager, IEmailService emailService )
+        public RegisterCommandHandle(UserManager<User> userManager, IEmailService emailService)
         {
             _userManager = userManager;
             _emailService = emailService;

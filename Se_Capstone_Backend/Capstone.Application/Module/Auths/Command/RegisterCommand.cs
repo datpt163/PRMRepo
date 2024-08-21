@@ -1,4 +1,5 @@
 ﻿using Capstone.Application.Common.ResponseMediator;
+using Capstone.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,8 @@ namespace Capstone.Application.Module.Auth.Command
         public string UserName { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
-        public string Gender { get; set; } = string.Empty;
-        public DateOnly Dob { get; set; }
+        public Gender Gender { get; set; } 
+        public DateTime Dob { get; set; }
         public string Phone { get; set; } = string.Empty;
-      
     }
 }

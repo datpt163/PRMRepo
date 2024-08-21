@@ -16,7 +16,7 @@ namespace Capstone.Api.Common.ConfigureService
             string audience = jwtSettings["Audience"] ?? string.Empty;
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = "Bearer";
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })

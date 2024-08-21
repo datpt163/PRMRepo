@@ -30,9 +30,9 @@ namespace Capstone.Application.Module.Auth.QueryHandle
         public async Task<ResponseMediator> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user != null )
+            if (user != null)
             {
-                if(await _userManager.CheckPasswordAsync(user, request.Password) )
+                if (await _userManager.CheckPasswordAsync(user, request.Password))
                 {
                     var accessToken = _jwtService.GenerateJwtToken(user, DateTime.Now.AddDays(10));
                     var refreshToken = _jwtService.GenerateJwtToken(user, DateTime.Now.AddDays(30));
