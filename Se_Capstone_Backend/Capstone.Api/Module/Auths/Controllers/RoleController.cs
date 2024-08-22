@@ -3,6 +3,8 @@ using Capstone.Api.Common.ResponseApi.Model;
 using Capstone.Application.Module.Auth.Query;
 using Capstone.Application.Module.Auth.Response;
 using Capstone.Application.Module.Auths.Command;
+using Capstone.Application.Module.Auths.Query;
+using Capstone.Application.Module.Auths.Response;
 using Capstone.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -13,7 +15,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Capstone.Api.Module.Auths.Controllers
 {
-    [Route("api/role")]
+    [Route("api/roles")]
     [ApiController]
     public class RoleController : BaseController
     {
@@ -40,6 +42,8 @@ namespace Capstone.Api.Module.Auths.Controllers
         }
 
         [HttpPost("add-role-for-user")]
+        [SwaggerResponse(204, "Successful")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> AddRoleToUser([FromBody] AddRoleForUserCommand request)
         {
@@ -48,6 +52,15 @@ namespace Capstone.Api.Module.Auths.Controllers
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(dataResponse: result.Data);
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
+        }
+
+        [HttpGet]
+        [SwaggerResponse(200, "Successful", typeof(List<RoleDTO>))]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetList()
+        {
+            var result = await _mediator.Send(new GetListRoleQuery());
+            return ResponseOk(dataResponse: result.Data);
         }
     }
 }

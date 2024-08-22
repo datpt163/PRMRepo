@@ -1,5 +1,6 @@
 ﻿using Capstone.Api.Common.ResponseApi.Controllers;
 using Capstone.Api.Common.ResponseApi.Model;
+using Capstone.Api.Module.Auths.Request;
 using Capstone.Application.Module.Auth.Command;
 using Capstone.Application.Module.Auth.Query;
 using Capstone.Application.Module.Auth.Response;
@@ -38,6 +39,19 @@ namespace Capstone.Api.Module.Auth.Controllers
 
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(dataResponse: result.Data);
+            return ResponseBadRequest(messageResponse: result.ErrorMessage);
+        }
+
+        [SwaggerResponse(204, "Successful")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var result = await _mediator.Send(new ResetPasswordCommand(token, request.OldPassword, request.NewPassword));
+
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseNoContent();
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
         }
     }
