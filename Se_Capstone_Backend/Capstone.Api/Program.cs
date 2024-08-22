@@ -1,4 +1,5 @@
 using Capstone.Api.Common.ConfigureService;
+using Capstone.Api.Middleware;
 using Capstone.Api.Module.Auth.Validator;
 using Capstone.Application;
 using Capstone.Application.Common.Email;
@@ -54,10 +55,11 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 });
 builder.Services.AddGreetingService(builder.Configuration);
 var app = builder.Build();
+app.UseMiddleware<BlacklistedTokenMiddleware>();
 
 //if (app.Environment.IsDevelopment())
 //{
-    app.UseSwagger();
+app.UseSwagger();
     app.UseSwaggerUI(); 
 //}
 
