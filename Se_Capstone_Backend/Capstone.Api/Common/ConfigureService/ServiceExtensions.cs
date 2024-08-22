@@ -1,4 +1,5 @@
 ﻿using Capstone.Application.Common.Email;
+using Capstone.Domain.Module.Auth.TokenBlackList;
 using Capstone.Infrastructure.Redis;
 using Capstone.Infrastructure.Repository;
 
@@ -12,7 +13,9 @@ namespace Capstone.Api.Common.ConfigureService
             services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
             services.AddScoped<IEmailService, EmailService>();
             services.Configure<RedisSettings>(configuration.GetSection("RedisDBSettings"));
-            services.AddScoped<RedisContext, RedisContext>();
+            services.AddSingleton<RedisContext, RedisContext>();
+            services.AddSingleton<ITokenBlacklistService, TokenBlacklistService>();
+
             #endregion
 
             #region Middleware

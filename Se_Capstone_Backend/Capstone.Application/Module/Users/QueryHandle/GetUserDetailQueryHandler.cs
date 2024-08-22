@@ -1,6 +1,7 @@
 ﻿using Capstone.Application.Module.Users.Query;
 using Capstone.Application.Module.Users.Response;
 using Capstone.Domain.Entities;
+using Capstone.Domain.Enums;
 using Capstone.Infrastructure.DbContexts;
 using Capstone.Infrastructure.Repository;
 using MediatR;
@@ -26,14 +27,19 @@ namespace Capstone.Application.Module.Users.QueryHandle
         public async Task<UserDto?> Handle(GetUserDetailQuery query, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetQueryNoTracking()
-                .Where(u => u.Id == query.UserId)
+                .Where(u => u.Id == query.UserId && u.Status == StatusUser.Active)
                 .Select(u => new UserDto
                 {
                     Id = u.Id,
                     Email = u.Email ?? string.Empty,
                     FullName = u.FullName,
                     Phone = u.PhoneNumber ?? string.Empty,
-                    Avatar = u.Avatar
+                    Avatar = u.Avatar ?? string.Empty,
+                    Address = u.Address,
+                    Gender = (int)u.Gender,  
+                    Dob = u.Dob ?? DateTime.MinValue, 
+                    BankAccount = u.BankAccount,
+                    BankAccountName = u.BankAccountName
                 })
                 .FirstOrDefaultAsync(cancellationToken);
 
