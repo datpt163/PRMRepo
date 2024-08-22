@@ -13,5 +13,11 @@ namespace Capstone.Application.Module.Users.Response
         public string FullName { get; set; } = null!;
         public string Phone { get; set; } = null!;
         public string Avatar { get; set; } = null!;
+
+        public string? Address { get; set; }
+        public int Gender { get; set; }
+        public DateTime Dob { get; set; }
+        public string? BankAccount { get; set; }
+        public string? BankAccountName { get; set; }
     }
 }
