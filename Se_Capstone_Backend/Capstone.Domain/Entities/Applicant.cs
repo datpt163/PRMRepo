@@ -32,6 +32,8 @@ namespace Capstone.Domain.Entities
         public Guid StaffId { get; set; }
         public Staff? Staff { get; set; }
 
+        public Guid JobId { get; set; }
+        public Job MainJob { get; set; } = new Job();
         public ICollection<Job> Jobs { get; set; } = new List<Job>();
     }
 }
