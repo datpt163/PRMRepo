@@ -50,5 +50,20 @@ namespace Capstone.Api.Module.Auth.Controllers
                 return ResponseNoContent();
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
         }
+
+        [SwaggerResponse(204, "Logout successful")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [HttpPost("logout")]
+        [Authorize] 
+        public async Task<IActionResult> Logout()
+        {
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var logoutQuery = new LogoutQuery { Token = token }; 
+            var result = await _mediator.Send(logoutQuery);
+
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseNoContent();
+            return ResponseBadRequest(messageResponse: result.ErrorMessage);
+        }
     }
 }

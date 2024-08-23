@@ -3,6 +3,7 @@ using System;
 using Capstone.Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Capstone.Infrastructure.Migrations
 {
     [DbContext(typeof(SeCapstoneContext))]
-    partial class SeCapstoneContextModelSnapshot : ModelSnapshot
+    [Migration("20240823104440_RefactorTableJobV0")]
+    partial class RefactorTableJobV0
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,11 +84,11 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("staffId");
 
                     b.Property<DateTime?>("StartDate")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("startDate");
 
                     b.Property<DateTime?>("UpdateAt")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("updateAt");
 
                     b.Property<string>("UpdatedBy")
@@ -137,7 +140,7 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("title");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("updatedAt");
 
                     b.HasKey("Id");
@@ -174,7 +177,7 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("staffId");
 
                     b.Property<DateTime?>("TimeStamp")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("timeStamp");
 
                     b.HasKey("Id");
@@ -182,25 +185,6 @@ namespace Capstone.Infrastructure.Migrations
                     b.HasIndex("StaffId");
 
                     b.ToTable("attendances");
-                });
-
-            modelBuilder.Entity("Capstone.Domain.Entities.GroupPermission", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("groupPermissions");
                 });
 
             modelBuilder.Entity("Capstone.Domain.Entities.Issue", b =>
@@ -312,7 +296,7 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("title");
 
                     b.Property<DateTime?>("UpdateAt")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("updateAt");
 
                     b.Property<string>("UpdatedBy")
@@ -367,7 +351,7 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("createdAt");
 
                     b.Property<DateTime?>("EndTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("endTime");
 
                     b.Property<bool>("IsApprove")
@@ -400,7 +384,7 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("staffId");
 
                     b.Property<DateTime?>("StartTime")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("startTime");
 
                     b.Property<string>("Title")
@@ -424,7 +408,7 @@ namespace Capstone.Infrastructure.Migrations
                         .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<DateTime?>("CreateAt")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("createAt");
 
                     b.Property<string>("ErrorMessage")
@@ -454,10 +438,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<Guid>("GroupPermissionId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("groupPermissionId");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -465,8 +445,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("name");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GroupPermissionId");
 
                     b.ToTable("permissions");
                 });
@@ -499,10 +477,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("endDate");
 
-                    b.Property<Guid?>("LeadId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("leadId");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -513,19 +487,15 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("startDate");
 
-                    b.Property<short>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint")
-                        .HasDefaultValue((short)2)
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
                         .HasColumnName("status");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("updatedAt");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LeadId");
 
                     b.ToTable("projects");
                 });
@@ -561,6 +531,30 @@ namespace Capstone.Infrastructure.Migrations
                     b.ToTable("roles", (string)null);
                 });
 
+            modelBuilder.Entity("Capstone.Domain.Entities.Sprint", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("sprints");
+                });
+
             modelBuilder.Entity("Capstone.Domain.Entities.Staff", b =>
                 {
                     b.Property<Guid>("Id")
@@ -574,7 +568,7 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("createdBy");
 
                     b.Property<DateTime?>("StartDate")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("startDate");
 
                     b.Property<string>("UpdateBy")
@@ -656,11 +650,11 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("createDate");
 
                     b.Property<DateTime?>("DeleteDate")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleteDate");
 
                     b.Property<DateTime?>("Dob")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("dob");
 
                     b.Property<string>("Email")
@@ -730,7 +724,7 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("twoFactorEnabled");
 
                     b.Property<DateTime?>("UpdateDate")
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("updateDate");
 
                     b.Property<string>("UserName")
@@ -888,6 +882,23 @@ namespace Capstone.Infrastructure.Migrations
                     b.ToTable("applicantJobs");
                 });
 
+            modelBuilder.Entity("projectSprints", b =>
+                {
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("projectId");
+
+                    b.Property<Guid>("SprintId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("sprintId");
+
+                    b.HasKey("ProjectId", "SprintId");
+
+                    b.HasIndex("SprintId");
+
+                    b.ToTable("projectSprints");
+                });
+
             modelBuilder.Entity("projectStaffs", b =>
                 {
                     b.Property<Guid>("ProjectId")
@@ -920,6 +931,23 @@ namespace Capstone.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("rolePermissions");
+                });
+
+            modelBuilder.Entity("sprintIssues", b =>
+                {
+                    b.Property<Guid>("IssueId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("issueId");
+
+                    b.Property<Guid>("SprintId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("sprintId");
+
+                    b.HasKey("IssueId", "SprintId");
+
+                    b.HasIndex("SprintId");
+
+                    b.ToTable("sprintIssues");
                 });
 
             modelBuilder.Entity("Capstone.Domain.Entities.Applicant", b =>
@@ -996,26 +1024,6 @@ namespace Capstone.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Staff");
-                });
-
-            modelBuilder.Entity("Capstone.Domain.Entities.Permission", b =>
-                {
-                    b.HasOne("Capstone.Domain.Entities.GroupPermission", "GroupPermission")
-                        .WithMany("Permissions")
-                        .HasForeignKey("GroupPermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GroupPermission");
-                });
-
-            modelBuilder.Entity("Capstone.Domain.Entities.Project", b =>
-                {
-                    b.HasOne("Capstone.Domain.Entities.Staff", "Lead")
-                        .WithMany("LeadProjects")
-                        .HasForeignKey("LeadId");
-
-                    b.Navigation("Lead");
                 });
 
             modelBuilder.Entity("Capstone.Domain.Entities.Staff", b =>
@@ -1095,6 +1103,21 @@ namespace Capstone.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("projectSprints", b =>
+                {
+                    b.HasOne("Capstone.Domain.Entities.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Capstone.Domain.Entities.Sprint", null)
+                        .WithMany()
+                        .HasForeignKey("SprintId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("projectStaffs", b =>
                 {
                     b.HasOne("Capstone.Domain.Entities.Project", null)
@@ -1125,9 +1148,19 @@ namespace Capstone.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Capstone.Domain.Entities.GroupPermission", b =>
+            modelBuilder.Entity("sprintIssues", b =>
                 {
-                    b.Navigation("Permissions");
+                    b.HasOne("Capstone.Domain.Entities.Issue", null)
+                        .WithMany()
+                        .HasForeignKey("IssueId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Capstone.Domain.Entities.Sprint", null)
+                        .WithMany()
+                        .HasForeignKey("SprintId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Capstone.Domain.Entities.Label", b =>
@@ -1147,8 +1180,6 @@ namespace Capstone.Infrastructure.Migrations
                     b.Navigation("Attendances");
 
                     b.Navigation("Issues");
-
-                    b.Navigation("LeadProjects");
 
                     b.Navigation("LeaveLogs");
                 });

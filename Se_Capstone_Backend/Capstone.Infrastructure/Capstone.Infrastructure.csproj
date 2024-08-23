@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Capstone.Domain\Capstone.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\" />
+  </ItemGroup>
+
 </Project>

@@ -15,7 +15,7 @@ namespace Capstone.Domain.Entities
         public string Description { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdateAt { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } = false;
         [MaxLength(100)]
         public string CreatedBy { get; set; } = string.Empty;
         [MaxLength(100)]

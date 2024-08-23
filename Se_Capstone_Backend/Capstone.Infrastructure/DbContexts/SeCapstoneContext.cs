@@ -172,6 +172,12 @@ namespace Capstone.Infrastructure.DbContexts
                .HasForeignKey(a => a.GroupPermissionId);
 
             modelBuilder.Entity<Applicant>()
+           .HasOne(a => a.MainJob)
+           .WithMany()
+           .HasForeignKey(a => a.JobId)
+           .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Applicant>()
               .HasMany(a => a.Jobs)
               .WithMany(j => j.Applicants)
               .UsingEntity<Dictionary<string, object>>(
