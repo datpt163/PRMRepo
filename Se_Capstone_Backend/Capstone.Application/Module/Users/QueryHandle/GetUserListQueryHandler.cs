@@ -24,7 +24,7 @@ namespace Capstone.Application.Module.Users.QueryHandle
 
         public async Task<List<UserDto>> Handle(GetUserListQuery request, CancellationToken cancellationToken)
         {
-            var usersQuery = _userRepository.GetQueryNoTracking().Where(x => x.Status == StatusUser.Active);
+            var usersQuery = _userRepository.GetQueryNoTracking().Where(x => x.Status == UserStatus.Active);
 
             if (!string.IsNullOrEmpty(request.FullName))
             {
