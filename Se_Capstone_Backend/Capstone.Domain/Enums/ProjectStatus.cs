@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Capstone.Domain.Enums
 {
-    public enum StatusUser
+    public enum ProjectStatus
     {
-        Active = 1,
-        Inacitve = 2,
+        NotStarted = 1,
+        InProgress = 2,
+        Finished = 3
     }
 }

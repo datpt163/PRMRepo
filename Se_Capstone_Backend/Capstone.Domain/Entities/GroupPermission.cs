@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Capstone.Domain.Entities
 {
-    [Table("sprints")]
-    public class Sprint
+    [Table("groupPermissions")]
+    public class GroupPermission
     {
         public Guid Id { get; set; }
         [MaxLength(100)]
         public string Name { get; set; } = string.Empty;
-        [MaxLength(100)]
-        public string? Description { get; set; } 
-        public ICollection<Issue> Issues { get; set; } = new List<Issue>();
-        public ICollection<Project> Projects { get; set; } = new List<Project>();
+        [JsonIgnore]
+        public ICollection<Permission> Permissions { get; set;} = new List<Permission>();
     }
 }

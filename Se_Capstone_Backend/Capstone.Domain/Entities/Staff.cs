@@ -20,5 +20,6 @@ namespace Capstone.Domain.Entities
         public ICollection<LeaveLog> LeaveLogs { get; set; } = new List<LeaveLog>();
         public ICollection<Applicant> Applicants { get; set; } = new List<Applicant>();
         public ICollection<Issue> Issues { get; set; } = new List<Issue>();
+        public ICollection<Project> LeadProjects { get; set; } = new List<Project>();
     }
 }

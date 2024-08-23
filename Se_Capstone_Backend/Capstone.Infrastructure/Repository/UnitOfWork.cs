@@ -29,9 +29,9 @@ namespace Capstone.Infrastructure.Repository
         public IRepository<Permission> permissions = null!;
         public IRepository<Project> projects = null!;
         public IRepository<Role> roles = null!;
-        public IRepository<Sprint> sprints = null!;
         public IRepository<Staff> staffs = null!;
         public IRepository<Status> statuses = null!;
+        public IRepository<GroupPermission> groupPermissions = null!;
         public IRepository<User> Users => users ?? new Repository<User>(_context);
         public IRepository<Applicant> Applicants => applicants ?? new Repository<Applicant>(_context);
         public IRepository<Attendance> Attendances => attendances ?? new Repository<Attendance>(_context);
@@ -44,9 +44,9 @@ namespace Capstone.Infrastructure.Repository
         public IRepository<Permission> Permissions => permissions ?? new Repository<Permission>(_context);
         public IRepository<Project> Projects => projects ?? new Repository<Project>(_context);
         public IRepository<Role> Roles => roles ?? new Repository<Role>(_context);
-        public IRepository<Sprint> Sprints => sprints ?? new Repository<Sprint>(_context);
         public IRepository<Staff> Staffs => staffs ?? new Repository<Staff>(_context);
         public IRepository<Status> Statuses => statuses ?? new Repository<Status>(_context);
+        public IRepository<GroupPermission> GroupPermissions => groupPermissions ?? new Repository<GroupPermission>(_context);
 
 
         public int SaveChanges()

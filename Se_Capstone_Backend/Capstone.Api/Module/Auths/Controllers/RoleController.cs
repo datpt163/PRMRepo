@@ -31,7 +31,7 @@ namespace Capstone.Api.Module.Auths.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = "ADD_ROLE")]
         public async Task<IActionResult> CreateRole([FromBody] CreateRoleCommand request)
         {
             var result = await _mediator.Send(request);
@@ -44,7 +44,7 @@ namespace Capstone.Api.Module.Auths.Controllers
         [HttpPost("add-role-for-user")]
         [SwaggerResponse(204, "Successful")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "ADMIN")]
+        //[Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> AddRoleToUser([FromBody] AddRoleForUserCommand request)
         {
             var result = await _mediator.Send(request);
@@ -56,7 +56,7 @@ namespace Capstone.Api.Module.Auths.Controllers
 
         [HttpGet]
         [SwaggerResponse(200, "Successful", typeof(List<RoleDTO>))]
-        [Authorize(Roles = "ADMIN")]
+        //[Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> GetList()
         {
             var result = await _mediator.Send(new GetListRoleQuery());
