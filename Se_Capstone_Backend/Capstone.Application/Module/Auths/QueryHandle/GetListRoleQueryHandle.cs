@@ -26,7 +26,7 @@ namespace Capstone.Application.Module.Auths.QueryHandle
 
         public async Task<ResponseMediator> Handle(GetListRoleQuery request, CancellationToken cancellationToken)
         {
-            var roles = await _unitOfWork.Roles.GetQuery().ToListAsync();
+            var roles = await _unitOfWork.Roles.GetQuery().Include(p => p.Permissions).ToListAsync();
             return new ResponseMediator("", _mapper.Map<List<RoleDTO>>(roles));
         }
     }

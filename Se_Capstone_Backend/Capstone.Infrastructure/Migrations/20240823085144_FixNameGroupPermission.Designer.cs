@@ -3,6 +3,7 @@ using System;
 using Capstone.Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Capstone.Infrastructure.Migrations
 {
     [DbContext(typeof(SeCapstoneContext))]
-    partial class SeCapstoneContextModelSnapshot : ModelSnapshot
+    [Migration("20240823085144_FixNameGroupPermission")]
+    partial class FixNameGroupPermission
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,10 +63,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("isOnBoard");
 
-                    b.Property<Guid>("JobId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("jobId");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -94,8 +93,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("updatedBy");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("JobId");
 
                     b.HasIndex("StaffId");
 
@@ -924,19 +921,11 @@ namespace Capstone.Infrastructure.Migrations
 
             modelBuilder.Entity("Capstone.Domain.Entities.Applicant", b =>
                 {
-                    b.HasOne("Capstone.Domain.Entities.Job", "MainJob")
-                        .WithMany()
-                        .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Capstone.Domain.Entities.Staff", "Staff")
                         .WithMany("Applicants")
                         .HasForeignKey("StaffId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("MainJob");
 
                     b.Navigation("Staff");
                 });

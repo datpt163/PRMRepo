@@ -27,14 +27,9 @@ namespace Capstone.Domain.Entities
         public Guid ProjectId { get; set; }
         public Guid StatusId { get; set; }
         public Guid LabelId { get; set; }
-
         public Label? Label { get; set; } 
-
         public Status? Status { get; set; } 
-
         public Project? Project { get; set; }
-
-        public ICollection<Sprint> Sprints { get; } = new List<Sprint>();
         public Staff? Staff { get; set; }
     }
 }

@@ -46,7 +46,9 @@ namespace Capstone.Application.Module.Auths.CommandHandle
             }
             else
             {
-                return new ResponseMediator("Fail", null);
+                var errors = result.Errors.Select(e => e.Description).ToList();
+                var errorMessage = string.Join("; ", errors);
+                return new ResponseMediator(errorMessage, errors);
             }
         }
     }
