@@ -62,7 +62,7 @@ namespace Capstone.Api.Module.Auth.Controllers
             var result = await _mediator.Send(logoutQuery);
 
             if (string.IsNullOrEmpty(result.ErrorMessage))
-                return ResponseNoContent();
+                return ResponseOk(dataResponse: result);
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
         }
     }

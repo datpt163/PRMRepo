@@ -24,7 +24,7 @@ namespace Capstone.Api.Module.Users.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> GetUsers([FromBody]GetUserListQuery query)
+        public async Task<IActionResult> GetUsers([FromBody] GetUserListQuery query)
         {
             var users = await _mediator.Send(query);
             return ResponseOk(dataResponse: users);
@@ -44,14 +44,21 @@ namespace Capstone.Api.Module.Users.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateUser([FromForm]UpdateUserRequest request)
+        public async Task<IActionResult> UpdateUser([FromForm] UpdateUserRequest request)
         {
-            var command = new UpdateUserCommand {
-            Id =request.Id,
-            Avatar = request.Avatar,
-            AvatarFile = request.AvatarFile,
-            FullName = request.FullName,
-            Phone = request.Phone};
+            var command = new UpdateUserCommand
+            {
+                Id = request.Id,
+                Avatar = request.Avatar,
+                AvatarFile = request.AvatarFile,
+                FullName = request.FullName,
+                Phone = request.Phone,
+                Address = request.Address,
+                Gender = request.Gender,
+                Dob = request.Dob,
+                BankAccount = request.BankAccount,
+                BankAccountName = request.BankAccountName
+            };
 
             var updatedUser = await _mediator.Send(command);
 
