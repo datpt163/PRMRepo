@@ -16,7 +16,7 @@ namespace Capstone.Application.Module.Users.Response
 
         public string? Address { get; set; }
         public int Gender { get; set; }
-        public DateTime Dob { get; set; }
+        public DateTime? Dob { get; set; }
         public string? BankAccount { get; set; }
         public string? BankAccountName { get; set; }
     }

@@ -29,19 +29,18 @@ namespace Capstone.Application.Common.Jwt
 
         public async Task<string> GenerateJwtTokenAsync(User account, DateTime expireTime)
         {
-            var accountId = account.Id + "";
-
             List<Claim> claims = new()
             {
-                new Claim(ClaimTypes.NameIdentifier, accountId),
+                new Claim(ClaimTypes.NameIdentifier, account.Id + ""),
             };
 
-            var user = await _userManager.FindByIdAsync(accountId);
-            var roles = await _userManager.GetRolesAsync(user ?? new User());
+            var roles = await _userManager.GetRolesAsync(account);
+            var permissions = _unitOfWork.Permissions.GetQuery()
+                                         .Where(p => p.Roles.Any(r => roles.Contains(r.Name ?? ""))) .ToList();
 
-            foreach (var role in roles)
+            foreach (var permission in permissions)
             {
-                claims.Add(new Claim(ClaimTypes.Role, role.ToUpper()));
+                claims.Add(new Claim(ClaimTypes.Role, permission.Name));
             }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));

@@ -24,6 +24,14 @@ namespace Capstone.Api.Module.Auth.Validator
           .Matches(@"[a-z]").WithMessage("Passwords must have at least one lowercase ('a'-'z').")
           .Matches(@"[0-9]").WithMessage("Passwords must have at least one digit ('0'-'9').")
           .Matches(@"[\W_]").WithMessage("Passwords must have at least one non alphanumeric character.");
+            RuleFor(x => x.Dob)
+            .Must(BeValidDateWithoutTimeZone)
+            .WithMessage("Date of birth must not include time zone information.");
+        }
+
+        private bool BeValidDateWithoutTimeZone(DateTime dob)
+        {
+            return dob.Kind == DateTimeKind.Unspecified;
         }
     }
 }

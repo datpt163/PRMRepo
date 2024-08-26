@@ -20,14 +20,10 @@ namespace Capstone.Api.Module.Auth.Controllers
     public class AuthController : BaseController
     {
         private readonly IMediator _mediator;
-        private readonly RoleManager<Role> _roleManager;
-        private readonly UserManager<User> _userManager;
 
-        public AuthController(IMediator mediator, RoleManager<Role> roleManager, UserManager<User> userManager)
+        public AuthController(IMediator mediator)
         {
             _mediator = mediator;
-            _roleManager = roleManager;
-            _userManager = userManager;
         }
 
         [SwaggerResponse(200, "Successful", typeof(ResponseSuccess<LoginResponse>))]
@@ -66,7 +62,7 @@ namespace Capstone.Api.Module.Auth.Controllers
             var result = await _mediator.Send(logoutQuery);
 
             if (string.IsNullOrEmpty(result.ErrorMessage))
-                return ResponseNoContent();
+                return ResponseOk(dataResponse: result);
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
         }
     }

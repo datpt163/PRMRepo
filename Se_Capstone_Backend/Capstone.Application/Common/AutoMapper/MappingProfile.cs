@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Capstone.Application.Module.Projects.Response;
 namespace Capstone.Application.Common.AutoMapper
 {
     public class MappingProfile : Profile
@@ -14,6 +14,8 @@ namespace Capstone.Application.Common.AutoMapper
         public MappingProfile()
         {
             CreateMap<Role, RoleDTO>();
+            CreateMap<Project, CreateProjectResponse>();
+            CreateMap<Permission, PermissionDTO>();
         }
     }
 }

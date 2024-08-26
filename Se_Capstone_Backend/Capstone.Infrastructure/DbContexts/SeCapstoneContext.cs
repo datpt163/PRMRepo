@@ -35,11 +35,11 @@ namespace Capstone.Infrastructure.DbContexts
         public DbSet<LogEntry> LogEntries { get; set; }
         public DbSet<Article> Articles { get; set; }
         public DbSet<Project> Projects { get; set; }
-        public DbSet<Sprint> Sprints { get; set; }
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Issue> Issues { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<GroupPermission> GroupPermissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -84,9 +84,6 @@ namespace Capstone.Infrastructure.DbContexts
                .Property(e => e.Id)
                .HasDefaultValueSql("gen_random_uuid()");
 
-            modelBuilder.Entity<Sprint>()
-              .Property(e => e.Id)
-              .HasDefaultValueSql("gen_random_uuid()");
 
             modelBuilder.Entity<Staff>()
               .Property(e => e.Id);
@@ -94,6 +91,10 @@ namespace Capstone.Infrastructure.DbContexts
             modelBuilder.Entity<Status>()
               .Property(e => e.Id)
               .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<GroupPermission>()
+             .Property(e => e.Id)
+             .HasDefaultValueSql("gen_random_uuid()");
 
             modelBuilder.Entity<User>()
              .Property(e => e.Gender)
@@ -105,13 +106,19 @@ namespace Capstone.Infrastructure.DbContexts
             .Property(e => e.Status)
             .HasColumnType("smallint")
             .HasConversion<int>()
-            .HasDefaultValue(StatusUser.Active);
+            .HasDefaultValue(UserStatus.Active);
 
             modelBuilder.Entity<Issue>()
            .Property(e => e.Priority)
            .HasColumnType("smallint")
             .HasConversion<int>()
             .HasDefaultValue(Priority.Low);
+
+            modelBuilder.Entity<Project>()
+          .Property(e => e.Status)
+          .HasColumnType("smallint")
+           .HasConversion<int>()
+           .HasDefaultValue(ProjectStatus.InProgress);
 
             modelBuilder.Entity<Attendance>()
             .HasOne(a => a.Staff)
@@ -154,6 +161,16 @@ namespace Capstone.Infrastructure.DbContexts
             .HasForeignKey<Staff>(s => s.Id)
             .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Project>()
+                  .HasOne(a => a.Lead)
+                   .WithMany(s => s.LeadProjects)
+                   .HasForeignKey(a => a.LeadId);
+
+            modelBuilder.Entity<Permission>()
+              .HasOne(a => a.GroupPermission)
+               .WithMany(s => s.Permissions)
+               .HasForeignKey(a => a.GroupPermissionId);
+
             modelBuilder.Entity<Applicant>()
            .HasOne(a => a.MainJob)
            .WithMany()
@@ -176,22 +193,6 @@ namespace Capstone.Infrastructure.DbContexts
                  j => j.HasOne<Staff>().WithMany().HasForeignKey("StaffId"),
                  a => a.HasOne<Project>().WithMany().HasForeignKey("ProjectId"));
 
-            modelBuilder.Entity<Project>()
-            .HasMany(a => a.Sprints)
-            .WithMany(j => j.Projects)
-            .UsingEntity<Dictionary<string, object>>(
-                "projectSprints",
-                j => j.HasOne<Sprint>().WithMany().HasForeignKey("SprintId"),
-                a => a.HasOne<Project>().WithMany().HasForeignKey("ProjectId"));
-
-            modelBuilder.Entity<Sprint>()
-           .HasMany(a => a.Issues)
-           .WithMany(j => j.Sprints)
-           .UsingEntity<Dictionary<string, object>>(
-            "sprintIssues",
-               j => j.HasOne<Issue>().WithMany().HasForeignKey("IssueId"),
-               a => a.HasOne<Sprint>().WithMany().HasForeignKey("SprintId"));
-
             modelBuilder.Entity<Permission>()
           .HasMany(a => a.Roles)
           .WithMany(j => j.Permissions)
@@ -199,6 +200,7 @@ namespace Capstone.Infrastructure.DbContexts
            "rolePermissions",
               j => j.HasOne<Role>().WithMany().HasForeignKey("RoleId"),
               a => a.HasOne<Permission>().WithMany().HasForeignKey("PermissionId"));
+
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
@@ -227,7 +229,7 @@ namespace Capstone.Infrastructure.DbContexts
             {
                 foreach (var property in entityType.GetProperties())
                 {
-                    if (property.ClrType == typeof(DateTime))
+                    if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
                     {
                         property.SetColumnType("timestamp without time zone");
                     }
