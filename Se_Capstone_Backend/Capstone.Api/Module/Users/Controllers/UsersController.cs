@@ -26,8 +26,10 @@ namespace Capstone.Api.Module.Users.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetUsers([FromBody] GetUserListQuery query)
         {
-            var users = await _mediator.Send(query);
-            return ResponseOk(dataResponse: users);
+            var response = await _mediator.Send(query);
+            
+            return ResponseOk(response.Data, response.Paging);
+
         }
 
         [HttpGet("{id:guid}")]

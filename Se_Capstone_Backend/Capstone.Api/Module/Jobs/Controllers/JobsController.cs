@@ -73,7 +73,6 @@ namespace Capstone.Api.Module.Jobs.Controllers
             {
                 Title = request.Title,
                 Description = request.Description,
-                IsDeleted = request.IsDeleted
             };
             var jobDtos = await _mediator.Send(query);
             return ResponseOk(jobDtos, "Jobs retrieved successfully");

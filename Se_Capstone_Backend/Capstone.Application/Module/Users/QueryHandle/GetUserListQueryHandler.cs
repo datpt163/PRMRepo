@@ -1,6 +1,9 @@
-﻿using Capstone.Application.Module.Users.Query;
+﻿using Capstone.Application.Common.Paging;
+using Capstone.Application.Module.Users.Query;
 using Capstone.Application.Module.Users.Response;
 using Capstone.Domain.Entities;
+using Capstone.Domain.Enums;
+using Capstone.Domain.Helpers;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -8,12 +11,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Capstone.Domain.Helpers;
-using Capstone.Domain.Enums;
 
 namespace Capstone.Application.Module.Users.QueryHandle
 {
-    public class GetUserListQueryHandler : IRequestHandler<GetUserListQuery, List<UserDto>>
+    public class GetUserListQueryHandler : IRequestHandler<GetUserListQuery, PagingResultSP<UsersDto>>
     {
         private readonly IRepository<User> _userRepository;
 
@@ -22,8 +23,9 @@ namespace Capstone.Application.Module.Users.QueryHandle
             _userRepository = userRepository;
         }
 
-        public async Task<List<UserDto>> Handle(GetUserListQuery request, CancellationToken cancellationToken)
+        public async Task<PagingResultSP<UsersDto>> Handle(GetUserListQuery request, CancellationToken cancellationToken)
         {
+            // Start building the query with filters
             var usersQuery = _userRepository.GetQueryNoTracking().Where(x => x.Status == UserStatus.Active);
 
             if (!string.IsNullOrEmpty(request.FullName))
@@ -61,8 +63,14 @@ namespace Capstone.Application.Module.Users.QueryHandle
                 usersQuery = usersQuery.Where(user => user.Dob <= request.DobTo.Value);
             }
 
-            return await usersQuery
-                .Select(user => new UserDto
+
+            // Apply pagination
+            int skip = (request.PageIndex - 1) * request.PageSize;
+            var pagedUsersQuery = usersQuery.Skip(skip).Take(request.PageSize);
+
+            // Fetch users and map to UserDto
+            var userList = await pagedUsersQuery
+                .Select(user => new UsersDto
                 {
                     Id = user.Id,
                     Email = user.Email ?? string.Empty,
@@ -70,12 +78,19 @@ namespace Capstone.Application.Module.Users.QueryHandle
                     Phone = user.PhoneNumber ?? string.Empty,
                     Avatar = user.Avatar ?? string.Empty,
                     Address = user.Address,
-                    Gender = (int)user.Gender, 
-                    Dob = user.Dob ?? DateTime.MinValue, 
+                    Gender = (int)user.Gender,
+                    Dob = user.Dob ?? DateTime.MinValue,
                     BankAccount = user.BankAccount,
                     BankAccountName = user.BankAccountName,
                 })
                 .ToListAsync(cancellationToken);
+
+            int totalCount = await usersQuery.CountAsync(cancellationToken);
+
+            // Create PagingResultSP
+            var result = new PagingResultSP<UsersDto>(userList, totalCount, request.PageIndex, request.PageSize);
+
+            return result;
         }
     }
 }

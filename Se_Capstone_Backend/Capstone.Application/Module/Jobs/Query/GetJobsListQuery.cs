@@ -7,6 +7,5 @@ namespace Capstone.Application.Module.Jobs.Query
     {
         public string? Title { get; set; }
         public string? Description { get; set; }
-        public bool? IsDeleted { get; set; }
     }
 }
