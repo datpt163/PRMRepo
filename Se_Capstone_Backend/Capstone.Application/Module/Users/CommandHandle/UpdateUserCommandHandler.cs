@@ -56,7 +56,7 @@ namespace Capstone.Application.Module.Users.CommandHandle
             user.FullName = request.FullName;
             user.PhoneNumber = request.Phone ?? string.Empty;
             user.Address = request.Address;
-            user.Gender = (Domain.Enums.Gender)request.Gender;
+            user.Gender = (Domain.Enums.Gender)(request.Gender ?? (int)Domain.Enums.Gender.Other);
             user.Dob = request.Dob;
             user.BankAccount = request.BankAccount;
             user.BankAccountName = request.BankAccountName;
