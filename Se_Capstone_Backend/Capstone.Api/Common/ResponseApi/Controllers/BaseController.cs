@@ -1,4 +1,5 @@
 ﻿using Capstone.Api.Common.ResponseApi.Model;
+using Capstone.Application.Common.Paging;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -9,6 +10,18 @@ namespace Capstone.Api.Common.ResponseApi.Controllers
         protected IActionResult ResponseOk(dynamic? dataResponse = null, string message = "", bool overrideBody = true)
         {
             return StatusCode((int)HttpStatusCode.OK, overrideBody ? new { data = dataResponse, Message = message, statusCode = (int)HttpStatusCode.OK } : dataResponse);
+        }
+        protected IActionResult ResponseOk<T>(IEnumerable<T> data, PagingSP paging, string message = "")
+        {
+            var response = new
+            {
+                Data = data,
+                Meta = paging,
+                Message = message,
+                statusCode = (int)HttpStatusCode.OK
+            };
+
+            return StatusCode((int)HttpStatusCode.OK, response);
         }
 
         protected IActionResult ResponseCreated(dynamic? dataResponse = null, string? messageResponse = null)
@@ -23,7 +36,7 @@ namespace Capstone.Api.Common.ResponseApi.Controllers
 
         protected IActionResult ResponseBadRequest(string? messageResponse = null, dynamic? dataResponse = null, bool overrideBody = true)
         {
-            return StatusCode((int)HttpStatusCode.BadRequest, overrideBody ? new ResponseFail(){ Message = messageResponse, StatusCode = (int)HttpStatusCode.BadRequest } : dataResponse);
+            return StatusCode((int)HttpStatusCode.BadRequest, overrideBody ? new ResponseFail() { Message = messageResponse, StatusCode = (int)HttpStatusCode.BadRequest } : dataResponse);
         }
 
         protected IActionResult ResponseUnauthorized(string? messageResponse = null)

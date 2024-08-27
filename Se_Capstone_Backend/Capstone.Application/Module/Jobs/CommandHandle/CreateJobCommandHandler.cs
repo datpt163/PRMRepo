@@ -12,10 +12,12 @@ namespace Capstone.Application.Module.Jobs.CommandHandle
     public class CreateJobCommandHandler : IRequestHandler<CreateJobCommand, JobDto>
     {
         private readonly IRepository<Job> _jobRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateJobCommandHandler(IRepository<Job> jobRepository)
+        public CreateJobCommandHandler(IRepository<Job> jobRepository, IUnitOfWork unitOfWork)
         {
             _jobRepository = jobRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<JobDto> Handle(CreateJobCommand request, CancellationToken cancellationToken)
@@ -25,13 +27,13 @@ namespace Capstone.Application.Module.Jobs.CommandHandle
                 Id = Guid.NewGuid(),
                 Title = request.Title,
                 Description = request.Description,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.Now,
                 CreatedBy = "Admin",
                 IsDeleted = false
             };
 
              _jobRepository.Add(job);
-
+            await _unitOfWork.SaveChangesAsync();
             return new JobDto
             {
                 Id = job.Id,

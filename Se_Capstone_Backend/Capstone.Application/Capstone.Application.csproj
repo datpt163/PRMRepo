@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Common\Shopee\**" />
+    <EmbeddedResource Remove="Common\Shopee\**" />
+    <None Remove="Common\Shopee\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="CloudinaryDotNet" Version="1.26.2" />
     <PackageReference Include="MediatR" Version="12.4.0" />
@@ -21,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common\Shopee\" />
     <Folder Include="Module\Applicants\Command\" />
     <Folder Include="Module\Applicants\CommandHandle\" />
     <Folder Include="Module\Applicants\Response\" />
