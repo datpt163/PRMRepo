@@ -22,6 +22,7 @@ namespace Capstone.Application.Module.Jobs.QueryHandle
         public async Task<List<JobDto>> Handle(GetJobsListQuery request, CancellationToken cancellationToken)
         {
             var query = _jobRepository.GetQuery().AsQueryable();
+            query = query.Where(x => !x.IsDeleted);
 
             if (!string.IsNullOrEmpty(request.Title))
             {
@@ -33,10 +34,6 @@ namespace Capstone.Application.Module.Jobs.QueryHandle
                 query = query.Where(x => x.Description.Contains(request.Description));
             }
 
-            if (request.IsDeleted.HasValue)
-            {
-                query = query.Where(x => x.IsDeleted == request.IsDeleted.Value);
-            }
 
             var jobs = query.ToList();
 
