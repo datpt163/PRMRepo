@@ -59,7 +59,9 @@ namespace Capstone.Api.Module.Users.Controllers
                 Gender = request.Gender,
                 Dob = request.Dob,
                 BankAccount = request.BankAccount,
-                BankAccountName = request.BankAccountName
+                BankAccountName = request.BankAccountName,
+                Status = request.Status,
+                RoleId = request.RoleId,
             };
 
             var updatedUser = await _mediator.Send(command);

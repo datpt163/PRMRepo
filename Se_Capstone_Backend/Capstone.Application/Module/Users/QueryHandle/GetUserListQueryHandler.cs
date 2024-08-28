@@ -26,7 +26,7 @@ namespace Capstone.Application.Module.Users.QueryHandle
         public async Task<PagingResultSP<UsersDto>> Handle(GetUserListQuery request, CancellationToken cancellationToken)
         {
             // Start building the query with filters
-            var usersQuery = _userRepository.GetQueryNoTracking().Where(x => x.Status == UserStatus.Active);
+            var usersQuery = _userRepository.GetQueryNoTracking().Include(user => user.Roles).Where(x => x.Status == UserStatus.Active);
 
             if (!string.IsNullOrEmpty(request.FullName))
             {
@@ -64,11 +64,9 @@ namespace Capstone.Application.Module.Users.QueryHandle
             }
 
 
-            // Apply pagination
             int skip = (request.PageIndex - 1) * request.PageSize;
             var pagedUsersQuery = usersQuery.Skip(skip).Take(request.PageSize);
 
-            // Fetch users and map to UserDto
             var userList = await pagedUsersQuery
                 .Select(user => new UsersDto
                 {
@@ -79,9 +77,15 @@ namespace Capstone.Application.Module.Users.QueryHandle
                     Avatar = user.Avatar ?? string.Empty,
                     Address = user.Address,
                     Gender = (int)user.Gender,
+                    Status =(int)user.Status,
                     Dob = user.Dob ?? DateTime.MinValue,
                     BankAccount = user.BankAccount,
                     BankAccountName = user.BankAccountName,
+                    CreateDate = user.CreateDate,
+                    UpdateDate = user.UpdateDate,
+                    DeleteDate = user.DeleteDate,
+                    RoleId = user.Roles.Select(r => r.Id.ToString()).FirstOrDefault(),
+                    RoleName = user.Roles.Select(r => r.Name).FirstOrDefault()
                 })
                 .ToListAsync(cancellationToken);
 

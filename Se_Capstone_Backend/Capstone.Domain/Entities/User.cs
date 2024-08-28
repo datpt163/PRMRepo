@@ -25,6 +25,8 @@ namespace Capstone.Domain.Entities
         public DateTime? DeleteDate { get; set; }
         public Staff? Staff { get; set; }
         public User() { }
+        public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
+
         public User(string email, string address, Gender gender, DateTime dob, string phone, string userName, string fullName)
         {
             Email = email;  
