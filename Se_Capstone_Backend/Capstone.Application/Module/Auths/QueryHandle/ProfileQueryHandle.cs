@@ -37,7 +37,7 @@ namespace Capstone.Application.Module.Auths.QueryHandle
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            var responseUser = new RegisterResponse(roles, user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
+            var responseUser = new RegisterResponse(roles.FirstOrDefault(), user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
                                           user.Address ?? "", user.Gender, user.Dob, user.BankAccount, user.BankAccountName,
                                           user.CreateDate, user.UpdateDate, user.DeleteDate);
 

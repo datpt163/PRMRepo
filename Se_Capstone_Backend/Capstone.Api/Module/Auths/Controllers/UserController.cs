@@ -29,7 +29,7 @@ namespace Capstone.Api.Module.Auths.Controllers
         [HttpPost]
         [SwaggerResponse(200, "Success", typeof(CreateUserResponse))]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        //[Authorize(Roles ="ADMIN")]
+        [Authorize(Roles = "ADD_USER")]
         public async Task<IActionResult> CreateUser([FromBody] RegisterRequest request)
         {
             string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");

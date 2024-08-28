@@ -43,9 +43,9 @@ namespace Capstone.Application.Module.Auth.QueryHandle
                     var refreshToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(30));
                     return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken, UserId = user.Id, Roles = roles });
                 }
-                return new ResponseMediator("Passwork not correct", null);
+                return new ResponseMediator("Password not correct", null, 400);
             }
-            return new ResponseMediator("Account not found", null);
+            return new ResponseMediator("Account not found", null, 404);
         }
     }
 }
