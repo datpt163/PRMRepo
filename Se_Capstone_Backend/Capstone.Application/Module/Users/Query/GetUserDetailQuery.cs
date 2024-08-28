@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Users.Query
 {
-    public class GetUserDetailQuery : IRequest<UserDto>
+    public class GetUserDetailQuery : IRequest<UserDto?>
     {
         public Guid UserId { get; set; }
 

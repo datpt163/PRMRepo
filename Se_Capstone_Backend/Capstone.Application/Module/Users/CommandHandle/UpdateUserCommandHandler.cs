@@ -7,6 +7,7 @@ using Capstone.Domain.Entities;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,17 +16,19 @@ namespace Capstone.Application.Module.Users.CommandHandle
     public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, UserDto>
     {
         private readonly IRepository<User> _userRepository;
+        private readonly IRepository<Role> _roleRepository;
         private readonly CloudinaryService _cloudinaryService;
         private readonly IJwtService _jwtService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public UpdateUserCommandHandler(IHttpContextAccessor httpContextAccessor, IRepository<User> userRepository, CloudinaryService cloudinaryService, IJwtService jwtService)
+        private readonly IUnitOfWork _unitOfWork;
+        public UpdateUserCommandHandler(IRepository<Role> roleRepository, IUnitOfWork unitOfWork,IHttpContextAccessor httpContextAccessor, IRepository<User> userRepository, CloudinaryService cloudinaryService, IJwtService jwtService)
         {
             _userRepository = userRepository;
             _cloudinaryService = cloudinaryService;
             _jwtService = jwtService;
             _httpContextAccessor = httpContextAccessor;
-
+            _unitOfWork = unitOfWork;
+            _roleRepository = roleRepository;
         }
 
         public async Task<UserDto?> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -43,8 +46,9 @@ namespace Capstone.Application.Module.Users.CommandHandle
             }
             else
             {
-                 user = _userRepository.GetQuery().FirstOrDefault(x => x.Id == request.Id);
-
+                user = await _userRepository.GetQuery()
+                            .Include(u => u.Roles)
+                            .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
             }
 
 
@@ -93,9 +97,13 @@ namespace Capstone.Application.Module.Users.CommandHandle
 
             if (request.RoleId.HasValue)
             {
-                var role = new Role { Id = request.RoleId.Value }; 
-                user.Roles.Clear(); 
-                user.Roles.Add(role); 
+                var role =  _roleRepository.GetQuery().FirstOrDefault(x=> x.Id == request.RoleId.Value);
+                if (role !=null)
+                {
+                    user.Roles.Clear();
+                    user.Roles.Add(role);
+                }
+                
             }
 
             user.UpdateDate = DateTime.Now;
@@ -111,7 +119,7 @@ namespace Capstone.Application.Module.Users.CommandHandle
             }
 
             _userRepository.Update(user);
-
+            await _unitOfWork.SaveChangesAsync();
             return new UserDto
             {
                 Id = user.Id,
@@ -127,7 +135,6 @@ namespace Capstone.Application.Module.Users.CommandHandle
                 BankAccountName = user.BankAccountName,
                 CreateDate = user.CreateDate,
                 UpdateDate = user.UpdateDate,
-                DeleteDate = user.DeleteDate,
                 RoleId = user.Roles.Select(r => r.Id.ToString()).FirstOrDefault(),
                 RoleName = user.Roles.Select(r => r.Name).FirstOrDefault()
             };
