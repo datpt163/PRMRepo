@@ -21,5 +21,7 @@ namespace Capstone.Application.Module.Users.Command
         public DateTime? Dob { get; set; }
         public string? BankAccount { get; set; } = string.Empty;
         public string? BankAccountName { get; set; } = string.Empty;
+        public Guid? RoleId { get;set; }
+        public int? Status { get; set; }
     }
 }
