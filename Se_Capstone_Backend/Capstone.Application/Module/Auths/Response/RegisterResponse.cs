@@ -29,9 +29,9 @@ namespace Capstone.Application.Module.Auths.Response
         public DateTime? UpdateDate { get; set; }
         public DateTime? DeleteDate { get; set; }
 
-        public object Roles { get; set; } 
+        public object? Role { get; set; } 
 
-        public RegisterResponse(object roles, UserStatus status, string email, Guid id, string userName, string fullName, string phone, string avatar, string address, Gender? gender, 
+        public RegisterResponse(object? roles, UserStatus status, string email, Guid id, string userName, string fullName, string phone, string avatar, string address, Gender? gender, 
             DateTime? dob, string? bankAccount, string? bankAccountName, DateTime createDate, DateTime? updateDate, DateTime? deleteDate)
         {
             Roles = roles;
