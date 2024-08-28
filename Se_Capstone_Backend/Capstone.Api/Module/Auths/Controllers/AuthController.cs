@@ -35,12 +35,18 @@ namespace Capstone.Api.Module.Auth.Controllers
 
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(dataResponse: result.Data);
-            return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            else
+            {
+                if (result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
         }
 
         [SwaggerResponse(204, "Successful")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [HttpPost("reset-password")]
+        [HttpPost("change-password")]
+        [Authorize]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
         {
             string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
