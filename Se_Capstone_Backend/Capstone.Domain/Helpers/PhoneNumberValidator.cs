@@ -11,7 +11,8 @@ namespace Capstone.Domain.Helpers
     {
         public static bool Validate(string phoneNumber)
         {
-            return Regex.IsMatch(phoneNumber, @"^\d{10}$");
+            return Regex.IsMatch(phoneNumber, @"^\d+$");
         }
+
     }
 }

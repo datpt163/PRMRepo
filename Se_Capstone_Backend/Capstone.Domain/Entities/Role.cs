@@ -9,6 +9,8 @@ namespace Capstone.Domain.Entities
 {
     public class Role : IdentityRole<Guid>
     {
+        public virtual ICollection<User> Users { get; set; } = new List<User>();
+
         public ICollection<Permission> Permissions { get; set; } = new List<Permission>();
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Capstone.Application.Common.Paging
 {
-    public class PagingResultSP<T> : List<T> where T : BaseExtendEntities
+    public class PagingResultSP<T> : List<T>
     {
         public PagingSP Paging { get; set; }
         public IList<T> Data { get; set; }
@@ -28,13 +28,13 @@ namespace Capstone.Application.Common.Paging
             Data = data.ToList();
         }
 
-        public static async Task<PagingResultSP<T>> CreateAsyncSP(IQueryable<T> query, int pageIndex, int pageSize)
-        {
-            var items = await query.ToListAsync();
-            var count = items.FirstOrDefault()?.TotalRows ?? 0;
+        //public static async Task<PagingResultSP<T>> CreateAsyncSP(IQueryable<T> query, int pageIndex, int pageSize)
+        //{
+        //    var items = await query.ToListAsync();
+        //    var count = items.FirstOrDefault()?.TotalRows ?? 0;
 
-            return new PagingResultSP<T>(items, count, pageIndex, pageSize);
-        }
+        //    return new PagingResultSP<T>(items, count, pageIndex, pageSize);
+        //}
 
         public static async Task<PagingResultSP<T>> CreateAsyncLinq(IQueryable<T> query, int totalRow, int pageIndex, int pageSize)
         {

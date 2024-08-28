@@ -53,13 +53,52 @@ namespace Capstone.Application.Module.Users.CommandHandle
                 return null; 
             }
 
-            user.FullName = request.FullName;
-            user.PhoneNumber = request.Phone ?? string.Empty;
-            user.Address = request.Address;
-            user.Gender = (Domain.Enums.Gender)(request.Gender ?? (int)Domain.Enums.Gender.Other);
-            user.Dob = request.Dob;
-            user.BankAccount = request.BankAccount;
-            user.BankAccountName = request.BankAccountName;
+            if (!string.IsNullOrEmpty(request.FullName))
+            {
+                user.FullName = request.FullName;
+            }
+
+            if (!string.IsNullOrEmpty(request.Phone))
+            {
+                user.PhoneNumber = request.Phone;
+            }
+
+            if (!string.IsNullOrEmpty(request.Address))
+            {
+                user.Address = request.Address;
+            }
+
+            if (request.Gender.HasValue)
+            {
+                user.Gender = (Domain.Enums.Gender)request.Gender.Value;
+            }
+            if (request.Status.HasValue)
+            {
+                user.Status = (Domain.Enums.UserStatus)request.Status.Value;
+            }
+            if (request.Dob.HasValue)
+            {
+                user.Dob = request.Dob;
+            }
+
+            if (!string.IsNullOrEmpty(request.BankAccount))
+            {
+                user.BankAccount = request.BankAccount;
+            }
+
+            if (!string.IsNullOrEmpty(request.BankAccountName))
+            {
+                user.BankAccountName = request.BankAccountName;
+            }
+
+            if (request.RoleId.HasValue)
+            {
+                var role = new Role { Id = request.RoleId.Value }; 
+                user.Roles.Clear(); 
+                user.Roles.Add(role); 
+            }
+
+            user.UpdateDate = DateTime.Now;
             if (request.AvatarFile != null)
             {
                 using var stream = request.AvatarFile.OpenReadStream();
@@ -76,15 +115,21 @@ namespace Capstone.Application.Module.Users.CommandHandle
             return new UserDto
             {
                 Id = user.Id,
-                Email = user.Email,
+                Email = user.Email ?? string.Empty,
                 FullName = user.FullName,
-                Phone = user.PhoneNumber,
-                Avatar = user.Avatar,
+                Phone = user.PhoneNumber ?? string.Empty,
+                Avatar = user.Avatar ?? string.Empty,
                 Address = user.Address,
                 Gender = (int)user.Gender,
+                Status = (int)user.Status,
                 Dob = user.Dob,
                 BankAccount = user.BankAccount,
-                BankAccountName = user.BankAccountName
+                BankAccountName = user.BankAccountName,
+                CreateDate = user.CreateDate,
+                UpdateDate = user.UpdateDate,
+                DeleteDate = user.DeleteDate,
+                RoleId = user.Roles.Select(r => r.Id.ToString()).FirstOrDefault(),
+                RoleName = user.Roles.Select(r => r.Name).FirstOrDefault()
             };
         }
     }

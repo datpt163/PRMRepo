@@ -19,5 +19,12 @@ namespace Capstone.Application.Module.Users.Response
         public DateTime? Dob { get; set; }
         public string? BankAccount { get; set; }
         public string? BankAccountName { get; set; }
+        public int Status { get; set; }
+        public string? RoleId { get; set; }
+        public string? RoleName { get; set; }
+
+        public DateTime CreateDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
+        public DateTime? DeleteDate { get; set; }
     }
 }
