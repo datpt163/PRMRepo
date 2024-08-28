@@ -44,7 +44,7 @@ namespace Capstone.Application.Module.Users.QueryHandle
                     BankAccountName = u.BankAccountName,
                     CreateDate = u.CreateDate,
                     UpdateDate = u.UpdateDate,
-\                    RoleId = u.Roles.Select(r => r.Id.ToString()).FirstOrDefault(),
+                    RoleId = u.Roles.Select(r => r.Id.ToString()).FirstOrDefault(),
                     RoleName = u.Roles.Select(r => r.Name).FirstOrDefault()
                 })
                 .FirstOrDefaultAsync(cancellationToken);
