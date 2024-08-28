@@ -1,6 +1,7 @@
 ﻿using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Auths.Command;
 using Capstone.Domain.Entities;
+using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -17,7 +18,7 @@ namespace Capstone.Application.Module.Auths.CommandHandle
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<Role> _roleManager;
 
-        public AddRoleForUserCommandHandle(RoleManager<Role> roleManager, UserManager<User> userManager)
+       public AddRoleForUserCommandHandle(RoleManager<Role> roleManager, UserManager<User> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -28,15 +29,20 @@ namespace Capstone.Application.Module.Auths.CommandHandle
             var user = await _userManager.FindByIdAsync(request.UserId + "");
             if (user == null)
             {
-                return new ResponseMediator("User not found", null);
+                return new ResponseMediator("User not found", null, 404);
             }
 
             var role = await _roleManager.FindByIdAsync(request.RoleId + "");
 
             if (role == null)
             {
-                return new ResponseMediator("Role not found", null);
+                return new ResponseMediator("Role not found", null, 404);
             }
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            if (roles.Count >= 1)
+                return new ResponseMediator("This user already has a role", null, 400);
 
             var result = await _userManager.AddToRoleAsync(user, role.Name ?? "");
 

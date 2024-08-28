@@ -44,19 +44,25 @@ namespace Capstone.Api.Module.Auths.Controllers
         [HttpPost("add-role-for-user")]
         [SwaggerResponse(204, "Successful")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        //[Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = "ADD_ROLE_FOR_USER")]
         public async Task<IActionResult> AddRoleToUser([FromBody] AddRoleForUserCommand request)
         {
             var result = await _mediator.Send(request);
 
-            if (string.IsNullOrEmpty(result.ErrorMessage))
-                return ResponseOk(dataResponse: result.Data);
-            return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            if (!string.IsNullOrEmpty(result.ErrorMessage))
+            {
+                if(result.StatusCode == 400)
+                    return ResponseBadRequest(messageResponse: result.ErrorMessage);
+                return ResponseNotFound(messageResponse: result.ErrorMessage);
+            }
+
+            return ResponseOk(dataResponse: result.Data);
+           
         }
 
         [HttpGet]
         [SwaggerResponse(200, "Successful", typeof(List<RoleDTO>))]
-        //[Authorize(Roles = "ADMIN")]
+        //[Authorize(Roles = "READ_LIST_ROLE")]
         public async Task<IActionResult> GetList()
         {
             var result = await _mediator.Send(new GetListRoleQuery());
