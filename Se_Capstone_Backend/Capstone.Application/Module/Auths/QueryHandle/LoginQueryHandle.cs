@@ -41,7 +41,7 @@ namespace Capstone.Application.Module.Auth.QueryHandle
                 {
                     var accessToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(10));
                     var refreshToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(30));
-                    return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken, UserId = user.Id, Roles = roles });
+                    return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken, UserId = user.Id, Role = roles.FirstOrDefault() });
                 }
                 return new ResponseMediator("Password not correct", null, 400);
             }
