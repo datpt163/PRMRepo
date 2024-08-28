@@ -26,7 +26,8 @@ namespace Capstone.Application.Module.Users.QueryHandle
 
         public async Task<UserDto?> Handle(GetUserDetailQuery query, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetQueryNoTracking()
+            var user = await _userRepository.GetQueryNoTracking().
+                Include(u=> u.Roles)
                 .Where(u => u.Id == query.UserId && u.Status == UserStatus.Active)
                 .Select(u => new UserDto
                 {
@@ -36,10 +37,15 @@ namespace Capstone.Application.Module.Users.QueryHandle
                     Phone = u.PhoneNumber ?? string.Empty,
                     Avatar = u.Avatar ?? string.Empty,
                     Address = u.Address,
-                    Gender = (int)u.Gender,  
-                    Dob = u.Dob ?? DateTime.MinValue, 
+                    Gender = (int)u.Gender,
+                    Status = (int)u.Status,
+                    Dob = u.Dob ?? DateTime.MinValue,
                     BankAccount = u.BankAccount,
-                    BankAccountName = u.BankAccountName
+                    BankAccountName = u.BankAccountName,
+                    CreateDate = u.CreateDate,
+                    UpdateDate = u.UpdateDate,
+\                    RoleId = u.Roles.Select(r => r.Id.ToString()).FirstOrDefault(),
+                    RoleName = u.Roles.Select(r => r.Name).FirstOrDefault()
                 })
                 .FirstOrDefaultAsync(cancellationToken);
 

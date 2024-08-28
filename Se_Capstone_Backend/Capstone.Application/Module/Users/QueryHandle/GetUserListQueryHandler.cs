@@ -83,7 +83,6 @@ namespace Capstone.Application.Module.Users.QueryHandle
                     BankAccountName = user.BankAccountName,
                     CreateDate = user.CreateDate,
                     UpdateDate = user.UpdateDate,
-                    DeleteDate = user.DeleteDate,
                     RoleId = user.Roles.Select(r => r.Id.ToString()).FirstOrDefault(),
                     RoleName = user.Roles.Select(r => r.Name).FirstOrDefault()
                 })

@@ -22,9 +22,7 @@ namespace Capstone.Application.Module.Users.Response
         public int Status { get; set; }
         public string? RoleId { get; set; }
         public string? RoleName { get; set; }
-
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
-        public DateTime? DeleteDate { get; set; }
     }
 }
