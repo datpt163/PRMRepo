@@ -106,17 +106,19 @@ namespace Capstone.Application.Module.Users.CommandHandle
                 
             }
 
-            user.UpdateDate = DateTime.Now;
             if (request.AvatarFile != null)
             {
                 using var stream = request.AvatarFile.OpenReadStream();
                 var avatarUrl = await _cloudinaryService.UploadImageAsync(stream, request.AvatarFile.FileName);
+                if(user.Avatar != null)
+                {
+                   var isDeletedAvatar = await _cloudinaryService.DeleteImageByUrlAsync(user.Avatar);
+                }
                 user.Avatar = avatarUrl; 
             }
-            else
-            {
-                user.Avatar = request.Avatar; 
-            }
+
+            user.UpdateDate = DateTime.Now;
+
 
             _userRepository.Update(user);
             await _unitOfWork.SaveChangesAsync();

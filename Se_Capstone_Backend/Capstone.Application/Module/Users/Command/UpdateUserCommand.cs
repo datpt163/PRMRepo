@@ -14,7 +14,6 @@ namespace Capstone.Application.Module.Users.Command
         public Guid? Id { get; set; }
         public string? FullName { get; set; } = string.Empty;
         public string? Phone { get; set; } = string.Empty;
-        public string? Avatar { get; set; } = string.Empty;
         public IFormFile? AvatarFile { get; set; }
         public string? Address { get; set; } = string.Empty;
         public int? Gender { get; set; }
