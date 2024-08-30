@@ -57,8 +57,7 @@ namespace Capstone.Api.Module.Auths.Controllers
         {
             var command = new UpdateUserCommand
             {
-                Avatar = request.Avatar,
-                AvatarFile = request.AvatarFile,
+                AvatarFile = request.Avatar,
                 FullName = request.FullName,
                 Phone = request.Phone,
                 Address = request.Address, 

@@ -35,7 +35,7 @@ namespace Capstone.Infrastructure.Redis
             return _cacheDb.StringSet(key, JsonSerializer.Serialize(value), expirTime);
         }
 
-        public object RemoveDate(string key)
+        public object RemoveData(string key)
         {
             var _exist = _cacheDb.KeyExists(key);
 

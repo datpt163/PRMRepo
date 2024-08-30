@@ -51,8 +51,7 @@ namespace Capstone.Api.Module.Users.Controllers
             var command = new UpdateUserCommand
             {
                 Id = request.Id,
-                Avatar = request.Avatar,
-                AvatarFile = request.AvatarFile,
+                AvatarFile = request.Avatar,
                 FullName = request.FullName,
                 Phone = request.Phone,
                 Address = request.Address,
