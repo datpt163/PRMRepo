@@ -5,6 +5,7 @@ using Capstone.Application.Module.Auth.Command;
 using Capstone.Application.Module.Auth.Query;
 using Capstone.Application.Module.Auth.Response;
 using Capstone.Application.Module.Auths.Command;
+using Capstone.Application.Module.Auths.Query;
 using Capstone.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -47,10 +48,10 @@ namespace Capstone.Api.Module.Auth.Controllers
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [HttpPost("change-password")]
         [Authorize]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        public async Task<IActionResult> ChangePassword([FromBody] ResetPasswordRequest request)
         {
             string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            var result = await _mediator.Send(new ResetPasswordCommand(token, request.OldPassword, request.NewPassword));
+            var result = await _mediator.Send(new ChangePasswordCommand(token, request.OldPassword, request.NewPassword));
 
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseNoContent();
@@ -69,6 +70,28 @@ namespace Capstone.Api.Module.Auth.Controllers
 
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(dataResponse: result);
+            return ResponseBadRequest(messageResponse: result.ErrorMessage);
+        }
+
+        [HttpPost("forgot-password")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [SwaggerResponse(204, "Success")]
+        public async Task<IActionResult> SendEmailForgotPass([FromBody] ForgotPasswordQuery forgotPasswordQuery)
+        {
+            var result = await _mediator.Send(forgotPasswordQuery);
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseNoContent();
+            return ResponseBadRequest(messageResponse: result.ErrorMessage);
+        }
+
+        [HttpPost("reset-password")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [SwaggerResponse(204, "Success")]
+        public async Task<IActionResult> ResetPassWord([FromBody] ResetPasswordCommand request)
+        {
+            var result = await _mediator.Send(request);
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseNoContent();
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
         }
     }

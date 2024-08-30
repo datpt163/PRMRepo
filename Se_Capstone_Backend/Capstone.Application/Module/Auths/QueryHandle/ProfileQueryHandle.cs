@@ -36,11 +36,19 @@ namespace Capstone.Application.Module.Auths.QueryHandle
             }
 
             var roles = await _userManager.GetRolesAsync(user);
+            if (roles.FirstOrDefault() != null)
+            {
+                var role = _unitOfWork.Roles.Find(x => x.Name == roles.FirstOrDefault()).FirstOrDefault();
+                if (role != null) {
+                    return new ResponseMediator("", new RegisterResponse(role.Id, role.Name, user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
+                                              user.Address ?? "", user.Gender, user.Dob, user.BankAccount, user.BankAccountName,
+                                              user.CreateDate, user.UpdateDate, user.DeleteDate));
+                }
+            }
 
-            var responseUser = new RegisterResponse(roles.FirstOrDefault(), user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
+            var responseUser = new RegisterResponse( null, null, user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
                                           user.Address ?? "", user.Gender, user.Dob, user.BankAccount, user.BankAccountName,
                                           user.CreateDate, user.UpdateDate, user.DeleteDate);
-
             return new ResponseMediator("", responseUser);
         }
     }
