@@ -54,5 +54,34 @@ namespace Capstone.Application.Common.Cloudinaries
             var publicId = publicIdWithExtension.Contains('.') ? publicIdWithExtension.Split('.')[0] : publicIdWithExtension;
             return publicId;
         }
+        public async Task<string> UploadPdfAsync(Stream pdfStream, string fileName)
+        {
+            var uploadParams = new RawUploadParams()
+            {
+                File = new FileDescription(fileName, pdfStream),
+                PublicId = Path.GetFileNameWithoutExtension(fileName),
+                Overwrite = true,
+            };
+
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            return uploadResult.SecureUrl.AbsoluteUri;
+        }
+
+        public async Task<bool> DeletePdfByUrlAsync(string pdfUrl)
+        {
+            string publicId = ExtractPublicIdFromUrl(pdfUrl);
+            if (string.IsNullOrEmpty(publicId))
+            {
+                return false;
+            }
+
+            var deleteParams = new DeletionParams(publicId)
+            {
+                ResourceType = ResourceType.Raw 
+            };
+
+            var result = await _cloudinary.DestroyAsync(deleteParams);
+            return result.Result == "ok";
+        }
     }
 }
