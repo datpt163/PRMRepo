@@ -70,7 +70,7 @@ namespace Capstone.Application.Module.Users.CommandHandle
                     {
                         return new ResponseMediator("Role Employee not exist", null);
                     }
-                     await _userManager.AddToRoleAsync(user, "EMPLOYEE");
+                    await _userManager.AddToRoleAsync(user, "EMPLOYEE");
                     return new ResponseMediator("", responseUser);
                 }
                 return new ResponseMediator($"User creation failed!", null);

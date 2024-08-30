@@ -27,7 +27,7 @@ namespace Capstone.Application.Common.Jwt
             _userManager = userManager;
         }
 
-        public async Task<string> GenerateJwtTokenAsync(User account, DateTime expireTime)
+        public async Task<string> GenerateJwtTokenAsync(User account, DateTime expireTime, string secretKeyReserve = "")
         {
             List<Claim> claims = new()
             {
@@ -44,6 +44,10 @@ namespace Capstone.Application.Common.Jwt
             }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
+            
+            if(!string.IsNullOrEmpty(secretKeyReserve))
+                key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKeyReserve));
+
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var jwtsecuritytoken = new JwtSecurityToken(
@@ -56,10 +60,13 @@ namespace Capstone.Application.Common.Jwt
             return new JwtSecurityTokenHandler().WriteToken(jwtsecuritytoken);
         }
 
-        public async Task<User?> VerifyTokenAsync(string token)
+        public async Task<User?> VerifyTokenAsync(string token, string secretKeyReserve = "")
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var keyJwt = Encoding.UTF8.GetBytes(_jwtSettings.SecretKey);
+
+            if (!string.IsNullOrEmpty(secretKeyReserve))
+                keyJwt = Encoding.UTF8.GetBytes(secretKeyReserve);
 
             var validationParameters = new TokenValidationParameters
             {

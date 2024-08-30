@@ -8,7 +8,7 @@ namespace Capstone.Application.Common.Jwt
 {
     public interface IJwtService
     {
-        Task<string> GenerateJwtTokenAsync(User account, DateTime expireTime);
-        Task<User?> VerifyTokenAsync(string token);
+        Task<string> GenerateJwtTokenAsync(User account, DateTime expireTime, string secretKeyReserve = "");
+        Task<User?> VerifyTokenAsync(string token, string secretKeyReserve = "");
     }
 }
