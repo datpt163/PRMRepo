@@ -13,6 +13,6 @@ namespace Capstone.Application.Module.Auth.Response
         public string RefreshToken { get; set; } = string.Empty;
         public Guid UserId { get; set; }
         public Guid? RoldId { get; set; }
-        public object? Role { get; set; }
+        public object? RoleName { get; set; }
     }
 }
