@@ -46,9 +46,9 @@ namespace Capstone.Application.Module.Auth.QueryHandle
                     {
                         var role = _unitOfWork.Roles.Find(x => x.Name == roles.FirstOrDefault()).FirstOrDefault();
                         if(role != null)
-                        return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RoldId = role.Id, RefreshToken = refreshToken, UserId = user.Id, Role = roles.FirstOrDefault() });
+                        return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RoldId = role.Id, RefreshToken = refreshToken, UserId = user.Id, RoleName = roles.FirstOrDefault() });
                     }
-                    return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken, UserId = user.Id, RoldId = null, Role = null });
+                    return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken, UserId = user.Id, RoldId = null, RoleName = null });
                 }
                 return new ResponseMediator("Password not correct", null, 400);
             }
