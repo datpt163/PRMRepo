@@ -94,5 +94,20 @@ namespace Capstone.Api.Module.Auth.Controllers
                 return ResponseNoContent();
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
         }
+
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [HttpPost("admin-change-password")]
+        [Authorize(Roles = "CHANGE_PASSWORD")]
+        public async Task<IActionResult> AdminChange([FromBody] ChangePassUserCommand request)
+        {
+            var result = await _mediator.Send(request);
+            if (!string.IsNullOrEmpty(result.ErrorMessage))
+            {
+                if(result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+            return ResponseNoContent();
+        }
     }
 }
