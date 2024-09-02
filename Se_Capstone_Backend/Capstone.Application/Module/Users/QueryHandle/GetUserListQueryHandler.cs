@@ -26,11 +26,15 @@ namespace Capstone.Application.Module.Users.QueryHandle
         public async Task<PagingResultSP<UsersDto>> Handle(GetUserListQuery request, CancellationToken cancellationToken)
         {
             // Start building the query with filters
-            var usersQuery = _userRepository.GetQueryNoTracking().Include(user => user.Roles).Where(x => x.Status == UserStatus.Active);
+            var usersQuery = _userRepository.GetQueryNoTracking().Include(user => user.Roles).Where(x => x.UserName !=null) ;
 
             if (!string.IsNullOrEmpty(request.FullName))
             {
                 usersQuery = usersQuery.Where(user => user.FullName.Contains(request.FullName));
+            }
+            if (!string.IsNullOrEmpty(request.RoleName))
+            {
+                usersQuery = usersQuery.Where(user => user.Roles.Any(role => role.Name == request.RoleName));
             }
 
             if (!string.IsNullOrEmpty(request.Phone))
@@ -52,7 +56,10 @@ namespace Capstone.Application.Module.Users.QueryHandle
             {
                 usersQuery = usersQuery.Where(user => (int)user.Gender == request.Gender.Value);
             }
-
+            if (request.Status.HasValue)
+            {
+                usersQuery = usersQuery.Where(user => (int)user.Status == request.Status.Value);
+            }
             if (request.DobFrom.HasValue)
             {
                 usersQuery = usersQuery.Where(user => user.Dob >= request.DobFrom.Value);
@@ -84,7 +91,8 @@ namespace Capstone.Application.Module.Users.QueryHandle
                     CreateDate = user.CreateDate,
                     UpdateDate = user.UpdateDate,
                     RoleId = user.Roles.Select(r => r.Id.ToString()).FirstOrDefault(),
-                    RoleName = user.Roles.Select(r => r.Name).FirstOrDefault()
+                    RoleName = user.Roles.Select(r => r.Name).FirstOrDefault(),
+                    UserName = user.UserName,
                 })
                 .ToListAsync(cancellationToken);
 
