@@ -45,7 +45,8 @@ namespace Capstone.Application.Module.Users.QueryHandle
                     CreateDate = u.CreateDate,
                     UpdateDate = u.UpdateDate,
                     RoleId = u.Roles.Select(r => r.Id.ToString()).FirstOrDefault(),
-                    RoleName = u.Roles.Select(r => r.Name).FirstOrDefault()
+                    RoleName = u.Roles.Select(r => r.Name).FirstOrDefault(),
+                    UserName = u.UserName
                 })
                 .FirstOrDefaultAsync(cancellationToken);
 
