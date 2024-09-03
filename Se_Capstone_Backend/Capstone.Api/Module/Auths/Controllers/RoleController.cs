@@ -62,7 +62,7 @@ namespace Capstone.Api.Module.Auths.Controllers
 
         [HttpGet]
         [SwaggerResponse(200, "Successful", typeof(List<RoleDTO>))]
-        //[Authorize(Roles = "READ_LIST_ROLE")]
+        [Authorize(Roles = "READ_LIST_ROLE")]
         public async Task<IActionResult> GetList()
         {
             var result = await _mediator.Send(new GetListRoleQuery());

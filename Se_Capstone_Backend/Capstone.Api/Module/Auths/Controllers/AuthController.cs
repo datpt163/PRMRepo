@@ -109,5 +109,17 @@ namespace Capstone.Api.Module.Auth.Controllers
             }
             return ResponseNoContent();
         }
+
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [HttpPost("check-code")]
+        public async Task<IActionResult> CheckCode([FromBody] CheckCodeQuery request)
+        {
+            var result = await _mediator.Send(request);
+            if (!string.IsNullOrEmpty(result.ErrorMessage))
+            {
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+            return ResponseNoContent();
+        }
     }
 }
