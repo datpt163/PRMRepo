@@ -103,7 +103,6 @@ namespace Capstone.Application.Module.Users.CommandHandle
                     user.Roles.Clear();
                     user.Roles.Add(role);
                 }
-                
             }
 
             if (request.AvatarFile != null)
