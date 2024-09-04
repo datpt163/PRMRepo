@@ -29,7 +29,7 @@ namespace Capstone.Application.Module.Auth.QueryHandle
 
                 await _tokenBlacklistService.BlacklistTokenAsync(request.Token);
 
-                return new LogoutResponse { Success = true, ErrorMessage = "Logged out successfully." };
+                return new LogoutResponse { Success = true };
             }
             catch (Exception ex)
             {
