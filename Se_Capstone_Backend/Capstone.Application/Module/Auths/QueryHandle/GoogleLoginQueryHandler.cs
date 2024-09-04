@@ -39,20 +39,8 @@ namespace Capstone.Application.Module.Auths.QueryHandle
             var user = await _userManager.FindByEmailAsync(payload.Email);
             if (user == null)
             {
-                user = new User
-                {
-                    UserName = payload.Email,
-                    Email = payload.Email,
-                    FullName = payload.Name
-                };
+                return new ResponseMediator("Account not found", null, 404);
 
-                var result = await _userManager.CreateAsync(user);
-                if (!result.Succeeded)
-                {
-                    return new ResponseMediator("User creation failed", null, 400);
-                }
-
-                await _userManager.AddToRoleAsync(user, "User");
             }
 
             var roles = await _userManager.GetRolesAsync(user);
