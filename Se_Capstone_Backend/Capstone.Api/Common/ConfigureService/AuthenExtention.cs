@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Capstone.Api.Common.ConfigureService
 {
-    public static class JwtAuthenExtention
+    public static class AuthenExtention
     {
         public static void AddAuthSerivce(this IServiceCollection services, IConfiguration configuration)
         {
@@ -34,6 +34,13 @@ namespace Capstone.Api.Common.ConfigureService
                     ValidAudience = audience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                 };
+            }).AddGoogle(options =>
+            {
+                IConfigurationSection googleAuthNSection =
+                    configuration.GetSection("Authentication:Google");
+
+                options.ClientId = googleAuthNSection["ClientId"] ?? string.Empty;
+                options.ClientSecret = googleAuthNSection["ClientSecret"] ?? string.Empty;
             });
             services.Configure<JwtSettings>(jwtSettings);
             services.AddScoped<IJwtService, JwtService>();
