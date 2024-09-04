@@ -26,6 +26,22 @@ namespace Capstone.Api.Module.Auth.Controllers
         {
             _mediator = mediator;
         }
+        [SwaggerResponse(200, "Successful", typeof(ResponseSuccess<LoginResponse>))]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [HttpPost("login/google")]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginQuery googleLoginQuery)
+        {
+            var result = await _mediator.Send(googleLoginQuery);
+
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(dataResponse: result.Data);
+            else
+            {
+                if (result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+        }
 
         [SwaggerResponse(200, "Successful", typeof(ResponseSuccess<LoginResponse>))]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]

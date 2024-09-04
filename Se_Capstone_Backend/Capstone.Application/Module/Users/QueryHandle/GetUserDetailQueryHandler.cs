@@ -4,7 +4,9 @@ using Capstone.Domain.Entities;
 using Capstone.Domain.Enums;
 using Capstone.Infrastructure.DbContexts;
 using Capstone.Infrastructure.Repository;
+using Google.Apis.Util;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,40 +20,57 @@ namespace Capstone.Application.Module.Users.QueryHandle
     {
         private readonly SeCapstoneContext _context;
         private readonly IRepository<User> _userRepository;
+        private readonly UserManager<User> _userManager;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetUserDetailQueryHandler(IRepository<User> userRepository)
+        public GetUserDetailQueryHandler(IRepository<User> userRepository, UserManager<User> userManager, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
+            _userManager = userManager;
+            _unitOfWork = unitOfWork;   
         }
 
         public async Task<UserDto?> Handle(GetUserDetailQuery query, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetQueryNoTracking().
-                Include(u=> u.Roles)
-                .ThenInclude(p => p.Permissions)
+            var user = await _userRepository.GetQueryNoTracking()
                 .Where(u => u.Id == query.UserId)
-                .Select(u => new UserDto
-                {
-                    Id = u.Id,
-                    Email = u.Email ?? string.Empty,
-                    FullName = u.FullName,
-                    Phone = u.PhoneNumber ?? string.Empty,
-                    Avatar = u.Avatar ?? string.Empty,
-                    Address = u.Address,
-                    Gender = (int)u.Gender,
-                    Status = (int)u.Status,
-                    Dob = u.Dob,
-                    BankAccount = u.BankAccount,
-                    BankAccountName = u.BankAccountName,
-                    CreateDate = u.CreateDate,
-                    UpdateDate = u.UpdateDate,
-                    RoleId = u.Roles.Select(r => r.Id.ToString()).FirstOrDefault(),
-                    RoleName = u.Roles.Select(r => r.Name).FirstOrDefault(),
-                    UserName = u.UserName
-                })
                 .FirstOrDefaultAsync(cancellationToken);
+            
+            if (user == null) 
+                return null;
+            else
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                string roleId = "";
+                string roleName = "";
+                if (roles != null && roles.Count > 0)
+                {
+                    var role = await _unitOfWork.Roles.FindOneAsync(x => x.Name.Equals(roles.FirstOrDefault()));
+                    roleId = role.Id + "";
+                    roleName = role.Name ?? "";
+                }
 
-            return user;
+
+                return new UserDto()
+                {
+                    Id = user.Id,
+                    Email = user.Email ?? string.Empty,
+                    FullName = user.FullName,
+                    Phone = user.PhoneNumber ?? string.Empty,
+                    Avatar = user.Avatar ?? string.Empty,
+                    Address = user.Address,
+                    Gender = (int)user.Gender,
+                    Status = (int)user.Status,
+                    Dob = user.Dob,
+                    BankAccount = user.BankAccount,
+                    BankAccountName = user.BankAccountName,
+                    CreateDate = user.CreateDate,
+                    UpdateDate = user.UpdateDate,
+                    RoleId = roleId,
+                    RoleName = roleName,
+                    UserName = user.UserName
+                };
+            }
         }
     }
 }
