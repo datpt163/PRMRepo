@@ -7,6 +7,7 @@ using Capstone.Domain.Entities;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +22,8 @@ namespace Capstone.Application.Module.Users.CommandHandle
         private readonly IJwtService _jwtService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUnitOfWork _unitOfWork;
-        public UpdateUserCommandHandler(IRepository<Role> roleRepository, IUnitOfWork unitOfWork,IHttpContextAccessor httpContextAccessor, IRepository<User> userRepository, CloudinaryService cloudinaryService, IJwtService jwtService)
+        private readonly UserManager<User> _userManager;
+        public UpdateUserCommandHandler(IRepository<Role> roleRepository, IUnitOfWork unitOfWork,IHttpContextAccessor httpContextAccessor, IRepository<User> userRepository, CloudinaryService cloudinaryService, IJwtService jwtService, UserManager<User> userManager)
         {
             _userRepository = userRepository;
             _cloudinaryService = cloudinaryService;
@@ -29,10 +31,13 @@ namespace Capstone.Application.Module.Users.CommandHandle
             _httpContextAccessor = httpContextAccessor;
             _unitOfWork = unitOfWork;
             _roleRepository = roleRepository;
+            _userManager = userManager;
         }
 
         public async Task<UserDto?> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
+            Guid? roleId = null;
+            string? roleName = null;
             var user = new User();
             if (request.Id == null)
             {
@@ -47,7 +52,6 @@ namespace Capstone.Application.Module.Users.CommandHandle
             else
             {
                 user = await _userRepository.GetQuery()
-                            .Include(u => u.Roles)
                             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
             }
 
@@ -95,13 +99,22 @@ namespace Capstone.Application.Module.Users.CommandHandle
                 user.BankAccountName = request.BankAccountName;
             }
 
+         
             if (request.RoleId.HasValue)
             {
                 var role =  _roleRepository.GetQuery().FirstOrDefault(x=> x.Id == request.RoleId.Value);
                 if (role !=null)
                 {
-                    user.Roles.Clear();
-                    user.Roles.Add(role);
+                    var currentRoles = await _userManager.GetRolesAsync(user);
+                    if(currentRoles != null && currentRoles.Count() > 0) 
+                        await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                    var roleQuery = await _unitOfWork.Roles.FindOneAsync(x => x.Id == request.RoleId);
+                    if (roleQuery != null)
+                    {
+                        roleId = roleQuery.Id;
+                        roleName = roleQuery.Name;
+                        await _userManager.AddToRolesAsync(user, new List<String>() { roleName ?? "" });
+                    }
                 }
             }
 
@@ -136,8 +149,8 @@ namespace Capstone.Application.Module.Users.CommandHandle
                 BankAccountName = user.BankAccountName,
                 CreateDate = user.CreateDate,
                 UpdateDate = user.UpdateDate,
-                RoleId = user.Roles.Select(r => r.Id.ToString()).FirstOrDefault(),
-                RoleName = user.Roles.Select(r => r.Name).FirstOrDefault()
+                RoleId = roleId + "",
+                RoleName = roleName
             };
         }
     }
