@@ -28,7 +28,8 @@ namespace Capstone.Application.Module.Users.QueryHandle
         {
             var user = await _userRepository.GetQueryNoTracking().
                 Include(u=> u.Roles)
-                .Where(u => u.Id == query.UserId && u.Status == UserStatus.Active)
+                .ThenInclude(p => p.Permissions)
+                .Where(u => u.Id == query.UserId)
                 .Select(u => new UserDto
                 {
                     Id = u.Id,
@@ -39,7 +40,7 @@ namespace Capstone.Application.Module.Users.QueryHandle
                     Address = u.Address,
                     Gender = (int)u.Gender,
                     Status = (int)u.Status,
-                    Dob = u.Dob ?? DateTime.MinValue,
+                    Dob = u.Dob,
                     BankAccount = u.BankAccount,
                     BankAccountName = u.BankAccountName,
                     CreateDate = u.CreateDate,
