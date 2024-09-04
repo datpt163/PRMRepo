@@ -34,7 +34,11 @@ namespace Capstone.Application.Module.Users.QueryHandle
             }
             if (!string.IsNullOrEmpty(request.RoleName))
             {
-                usersQuery = usersQuery.Where(user => user.Roles.Any(role => role.Name == request.RoleName));
+                usersQuery = usersQuery.Where(user => user.Roles.Any(role => role.Name.Contains(request.RoleName)));
+            }
+            if (request.RoleId !=null)
+            {
+                usersQuery = usersQuery.Where(user => user.Roles.Any(role => role.Id == request.RoleId));
             }
 
             if (!string.IsNullOrEmpty(request.Phone))
@@ -85,7 +89,7 @@ namespace Capstone.Application.Module.Users.QueryHandle
                     Address = user.Address,
                     Gender = (int)user.Gender,
                     Status =(int)user.Status,
-                    Dob = user.Dob ?? DateTime.MinValue,
+                    Dob = user.Dob,
                     BankAccount = user.BankAccount,
                     BankAccountName = user.BankAccountName,
                     CreateDate = user.CreateDate,

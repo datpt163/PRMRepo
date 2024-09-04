@@ -28,6 +28,12 @@ namespace Capstone.Application.Module.Users.Response
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public string? UserName { get; set; } = string.Empty;
+        //public List<PermissionDto> Permission { get; set; } = new List<PermissionDto>();
     }
 
+    //public class PermissionDto
+    //{
+    //    public Guid Id { get; set; }
+    //    public string? Name { get; set; }
+    //}
 }
