@@ -28,13 +28,13 @@ namespace Capstone.Api.Module.Auth.Controllers
         }
         [SwaggerResponse(200, "Successful", typeof(ResponseSuccess<LoginResponse>))]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [HttpPost("login/google")]
+        [HttpPost("google-login")]
         public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginQuery googleLoginQuery)
         {
             var result = await _mediator.Send(googleLoginQuery);
 
             if (string.IsNullOrEmpty(result.ErrorMessage))
-                return ResponseOk(dataResponse: result.Data);
+                return ResponseOk(dataResponse: result.Data, "Login Successful!");
             else
             {
                 if (result.StatusCode == 404)
