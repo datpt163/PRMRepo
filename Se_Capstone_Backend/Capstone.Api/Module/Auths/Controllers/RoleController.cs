@@ -41,6 +41,21 @@ namespace Capstone.Api.Module.Auths.Controllers
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
         }
 
+        [HttpPut]
+        [Authorize(Roles = "ADD_ROLE")]
+        public async Task<IActionResult> CreateRole([FromBody] UpdateRoleCommand request)
+        {
+            var result = await _mediator.Send(request);
+
+            if (!string.IsNullOrEmpty(result.ErrorMessage))
+            {
+                if(result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+            return ResponseOk(dataResponse: result.Data);
+        }
+
         [HttpPost("add-role-for-user")]
         [SwaggerResponse(204, "Successful")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
@@ -51,13 +66,13 @@ namespace Capstone.Api.Module.Auths.Controllers
 
             if (!string.IsNullOrEmpty(result.ErrorMessage))
             {
-                if(result.StatusCode == 400)
+                if (result.StatusCode == 400)
                     return ResponseBadRequest(messageResponse: result.ErrorMessage);
                 return ResponseNotFound(messageResponse: result.ErrorMessage);
             }
 
             return ResponseOk(dataResponse: result.Data);
-           
+
         }
 
         [HttpGet]

@@ -22,7 +22,7 @@ namespace Capstone.Application.Module.Permissions.QueryHandle
 
         public async Task<ResponseMediator> Handle(GetGroupPermissionQuery request, CancellationToken cancellationToken)
         {
-            var groups = await _unitOfWork.GroupPermissions.GetQuery().ToListAsync();
+            var groups = await _unitOfWork.GroupPermissions.GetQuery().Include(c => c.Permissions).ToListAsync();
             return new ResponseMediator("", groups);
         }
     }

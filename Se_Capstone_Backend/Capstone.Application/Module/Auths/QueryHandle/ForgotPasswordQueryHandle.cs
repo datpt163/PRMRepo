@@ -32,7 +32,6 @@ namespace Capstone.Application.Module.Auths.QueryHandle
 
         public async Task<ResponseMediator> Handle(ForgotPasswordQuery request, CancellationToken cancellationToken)
         {
-            bool check = false;
             if (string.IsNullOrEmpty(request.Email))
                 return new ResponseMediator("Email is empty", null);
 
