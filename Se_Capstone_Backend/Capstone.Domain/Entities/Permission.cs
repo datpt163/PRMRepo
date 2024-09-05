@@ -15,6 +15,7 @@ namespace Capstone.Domain.Entities
         public string Name { get; set; } = string.Empty;
         [JsonIgnore]
         public Guid GroupPermissionId { get; set; }
+        [JsonIgnore]
         public GroupPermission? GroupPermission { get; set; }
         [JsonIgnore]
         public ICollection<Role> Roles { get; set; } = new List<Role>();
