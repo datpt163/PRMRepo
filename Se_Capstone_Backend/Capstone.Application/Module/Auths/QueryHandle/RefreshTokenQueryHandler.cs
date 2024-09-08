@@ -3,6 +3,7 @@ using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Auth.Query;
 using Capstone.Application.Module.Auth.Response;
 using Capstone.Application.Module.Auths.Query;
+using Capstone.Application.Module.Auths.Response;
 using Capstone.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -82,8 +83,9 @@ namespace Capstone.Application.Module.Auth.QueryHandle
                 {
                     AccessToken = accessToken,
                     RefreshToken = newRefreshToken,
-                    UserId = user.Id,
-                    RoleName = (await _userManager.GetRolesAsync(user)).FirstOrDefault()
+                    User = new RegisterResponse(null, null, user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
+                                              user.Address ?? "", user.Gender, user.Dob, user.BankAccount, user.BankAccountName,
+                                              user.CreateDate, user.UpdateDate, user.DeleteDate)
                 });
             }
             catch (SecurityTokenExpiredException)
