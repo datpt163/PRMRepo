@@ -41,13 +41,15 @@ namespace Capstone.Application.Module.Auth.QueryHandle
                 {
                     var accessToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(10));
                     var refreshToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(30));
-
-                    if(roles.FirstOrDefault() != null)
+                    user.RefreshToken = refreshToken;
+                    await _userManager.UpdateAsync(user);
+                    if (roles.FirstOrDefault() != null)
                     {
                         var role = _unitOfWork.Roles.Find(x => x.Name == roles.FirstOrDefault()).FirstOrDefault();
                         if(role != null)
                         return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RoldId = role.Id, RefreshToken = refreshToken, UserId = user.Id, RoleName = roles.FirstOrDefault() });
                     }
+                    
                     return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken, UserId = user.Id, RoldId = null, RoleName = null });
                 }
                 return new ResponseMediator("Password not correct", null, 400);

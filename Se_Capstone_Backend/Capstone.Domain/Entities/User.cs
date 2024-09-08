@@ -23,6 +23,7 @@ namespace Capstone.Domain.Entities
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public DateTime? DeleteDate { get; set; }
+        public string? RefreshToken { get; set; }
         public Staff? Staff { get; set; }
         public User() { }
         public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
