@@ -10,6 +10,7 @@ using Capstone.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -26,6 +27,17 @@ namespace Capstone.Api.Module.Auth.Controllers
         {
             _mediator = mediator;
         }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenQuery query)
+        {
+            var result = await _mediator.Send(query);
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(dataResponse: result.Data);
+
+            return ResponseBadRequest(messageResponse: result.ErrorMessage);
+        }
+
         [SwaggerResponse(200, "Successful", typeof(ResponseSuccess<LoginResponse>))]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [HttpPost("google-login")]
