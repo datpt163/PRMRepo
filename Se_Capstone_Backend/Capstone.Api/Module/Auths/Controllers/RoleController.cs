@@ -41,6 +41,17 @@ namespace Capstone.Api.Module.Auths.Controllers
             return ResponseBadRequest(messageResponse: result.ErrorMessage);
         }
 
+        [HttpGet("{id}")]
+        [Authorize(Roles = "GET_ROLE_DETAIL")]
+        public async Task<IActionResult> Detail(Guid id)
+        {
+            var result = await _mediator.Send(new RoleDetailQuery() { Id = id});
+
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(dataResponse: result.Data);
+            return ResponseNotFound(messageResponse: result.ErrorMessage);
+        }
+
         [HttpPut]
         [Authorize(Roles = "ADD_ROLE")]
         public async Task<IActionResult> CreateRole([FromBody] UpdateRoleCommand request)
