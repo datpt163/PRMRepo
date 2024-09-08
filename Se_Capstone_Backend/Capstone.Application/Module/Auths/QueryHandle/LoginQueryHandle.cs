@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Capstone.Application.Module.Auth.Response;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Capstone.Infrastructure.Repository;
+using Capstone.Application.Module.Auths.Response;
 
 namespace Capstone.Application.Module.Auth.QueryHandle
 {
@@ -47,10 +48,22 @@ namespace Capstone.Application.Module.Auth.QueryHandle
                     {
                         var role = _unitOfWork.Roles.Find(x => x.Name == roles.FirstOrDefault()).FirstOrDefault();
                         if(role != null)
-                        return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RoldId = role.Id, RefreshToken = refreshToken, UserId = user.Id, RoleName = roles.FirstOrDefault() });
+                        return new ResponseMediator("", new LoginResponse() 
+                        { AccessToken = accessToken,
+                            RefreshToken = refreshToken, 
+                            User = new RegisterResponse(role.Id, role.Name, user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
+                                              user.Address ?? "", user.Gender, user.Dob, user.BankAccount, user.BankAccountName,
+                                              user.CreateDate, user.UpdateDate, user.DeleteDate)
+                        });
                     }
-                    
-                    return new ResponseMediator("", new LoginResponse() { AccessToken = accessToken, RefreshToken = refreshToken, UserId = user.Id, RoldId = null, RoleName = null });
+                    return new ResponseMediator("", new LoginResponse()
+                    {
+                        AccessToken = accessToken,
+                        RefreshToken = refreshToken,
+                        User = new RegisterResponse(null, null, user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
+                                              user.Address ?? "", user.Gender, user.Dob, user.BankAccount, user.BankAccountName,
+                                              user.CreateDate, user.UpdateDate, user.DeleteDate)
+                    });
                 }
                 return new ResponseMediator("Password not correct", null, 400);
             }

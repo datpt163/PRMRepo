@@ -2,6 +2,7 @@
 using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Auth.Response;
 using Capstone.Application.Module.Auths.Query;
+using Capstone.Application.Module.Auths.Response;
 using Capstone.Domain.Entities;
 using Capstone.Infrastructure.Repository;
 using Google.Apis.Auth;
@@ -39,20 +40,8 @@ namespace Capstone.Application.Module.Auths.QueryHandle
             var user = await _userManager.FindByEmailAsync(payload.Email);
             if (user == null)
             {
-                user = new User
-                {
-                    UserName = payload.Email,
-                    Email = payload.Email,
-                    FullName = payload.Name
-                };
+                return new ResponseMediator("Account not found", null, 404);
 
-                var result = await _userManager.CreateAsync(user);
-                if (!result.Succeeded)
-                {
-                    return new ResponseMediator("User creation failed", null, 400);
-                }
-
-                await _userManager.AddToRoleAsync(user, "User");
             }
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -61,14 +50,24 @@ namespace Capstone.Application.Module.Auths.QueryHandle
 
             var role = roles.FirstOrDefault();
             var roleEntity = _unitOfWork.Roles.Find(x => x.Name == role).FirstOrDefault();
-
+            if(roleEntity !=null)
+            {
+                return new ResponseMediator("", new LoginResponse
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken,
+                    User = new RegisterResponse(roleEntity?.Id, role, user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
+                                              user.Address ?? "", user.Gender, user.Dob, user.BankAccount, user.BankAccountName,
+                                              user.CreateDate, user.UpdateDate, user.DeleteDate)
+                });
+            }
             return new ResponseMediator("", new LoginResponse
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
-                UserId = user.Id,
-                RoleName = role,
-                RoldId = roleEntity?.Id
+                User = new RegisterResponse(null, null, user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
+                                              user.Address ?? "", user.Gender, user.Dob, user.BankAccount, user.BankAccountName,
+                                              user.CreateDate, user.UpdateDate, user.DeleteDate)
             });
         }
     }

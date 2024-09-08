@@ -15,7 +15,7 @@ namespace Capstone.Domain.Entities
         public Guid Id { get; set; }
         [MaxLength(100)]
         public string Name { get; set; } = string.Empty;
-        [JsonIgnore]
+   
         public ICollection<Permission> Permissions { get; set;} = new List<Permission>();
     }
 }
