@@ -1,4 +1,5 @@
-﻿using Capstone.Domain.Entities;
+﻿using Capstone.Application.Module.Auths.Response;
+using Capstone.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,6 @@ namespace Capstone.Application.Module.Auth.Response
     {
         public string AccessToken { get; set; } = string.Empty;
         public string RefreshToken { get; set; } = string.Empty;
-        public Guid UserId { get; set; }
-        public Guid? RoldId { get; set; }
-        public object? RoleName { get; set; }
+        public RegisterResponse? User { get; set; }
     }
 }
