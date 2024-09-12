@@ -36,6 +36,9 @@ namespace Capstone.Application.Module.Auths.CommandHandle
                 return new ResponseMediator("Description empty", null);
             }
 
+            if (request.PermissionsId == null || request.PermissionsId.Count == 0)
+                return new ResponseMediator("List Permission empty", null, 400);
+
             var roleExists = await _roleManager.RoleExistsAsync(request.Name);
             if (roleExists)
             {

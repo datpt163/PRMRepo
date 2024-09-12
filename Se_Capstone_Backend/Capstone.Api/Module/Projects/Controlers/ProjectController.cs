@@ -25,7 +25,7 @@ namespace Capstone.Api.Module.Projects.Controlers
         [HttpPost("dang-test-vui-long-k-dung")]
         [SwaggerResponse(200, "Success", typeof(CreateUserResponse))]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = "ADD_PROJECT")]
         public async Task<IActionResult> CreateProject([FromBody] CreateProjectCommand request)
         {
             string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");

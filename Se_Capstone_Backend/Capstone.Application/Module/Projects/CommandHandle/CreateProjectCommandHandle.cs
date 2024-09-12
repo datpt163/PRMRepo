@@ -6,6 +6,7 @@ using Capstone.Domain.Entities;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace Capstone.Application.Module.Projects.CommandHandle
         }
         public async Task<ResponseMediator> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
         {
-            var project = _unitOfWork.Projects.Find(p => p.Code.ToUpper().Equals(request.Code.ToUpper())).FirstOrDefault();
+            var project = _unitOfWork.Projects.Find(p => p.Code.Trim().ToUpper().Equals(request.Code.Trim().ToUpper())).FirstOrDefault();
 
             if (project != null)
                 return new ResponseMediator("Project code is exist", null);
@@ -36,10 +37,8 @@ namespace Capstone.Application.Module.Projects.CommandHandle
             if (request.StartDate < DateTime.Now || request.EndDate < DateTime.Now)
                 return new ResponseMediator("Start date and end date must be greater than the current time", null);
 
-            if (request.EndDate < request.StartDate)
+            if (request.EndDate <= request.StartDate)
                 return new ResponseMediator("End date must be greater than the start date", null);
-
-            var projectCreate = new Project(request.Name, request.Code, request.Description, request.StartDate, request.EndDate, request.TeamLeadId);
             UserDTO userDto = new UserDTO();
             if (request.TeamLeadId != null)
             {
@@ -47,17 +46,26 @@ namespace Capstone.Application.Module.Projects.CommandHandle
                 if (user == null)
                     return new ResponseMediator("Team lead not found", null);
                 var roles = await _userManager.GetRolesAsync(user);
+                if (roles == null || roles.Count == 0)
+                    return new ResponseMediator("This user not have role to become a leader", null);
 
-                if(!(roles.Contains("PM") || roles.Contains("TEAMLEAD")))
-                      return new ResponseMediator("Leader must have role PM or Team lead", null);
+                var role = _unitOfWork.Roles.Find(x => x.Name != null && x.Name.Equals(roles.FirstOrDefault())).Include(c => c.Permissions).FirstOrDefault();
+                if ( role == null)
+                    return new ResponseMediator("This user not have role to become a leader", null);
+                
+                if (!role.Permissions.Any(x => x.Name == "IS_PROJECT_LEAD"))
+                    return new ResponseMediator("This user not have role to become a leader", null);
+
                 userDto.Id = user.Id;
                 userDto.Name = user.FullName;
             }
-
+            var projectCreate = new Project(request.Name.Trim(), request.Code.Trim(), request.Description, request.StartDate, request.EndDate, request.TeamLeadId, false);
+          
             _unitOfWork.Projects.Add(projectCreate);
             await _unitOfWork.SaveChangesAsync();
             var response =  _mappper.Map<CreateProjectResponse>(projectCreate);
-            response.Lead = userDto;
+            response.LeadId = userDto.Id;
+            response.LeadName = userDto.Name;
             return new ResponseMediator("", response);
         }
     }
