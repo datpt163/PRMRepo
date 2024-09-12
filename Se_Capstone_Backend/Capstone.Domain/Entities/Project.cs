@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Capstone.Domain.Entities
 {
@@ -13,7 +14,7 @@ namespace Capstone.Domain.Entities
         {
         }
 
-        public Project(string name, string code, string description, DateTime startDate, DateTime endDate, Guid? leadId)
+        public Project(string name, string code, string description, DateTime startDate, DateTime endDate, Guid? leadId, bool isVisible)
         {
             Name = name;
             Code = code;
@@ -23,6 +24,7 @@ namespace Capstone.Domain.Entities
             Status = ProjectStatus.NotStarted;
             CreatedAt = DateTime.Now;
             LeadId = leadId;
+            IsVisible = isVisible;
         }
 
         public Guid Id { get; set; }
