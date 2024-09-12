@@ -20,7 +20,9 @@ namespace Capstone.Application.Module.Projects.Response
         public ProjectStatus Status { get; set; } = ProjectStatus.NotStarted;
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public UserDTO? Lead { get; set; }
+        public bool IsVisible { get; set; } = false;
+        public Guid? LeadId { get; set; }
+        public string? LeadName { get; set; } 
     }
 
     public class UserDTO

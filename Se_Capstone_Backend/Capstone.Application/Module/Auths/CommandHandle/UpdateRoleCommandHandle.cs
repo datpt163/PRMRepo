@@ -36,6 +36,9 @@ namespace Capstone.Application.Module.Auths.CommandHandle
                 return new ResponseMediator("Description empty", null,400);
             }
 
+            if(request.PermissionsId == null || request.PermissionsId.Count == 0)
+                return new ResponseMediator("List Permission empty", null, 400);
+
             var roleUpdate = await _unitOfWork.Roles.Find(x => x.Id == request.Id).Include(c => c.Permissions).FirstOrDefaultAsync();
             if(roleUpdate == null)
                 return new ResponseMediator("Role not found", null,404);
@@ -46,6 +49,7 @@ namespace Capstone.Application.Module.Auths.CommandHandle
             }
 
             var role = await _roleManager.FindByNameAsync(roleUpdate.Name ?? "");
+
 
             if(role == null)
             {
