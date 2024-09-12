@@ -44,7 +44,7 @@ namespace Capstone.Application.Module.Projects.CommandHandle
             {
                 var user = _unitOfWork.Users.Find(u => u.Id == request.TeamLeadId).FirstOrDefault();
                 if (user == null)
-                    return new ResponseMediator("Team lead not found", null);
+                    return new ResponseMediator("Team lead not found", null,404);
                 var roles = await _userManager.GetRolesAsync(user);
                 if (roles == null || roles.Count == 0)
                     return new ResponseMediator("This user not have role to become a leader", null);

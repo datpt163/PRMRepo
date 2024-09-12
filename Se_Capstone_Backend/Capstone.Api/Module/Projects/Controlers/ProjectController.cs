@@ -22,7 +22,7 @@ namespace Capstone.Api.Module.Projects.Controlers
             _mediator = mediator;
         }
 
-        [HttpPost("dang-test-vui-long-k-dung")]
+        [HttpPost)]
         [SwaggerResponse(200, "Success", typeof(CreateUserResponse))]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [Authorize(Roles = "ADD_PROJECT")]
@@ -32,7 +32,13 @@ namespace Capstone.Api.Module.Projects.Controlers
             var result = await _mediator.Send(request);
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data);
-            return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            else
+            {
+                if(result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+
+            }
         }
     }
 }
