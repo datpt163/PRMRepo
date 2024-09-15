@@ -1,18 +1,17 @@
 ﻿using Capstone.Application.Common.ResponseMediator;
-using Capstone.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Projects.Command
 {
-    public class CreateProjectCommand : IRequest<ResponseMediator>
+    public class UpdateProjectCommand : IRequest<ResponseMediator>
     {
+        public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Code { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
@@ -20,7 +19,19 @@ namespace Capstone.Application.Module.Projects.Command
         public DateTime StartDate { get; set; }
         [DefaultValue("2024-10-22T09:50:31.798")]
         public DateTime EndDate { get; set; }
-        public bool? IsVisivle { get; set; }
+        public bool IsVisivle { get; set; }
         public Guid? TeamLeadId { get; set; }
+
+        public UpdateProjectCommand(Guid id, string name, string code, string description, DateTime startDate, DateTime endDate, bool isVisivle, Guid? teamLeadId)
+        {
+            Id = id;
+            Name = name;
+            Code = code;
+            Description = description;
+            StartDate = startDate;
+            EndDate = endDate;
+            IsVisivle = isVisivle;
+            TeamLeadId = teamLeadId;
+        }
     }
 }

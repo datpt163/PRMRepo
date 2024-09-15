@@ -1,5 +1,6 @@
 ﻿using Capstone.Api.Common.ResponseApi.Controllers;
 using Capstone.Api.Common.ResponseApi.Model;
+using Capstone.Api.Module.Projects.Request;
 using Capstone.Application.Module.Auth.Command;
 using Capstone.Application.Module.Auths.Response;
 using Capstone.Application.Module.Projects.Command;
@@ -28,13 +29,29 @@ namespace Capstone.Api.Module.Projects.Controlers
         [Authorize(Roles = "ADD_PROJECT")]
         public async Task<IActionResult> CreateProject([FromBody] CreateProjectCommand request)
         {
-            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
             var result = await _mediator.Send(request);
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data);
             else
             {
-                if(result.StatusCode == 404)
+                if (result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+
+            }
+        }
+
+        [HttpPut("{id}")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles = "UPDATE_PROJECT")]
+        public async Task<IActionResult> UpdateProject(Guid id, [FromBody] UpdateProjectRequest request)
+        {
+            var result = await _mediator.Send(new UpdateProjectCommand(id, request.Name, request.Code, request.Description, request.StartDate, request.EndDate, request.IsVisivle, request.TeamLeadId));
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(result.Data);
+            else
+            {
+                if (result.StatusCode == 404)
                     return ResponseNotFound(messageResponse: result.ErrorMessage);
                 return ResponseBadRequest(messageResponse: result.ErrorMessage);
 
