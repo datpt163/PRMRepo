@@ -33,8 +33,6 @@
     <Folder Include="Module\Applicants\Response\" />
     <Folder Include="Module\Applicants\QueryHandle\" />
     <Folder Include="Module\Applicants\Query\" />
-    <Folder Include="Module\Projects\QueryHandle\" />
-    <Folder Include="Module\Projects\Query\" />
   </ItemGroup>
 
 </Project>

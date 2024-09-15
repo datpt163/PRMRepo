@@ -3,6 +3,7 @@ using Capstone.Api.Common.ResponseApi.Model;
 using Capstone.Application.Module.Auth.Command;
 using Capstone.Application.Module.Auths.Response;
 using Capstone.Application.Module.Projects.Command;
+using Capstone.Application.Module.Projects.Query;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -22,8 +23,7 @@ namespace Capstone.Api.Module.Projects.Controlers
             _mediator = mediator;
         }
 
-        [HttpPost)]
-        [SwaggerResponse(200, "Success", typeof(CreateUserResponse))]
+        [HttpPost]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [Authorize(Roles = "ADD_PROJECT")]
         public async Task<IActionResult> CreateProject([FromBody] CreateProjectCommand request)
@@ -40,5 +40,48 @@ namespace Capstone.Api.Module.Projects.Controlers
 
             }
         }
+
+        [HttpGet]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles = "GET_LIST_PROJECT")]
+        public async Task<IActionResult> GetListProject(int? pageIndex,int? pageSize, bool? isVisible )
+        {
+            var result = await _mediator.Send(new GetListProjectQuery(pageIndex, pageSize, isVisible));
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(result.Data, result.Paging);
+            else
+            {
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles = "DELETE_PROJECT")]
+        public async Task<IActionResult> DeleteProject(Guid id)
+        {
+            var result = await _mediator.Send(new DeleteProjectCommand() { Id = id});
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseNoContent();
+            else
+            {
+                return ResponseNotFound(messageResponse: result.ErrorMessage);
+            }
+        }
+
+        [HttpGet("{id}")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles = "GET_DETAIL_PROJECT")]
+        public async Task<IActionResult> GetProject(Guid id)
+        {
+            var result = await _mediator.Send(new GetDetailProjectQuery() { Id = id });
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(dataResponse: result.Data);
+            else
+            {
+                return ResponseNotFound(messageResponse: result.ErrorMessage);
+            }
+        }
+       
     }
 }

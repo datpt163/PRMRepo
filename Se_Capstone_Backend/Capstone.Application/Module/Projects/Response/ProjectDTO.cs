@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Projects.Response
 {
-    public class CreateProjectResponse
+    public class ProjectDTO
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;

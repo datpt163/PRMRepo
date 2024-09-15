@@ -63,7 +63,7 @@ namespace Capstone.Application.Module.Projects.CommandHandle
           
             _unitOfWork.Projects.Add(projectCreate);
             await _unitOfWork.SaveChangesAsync();
-            var response =  _mappper.Map<CreateProjectResponse>(projectCreate);
+            var response =  _mappper.Map<ProjectDTO>(projectCreate);
             response.LeadId = userDto.Id;
             response.LeadName = userDto.Name;
             return new ResponseMediator("", response);
