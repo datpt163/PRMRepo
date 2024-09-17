@@ -1,10 +1,14 @@
 ﻿using Capstone.Api.Common.ResponseApi.Controllers;
+using Capstone.Api.Common.ResponseApi.Model;
 using Capstone.Api.Module.Users.Models;
+using Capstone.Application.Module.Auths.Query;
+using Capstone.Application.Module.Projects.Query;
 using Capstone.Application.Module.Users.Command;
 using Capstone.Application.Module.Users.Query;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -71,6 +75,21 @@ namespace Capstone.Api.Module.Users.Controllers
             }
 
             return ResponseOk(dataResponse: updatedUser);
+        }
+
+        [HttpGet("get-by-permissions")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        public async Task<IActionResult> GetByPermission(string permissionName)
+        {
+            var result = await _mediator.Send(new GetUserByPermissionQuery() { permissionName = permissionName });
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(dataResponse: result.Data);
+            else
+            {
+                if(result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
         }
     }
 }
