@@ -148,7 +148,8 @@ namespace Capstone.Infrastructure.DbContexts
             modelBuilder.Entity<Issue>()
              .HasOne(a => a.Project)
               .WithMany(s => s.Issues)
-              .HasForeignKey(a => a.ProjectId);
+              .HasForeignKey(a => a.ProjectId)
+               .OnDelete(DeleteBehavior.Cascade); 
 
             modelBuilder.Entity<Applicant>()
                .HasOne(a => a.Staff)

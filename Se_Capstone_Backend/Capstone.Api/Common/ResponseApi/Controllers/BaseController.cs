@@ -11,7 +11,7 @@ namespace Capstone.Api.Common.ResponseApi.Controllers
         {
             return StatusCode((int)HttpStatusCode.OK, overrideBody ? new { data = dataResponse, Message = message, statusCode = (int)HttpStatusCode.OK } : dataResponse);
         }
-        protected IActionResult ResponseOk<T>(IEnumerable<T> data, PagingSP paging, string message = "")
+        protected IActionResult ResponseOk<T>(IEnumerable<T> data, PagingSP? paging, string message = "")
         {
             var response = new
             {

@@ -9,8 +9,9 @@ namespace Capstone.Application.Common.Paging
 {
     public class PagingResultSP<T> : List<T>
     {
-        public PagingSP Paging { get; set; }
+        public PagingSP? Paging { get; set; }
         public IList<T> Data { get; set; }
+        public string ErrorMessage { get; set; } = string.Empty;
 
         public PagingResultSP()
         {

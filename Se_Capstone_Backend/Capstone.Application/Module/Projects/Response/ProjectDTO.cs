@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Projects.Response
 {
-    public class CreateProjectResponse
+    public class ProjectDTO
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -22,12 +22,28 @@ namespace Capstone.Application.Module.Projects.Response
         public DateTime? UpdatedAt { get; set; }
         public bool IsVisible { get; set; } = false;
         public Guid? LeadId { get; set; }
-        public string? LeadName { get; set; } 
+        public string? LeadName { get; set; }
+        public List<IssueDTO> Issues { get; set; } = new List<IssueDTO>();
     }
 
     public class UserDTO
     {
         public Guid Id;
         public string Name = string.Empty;
+    }
+
+    public class IssueDTO
+    {
+        public Guid Id { get; set; }
+        [MaxLength(100)]
+        public string Subject { get; set; } = string.Empty;
+        [MaxLength(100)]
+        public string? Description { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime DueDate { get; set; }
+        public int Percentage { get; set; } = 0;
+        public Priority Priority { get; set; }
+        public int? EstimatedTime { get; set; }
+        public int PercentDone { get; set; }
     }
 }
