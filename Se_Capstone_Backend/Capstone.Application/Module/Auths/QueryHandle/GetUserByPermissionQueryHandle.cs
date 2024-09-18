@@ -34,6 +34,7 @@ namespace Capstone.Application.Module.Auths.QueryHandle
                      {
                          Id = x.Id,
                          UserName = x.UserName,
+                         FullName = x.FullName,
                          Dob = x.Dob,
                          Email = x.Email,
                      })

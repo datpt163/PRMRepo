@@ -13,6 +13,7 @@ namespace Capstone.Application.Module.Auth.Query
     {
         [DefaultValue("datpt163@gmail.com")]
         public string Email { get; set; } = string.Empty;
+        [DefaultValue("@Dat1234")]
         public string Password { get; set; } = string.Empty;
     }
 }
