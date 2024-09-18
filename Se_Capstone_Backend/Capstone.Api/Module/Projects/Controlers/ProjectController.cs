@@ -2,9 +2,11 @@
 using Capstone.Api.Common.ResponseApi.Model;
 using Capstone.Api.Module.Projects.Request;
 using Capstone.Application.Module.Auth.Command;
+using Capstone.Application.Module.Auths.Command;
 using Capstone.Application.Module.Auths.Response;
 using Capstone.Application.Module.Projects.Command;
 using Capstone.Application.Module.Projects.Query;
+using Capstone.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -60,10 +62,10 @@ namespace Capstone.Api.Module.Projects.Controlers
 
         [HttpGet]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "GET_LIST_PROJECT")]
-        public async Task<IActionResult> GetListProject(int? pageIndex,int? pageSize, bool? isVisible )
+        public async Task<IActionResult> GetListProject(int? pageIndex,int? pageSize, bool? isVisible, ProjectStatus? projectStatus )
         {
-            var result = await _mediator.Send(new GetListProjectQuery(pageIndex, pageSize, isVisible));
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var result = await _mediator.Send(new GetListProjectQuery(pageIndex, pageSize, isVisible, projectStatus, token));
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data, result.Paging);
             else
@@ -100,7 +102,18 @@ namespace Capstone.Api.Module.Projects.Controlers
             }
         }
 
-    
-
+        [HttpGet("{id}/visible/toggle")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles = "TOGGLE_VISIBLE_PROJECT")]
+        public async Task<IActionResult> ToggleVisible(Guid id)
+        {
+            var result = await _mediator.Send(new ToggleProjectCommand() { Id = id });
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(dataResponse: result.Data);
+            else
+            {
+                return ResponseNotFound(messageResponse: result.ErrorMessage);
+            }
+        }
     }
 }

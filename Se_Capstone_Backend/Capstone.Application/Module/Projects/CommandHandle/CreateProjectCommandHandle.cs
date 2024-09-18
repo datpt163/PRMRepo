@@ -40,9 +40,9 @@ namespace Capstone.Application.Module.Projects.CommandHandle
             if (request.EndDate <= request.StartDate)
                 return new ResponseMediator("End date must be greater than the start date", null);
             UserDTO userDto = new UserDTO();
-            if (request.TeamLeadId != null)
+            if (request.LeadId != null)
             {
-                var user = _unitOfWork.Users.Find(u => u.Id == request.TeamLeadId).FirstOrDefault();
+                var user = _unitOfWork.Users.Find(u => u.Id == request.LeadId).FirstOrDefault();
                 if (user == null)
                     return new ResponseMediator("Team lead not found", null,404);
                 var roles = await _userManager.GetRolesAsync(user);
@@ -59,7 +59,7 @@ namespace Capstone.Application.Module.Projects.CommandHandle
                 userDto.Id = user.Id;
                 userDto.Name = user.FullName;
             }
-            var projectCreate = new Project(request.Name.Trim(), request.Code.Trim(), request.Description, request.StartDate, request.EndDate, request.TeamLeadId, false);
+            var projectCreate = new Project(request.Name.Trim(), request.Code.Trim(), request.Description, request.StartDate, request.EndDate, request.LeadId, false);
             if (request.IsVisivle != null)
                 projectCreate.IsVisible = request.IsVisivle.Value;
 
