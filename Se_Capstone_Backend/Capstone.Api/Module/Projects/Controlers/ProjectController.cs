@@ -46,7 +46,7 @@ namespace Capstone.Api.Module.Projects.Controlers
         [Authorize(Roles = "UPDATE_PROJECT")]
         public async Task<IActionResult> UpdateProject(Guid id, [FromBody] UpdateProjectRequest request)
         {
-            var result = await _mediator.Send(new UpdateProjectCommand(id, request.Name, request.Code, request.Description, request.StartDate, request.EndDate, request.IsVisivle, request.TeamLeadId));
+            var result = await _mediator.Send(new UpdateProjectCommand(id, request.Name, request.Code, request.Description, request.StartDate, request.EndDate, request.TeamLeadId));
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data);
             else

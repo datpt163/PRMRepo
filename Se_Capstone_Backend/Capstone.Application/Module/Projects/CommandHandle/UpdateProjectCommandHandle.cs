@@ -69,7 +69,6 @@ namespace Capstone.Application.Module.Projects.CommandHandle
             project.StartDate = request.StartDate;
             project.EndDate = request.EndDate;
             project.LeadId = request.TeamLeadId;
-            project.IsVisible = request.IsVisivle;
             project.UpdatedAt = DateTime.Now;
             project.LeadId = request.TeamLeadId;
             _unitOfWork.Projects.Update(project);
