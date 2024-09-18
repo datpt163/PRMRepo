@@ -77,7 +77,7 @@ namespace Capstone.Api.Module.Users.Controllers
             return ResponseOk(dataResponse: updatedUser);
         }
 
-        [HttpGet("get-by-permissions")]
+        [HttpGet("get-by-permission")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         public async Task<IActionResult> GetByPermission(string permissionName)
         {
