@@ -48,7 +48,7 @@ namespace Capstone.Api.Module.Projects.Controlers
         [Authorize(Roles = "UPDATE_PROJECT")]
         public async Task<IActionResult> UpdateProject(Guid id, [FromBody] UpdateProjectRequest request)
         {
-            var result = await _mediator.Send(new UpdateProjectCommand(id, request.Name, request.Code, request.Description, request.StartDate, request.EndDate, request.TeamLeadId));
+            var result = await _mediator.Send(new UpdateProjectCommand(id, request.Name, request.Code, request.Description, request.StartDate, request.EndDate, request.LeadId, request.Status));
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data);
             else
@@ -61,11 +61,12 @@ namespace Capstone.Api.Module.Projects.Controlers
         }
 
         [HttpGet]
+        [Authorize]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        public async Task<IActionResult> GetListProject(int? pageIndex,int? pageSize, bool? isVisible, ProjectStatus? projectStatus )
+        public async Task<IActionResult> GetListProject(int? pageIndex,int? pageSize, bool? isVisible, ProjectStatus? status )
         {
             string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            var result = await _mediator.Send(new GetListProjectQuery(pageIndex, pageSize, isVisible, projectStatus, token));
+            var result = await _mediator.Send(new GetListProjectQuery(pageIndex, pageSize, isVisible, status, token));
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data, result.Paging);
             else

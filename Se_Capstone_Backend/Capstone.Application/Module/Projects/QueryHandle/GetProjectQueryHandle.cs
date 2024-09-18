@@ -6,6 +6,7 @@ using Capstone.Application.Module.Projects.Query;
 using Capstone.Application.Module.Projects.Response;
 using Capstone.Application.Module.Users.Response;
 using Capstone.Domain.Entities;
+using Capstone.Domain.Enums;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -35,6 +36,10 @@ namespace Capstone.Application.Module.Projects.QueryHandle
 
         public async Task<PagingResultSP<ProjectDTO>> Handle(GetListProjectQuery request, CancellationToken cancellationToken)
         {
+            if(request.Status.HasValue)
+            if (!(request.Status == ProjectStatus.NotStarted || request.Status == ProjectStatus.InProgress || request.Status == ProjectStatus.Finished))
+                    return new PagingResultSP<ProjectDTO>() { ErrorMessage = "Status must more than 0 or less than 4" };
+
             var projectsQuery = new List<Project>();
 
             var user = await _jwtService.VerifyTokenAsync(request.Token);

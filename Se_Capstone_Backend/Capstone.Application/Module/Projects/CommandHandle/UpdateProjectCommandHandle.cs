@@ -4,6 +4,7 @@ using Capstone.Application.Module.Projects.Command;
 using Capstone.Application.Module.Projects.Response;
 using Capstone.Application.Module.Users.Response;
 using Capstone.Domain.Entities;
+using Capstone.Domain.Enums;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -30,6 +31,9 @@ namespace Capstone.Application.Module.Projects.CommandHandle
 
         public async Task<ResponseMediator> Handle(UpdateProjectCommand request, CancellationToken cancellationToken)
         {
+            if( !(request.Status == ProjectStatus.NotStarted || request.Status == ProjectStatus.InProgress || request.Status == ProjectStatus.Finished ))
+                return new ResponseMediator("Status must more than 0 or less than 4", null);
+
             var projectCheckCode = _unitOfWork.Projects.Find(p => p.Code.Trim().ToUpper().Equals(request.Code.Trim().ToUpper()) && request.Id != p.Id).FirstOrDefault();
 
             if (projectCheckCode != null)
@@ -70,6 +74,7 @@ namespace Capstone.Application.Module.Projects.CommandHandle
             project.EndDate = request.EndDate;
             project.LeadId = request.TeamLeadId;
             project.UpdatedAt = DateTime.Now;
+            project.Status = request.Status;
             project.LeadId = request.TeamLeadId;
             _unitOfWork.Projects.Update(project);
             await _unitOfWork.SaveChangesAsync();

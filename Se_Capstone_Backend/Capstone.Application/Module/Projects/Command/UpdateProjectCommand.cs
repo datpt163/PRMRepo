@@ -1,4 +1,6 @@
 ﻿using Capstone.Application.Common.ResponseMediator;
+using Capstone.Domain.Entities;
+using Capstone.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -19,9 +21,10 @@ namespace Capstone.Application.Module.Projects.Command
         public DateTime StartDate { get; set; }
         [DefaultValue("2024-10-22T09:50:31.798")]
         public DateTime EndDate { get; set; }
+        public ProjectStatus Status { get; set; }
         public Guid? TeamLeadId { get; set; }
 
-        public UpdateProjectCommand(Guid id, string name, string code, string description, DateTime startDate, DateTime endDate, Guid? teamLeadId)
+        public UpdateProjectCommand(Guid id, string name, string code, string description, DateTime startDate, DateTime endDate, Guid? teamLeadId, ProjectStatus projectStatus)
         {
             Id = id;
             Name = name;
@@ -30,6 +33,7 @@ namespace Capstone.Application.Module.Projects.Command
             StartDate = startDate;
             EndDate = endDate;
             TeamLeadId = teamLeadId;
+            Status = projectStatus;
         }
     }
 }

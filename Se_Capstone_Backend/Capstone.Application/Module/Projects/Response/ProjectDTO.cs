@@ -17,7 +17,7 @@ namespace Capstone.Application.Module.Projects.Response
         public string Description { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public ProjectStatus Status { get; set; } = ProjectStatus.NotStarted;
+        public ProjectStatus Status { get; set; } 
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public bool IsVisible { get; set; } = false;
