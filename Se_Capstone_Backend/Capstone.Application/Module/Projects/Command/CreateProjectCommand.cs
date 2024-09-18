@@ -20,7 +20,7 @@ namespace Capstone.Application.Module.Projects.Command
         public DateTime StartDate { get; set; }
         [DefaultValue("2024-10-22T09:50:31.798")]
         public DateTime EndDate { get; set; }
-        public bool? IsVisivle { get; set; }
+        public bool? IsVisible { get; set; }
         public Guid? LeadId { get; set; }
     }
 }

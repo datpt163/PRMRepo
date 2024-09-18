@@ -102,7 +102,7 @@ namespace Capstone.Api.Module.Projects.Controlers
             }
         }
 
-        [HttpGet("{id}/visible/toggle")]
+        [HttpPut("{id}/visible/toggle")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [Authorize(Roles = "TOGGLE_VISIBLE_PROJECT")]
         public async Task<IActionResult> ToggleVisible(Guid id)

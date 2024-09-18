@@ -60,8 +60,8 @@ namespace Capstone.Application.Module.Projects.CommandHandle
                 userDto.Name = user.FullName;
             }
             var projectCreate = new Project(request.Name.Trim(), request.Code.Trim(), request.Description, request.StartDate, request.EndDate, request.LeadId, false);
-            if (request.IsVisivle != null)
-                projectCreate.IsVisible = request.IsVisivle.Value;
+            if (request.IsVisible != null)
+                projectCreate.IsVisible = request.IsVisible.Value;
 
             _unitOfWork.Projects.Add(projectCreate);
             await _unitOfWork.SaveChangesAsync();
