@@ -1,6 +1,8 @@
 ﻿using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Auths.Command;
+using Capstone.Application.Module.Auths.Model;
 using Capstone.Domain.Entities;
+using Capstone.Infrastructure.Redis;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -17,15 +19,17 @@ namespace Capstone.Application.Module.Auths.CommandHandle
     {
         private readonly RoleManager<Role> _roleManager;
         private readonly IUnitOfWork _unitOfWork;
-
-        public UpdateRoleCommandHandle(RoleManager<Role> roleManager, IUnitOfWork unitOfWork)
+        private readonly RedisContext _redis;
+        public UpdateRoleCommandHandle(RoleManager<Role> roleManager, IUnitOfWork unitOfWork, RedisContext redis)
         {
             _roleManager = roleManager;
             _unitOfWork = unitOfWork;
+            _redis = redis;
         }
 
         public async Task<ResponseMediator> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
         {
+            bool checkPermissionUpdate = false;
             if (string.IsNullOrEmpty(request.Name))
             {
                 return new ResponseMediator("Role name empty", null,400);
@@ -40,9 +44,10 @@ namespace Capstone.Application.Module.Auths.CommandHandle
                 return new ResponseMediator("List Permission empty", null, 400);
 
             var roleUpdate = await _unitOfWork.Roles.Find(x => x.Id == request.Id).Include(c => c.Permissions).FirstOrDefaultAsync();
-            if(roleUpdate == null)
-                return new ResponseMediator("Role not found", null,404);
 
+            if (roleUpdate == null)
+                return new ResponseMediator("Role not found", null,404);
+            var rolePermissionIds = roleUpdate.Permissions.Select(p => p.Id).ToList();
             if ( _unitOfWork.Roles.FindOne( x => x.Name != null && x.Name == request.Name.ToUpper() && x.Id != request.Id ) != null)
             {
                 return new ResponseMediator("This role name already exists", null);
@@ -75,6 +80,24 @@ namespace Capstone.Application.Module.Auths.CommandHandle
                         }
                         _unitOfWork.Roles.Update(createdRole);
                         await _unitOfWork.SaveChangesAsync();
+
+                       
+                        bool arePermissionsIdentical = !rolePermissionIds.Except(request.PermissionsId).Any()
+                                           && !request.PermissionsId.Except(rolePermissionIds).Any();
+
+                        if(!arePermissionsIdentical) {
+                            var listMonitorToken = _redis.GetData<List<MonitorTokenModel>>("ListMonitorToken");
+                            if (listMonitorToken != null)
+                            {
+                                foreach (var monitorToken in listMonitorToken)
+                                {
+                                    if (monitorToken.RoleId == request.Id)
+                                        monitorToken.Status = true;
+                                }
+                                _redis.SetData<List<MonitorTokenModel>>("ListMonitorToken", listMonitorToken, DateTime.Now.AddYears(10));
+                            }
+                        }
+
                         return new ResponseMediator("", new { id = createdRole.Id, name = createdRole.Name, description = createdRole.Description, permissions = createdRole.Permissions });
                     }
                     return new ResponseMediator("Failed to update role", null);
