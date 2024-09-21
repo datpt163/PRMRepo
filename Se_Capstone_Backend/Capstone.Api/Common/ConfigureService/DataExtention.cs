@@ -19,7 +19,6 @@ namespace Capstone.Api.Common.ConfigureService
             services.AddTransient<IRepository<Job>, Repository<Job>>();
             services.AddScoped<IRepository<User>, Repository<User>>();
             services.AddScoped<IRepository<Role>, Repository<Role>>();
-            services.AddSingleton<CloudinaryService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
