@@ -63,10 +63,10 @@ namespace Capstone.Api.Module.Projects.Controlers
         [HttpGet]
         [Authorize]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        public async Task<IActionResult> GetListProject(int? pageIndex,int? pageSize, bool? isVisible, ProjectStatus? status )
+        public async Task<IActionResult> GetListProject(int? pageIndex,int? pageSize, bool? isVisible, ProjectStatus? status, string? search )
         {
             string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            var result = await _mediator.Send(new GetListProjectQuery(pageIndex, pageSize, isVisible, status, token));
+            var result = await _mediator.Send(new GetListProjectQuery(pageIndex, pageSize, isVisible, status, token, search));
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data, result.Paging);
             else
