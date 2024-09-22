@@ -34,18 +34,16 @@ namespace Capstone.Api.Middleware
                     {
                         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                         await context.Response.WriteAsync("Token is blacklisted.");
-                        return;
+                        return; 
                     }
 
                     if (IsTokenExpired(token, out var errorMessage))
                     {
                         Console.WriteLine("Token expired!!!");
 
-                        Console.WriteLine($"Returning status code {Token.TokenExpired}");
-
-                        context.Response.StatusCode = Token.TokenExpired;  
+                        context.Response.StatusCode = Token.TokenExpired;
                         await context.Response.WriteAsync(errorMessage);
-                        return;
+                        return; 
                     }
                 }
 
@@ -58,6 +56,7 @@ namespace Capstone.Api.Middleware
                 await context.Response.WriteAsync("An internal error occurred.");
             }
         }
+
 
         private bool IsTokenExpired(string token, out string errorMessage)
         {
