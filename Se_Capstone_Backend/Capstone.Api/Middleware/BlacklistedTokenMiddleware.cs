@@ -41,7 +41,9 @@ namespace Capstone.Api.Middleware
                     {
                         Console.WriteLine("Token expired!!!");
 
-                        context.Response.StatusCode = Token.TokenExpired; 
+                        Console.WriteLine($"Returning status code {Token.TokenExpired}");
+
+                        context.Response.StatusCode = Token.TokenExpired;  
                         await context.Response.WriteAsync(errorMessage);
                         return;
                     }
@@ -94,6 +96,7 @@ namespace Capstone.Api.Middleware
 
             return false;
         }
+
 
     }
 }
