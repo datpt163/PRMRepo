@@ -23,29 +23,38 @@ namespace Capstone.Api.Middleware
         {
             Console.WriteLine("Start Check Black List Token!!!");
 
-            if (context.Request.Headers.TryGetValue("Authorization", out var tokenHeader))
+            try
             {
-                Console.WriteLine("In the fun check token!!!");
-                var token = tokenHeader.ToString().Replace("Bearer ", "").Trim();
-
-                if (await _tokenBlacklistService.IsTokenBlacklistedAsync(token))
+                if (context.Request.Headers.TryGetValue("Authorization", out var tokenHeader))
                 {
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    await context.Response.WriteAsync("Token is blacklisted.");
-                    return;
+                    Console.WriteLine("In the fun check token!!!");
+                    var token = tokenHeader.ToString().Replace("Bearer ", "").Trim();
+
+                    if (await _tokenBlacklistService.IsTokenBlacklistedAsync(token))
+                    {
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        await context.Response.WriteAsync("Token is blacklisted.");
+                        return;
+                    }
+
+                    if (IsTokenExpired(token, out var errorMessage))
+                    {
+                        Console.WriteLine("Token expired!!!");
+
+                        context.Response.StatusCode = Token.TokenExpired; 
+                        await context.Response.WriteAsync(errorMessage);
+                        return;
+                    }
                 }
 
-                if (IsTokenExpired(token, out var errorMessage))
-                {
-                    Console.WriteLine("Token expried!!!");
-
-                    context.Response.StatusCode = Token.TokenExpired;
-                    await context.Response.WriteAsync(errorMessage);
-                    return;
-                }
+                await _next(context);
             }
-
-            await _next(context);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred: {ex.Message}");
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                await context.Response.WriteAsync("An internal error occurred.");
+            }
         }
 
         private bool IsTokenExpired(string token, out string errorMessage)
@@ -60,8 +69,8 @@ namespace Capstone.Api.Middleware
                     ValidateIssuerSigningKey = false,
                     ValidateIssuer = false,
                     ValidateAudience = false,
-                    ValidateLifetime = true, 
-                    ClockSkew = TimeSpan.Zero 
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
                 };
 
                 var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
@@ -85,5 +94,6 @@ namespace Capstone.Api.Middleware
 
             return false;
         }
+
     }
 }
