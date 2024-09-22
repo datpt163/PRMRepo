@@ -13,7 +13,6 @@ namespace Capstone.Domain.Entities
         public string? Description { get; set; } = string.Empty;
         [JsonIgnore]
         public virtual ICollection<User> Users { get; set; } = new List<User>();
-
         public ICollection<Permission> Permissions { get; set; } = new List<Permission>();
     }
 }

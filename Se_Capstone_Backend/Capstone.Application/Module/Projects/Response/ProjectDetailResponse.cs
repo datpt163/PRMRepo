@@ -2,14 +2,13 @@
 using Capstone.Domain.Enums;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Projects.Response
 {
-    public class ProjectDTO
+    public class ProjectDetailResponse
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -17,32 +16,20 @@ namespace Capstone.Application.Module.Projects.Response
         public string Description { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public ProjectStatus Status { get; set; } 
+        public ProjectStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public bool IsVisible { get; set; } = false;
         public Guid? LeadId { get; set; }
         public string? LeadName { get; set; }
+        public List<UserForProjectDetailDTO> Member { get; set; } = new List<UserForProjectDetailDTO> { };
     }
 
-    public class UserDTO
-    {
-        public Guid Id;
-        public string Name = string.Empty;
-    }
-
-    public class IssueDTO
+    public class UserForProjectDetailDTO
     {
         public Guid Id { get; set; }
-        [MaxLength(100)]
-        public string Subject { get; set; } = string.Empty;
-        [MaxLength(100)]
-        public string? Description { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime DueDate { get; set; }
-        public int Percentage { get; set; } = 0;
-        public Priority Priority { get; set; }
-        public int? EstimatedTime { get; set; }
-        public int PercentDone { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string UserName { get; set; } = string.Empty;
+        public string? RoleName { get; set; }
     }
 }
