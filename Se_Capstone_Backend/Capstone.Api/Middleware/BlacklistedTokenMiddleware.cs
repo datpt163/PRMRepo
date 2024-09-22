@@ -2,6 +2,7 @@
 using Capstone.Domain.Module.Auth.TokenBlackList;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 
@@ -20,8 +21,11 @@ namespace Capstone.Api.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
+            Console.WriteLine("Start Check Black List Token!!!");
+
             if (context.Request.Headers.TryGetValue("Authorization", out var tokenHeader))
             {
+                Console.WriteLine("In the fun check token!!!");
                 var token = tokenHeader.ToString().Replace("Bearer ", "").Trim();
 
                 if (await _tokenBlacklistService.IsTokenBlacklistedAsync(token))
@@ -33,6 +37,8 @@ namespace Capstone.Api.Middleware
 
                 if (IsTokenExpired(token, out var errorMessage))
                 {
+                    Console.WriteLine("Token expried!!!");
+
                     context.Response.StatusCode = Token.TokenExpired;
                     await context.Response.WriteAsync(errorMessage);
                     return;
