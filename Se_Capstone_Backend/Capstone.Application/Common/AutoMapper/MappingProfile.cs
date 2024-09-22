@@ -15,8 +15,18 @@ namespace Capstone.Application.Common.AutoMapper
         {
             CreateMap<Role, RoleDTO>();
             CreateMap<Project, ProjectDTO>()
-            .ForMember(dest => dest.LeadId, opt => opt.MapFrom(src => (src.Lead != null && src.Lead.User != null) ? src.Lead.User.Id : (Guid?)null )) 
-             .ForMember(dest => dest.LeadName, opt => opt.MapFrom(src => (src.Lead != null && src.Lead.User != null ) ? src.Lead.User.UserName : null ));
+            .ForMember(dest => dest.LeadId, opt => opt.MapFrom(src => (src.Lead != null && src.Lead.User != null) ? src.Lead.User.Id : (Guid?)null))
+            .ForMember(dest => dest.LeadName, opt => opt.MapFrom(src => (src.Lead != null && src.Lead.User != null) ? src.Lead.User.UserName : null));
+            CreateMap<Project, ProjectDetailResponse>()
+            .ForMember(dest => dest.LeadId, opt => opt.MapFrom(src => (src.Lead != null && src.Lead.User != null) ? src.Lead.User.Id : (Guid?)null))
+            .ForMember(dest => dest.LeadName, opt => opt.MapFrom(src => (src.Lead != null && src.Lead.User != null) ? src.Lead.User.UserName : null))
+            .ForMember(dest => dest.Member, opt => opt.MapFrom(src => src.Staffs.Select(staff => staff.User).ToList()));
+
+             CreateMap<User, UserForProjectDetailDTO>()
+             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+             .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
+             .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName));
+
             CreateMap<Permission, PermissionDTO>();
         }
     }
