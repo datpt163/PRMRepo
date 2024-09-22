@@ -1,6 +1,7 @@
 ﻿using Capstone.Api.Common.Constant;
 using Capstone.Domain.Module.Auth.TokenBlackList;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 
@@ -44,27 +45,31 @@ namespace Capstone.Api.Middleware
         private bool IsTokenExpired(string token, out string errorMessage)
         {
             errorMessage = string.Empty;
-
             var tokenHandler = new JwtSecurityTokenHandler();
+
             try
             {
-                var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
-                if (jwtToken == null)
+                var validationParameters = new TokenValidationParameters
                 {
-                    errorMessage = "Invalid token.";
+                    ValidateIssuerSigningKey = false,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true, 
+                    ClockSkew = TimeSpan.Zero 
+                };
+
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
+
+                if (validatedToken is JwtSecurityToken jwtToken && jwtToken.ValidTo < DateTime.UtcNow)
+                {
+                    errorMessage = "Token has expired.";
                     return true;
                 }
-
-                var expirationClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Exp);
-                if (expirationClaim != null && long.TryParse(expirationClaim.Value, out var expValue))
-                {
-                    var expirationDate = DateTimeOffset.FromUnixTimeSeconds(expValue).UtcDateTime;
-                    if (expirationDate < DateTime.UtcNow)
-                    {
-                        errorMessage = "Token has expired.";
-                        return true;
-                    }
-                }
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                errorMessage = "Token has expired.";
+                return true;
             }
             catch (Exception ex)
             {
