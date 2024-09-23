@@ -2,6 +2,7 @@
 {
     public class Token
     {
-        public const int TokenExpired = 4888;
+        public const int TokenExpired = 999;
+        public const int TokenBanned = 888;
     }
 }
