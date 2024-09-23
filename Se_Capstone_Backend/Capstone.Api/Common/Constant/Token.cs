@@ -2,6 +2,6 @@
 {
     public class Token
     {
-        public const int TokenExpired = 898;
+        public const int TokenExpired = 999;
     }
 }

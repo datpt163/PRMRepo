@@ -39,7 +39,7 @@ namespace Capstone.Api.Middleware
                             listMonitorToken.Remove(monitorToken);
                             _redis.SetData<List<MonitorTokenModel>>("ListMonitorToken", listMonitorToken, DateTime.Now.AddYears(10));
                             _redis.SetData<string>(token + "ban", "check" , DateTime.Now.AddDays(15));
-                            context.Response.StatusCode = 4111;
+                            context.Response.StatusCode = 411;
                             return;
                         }
                     }
