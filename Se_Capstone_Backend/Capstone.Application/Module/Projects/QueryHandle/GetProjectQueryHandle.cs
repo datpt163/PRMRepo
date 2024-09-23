@@ -67,6 +67,10 @@ namespace Capstone.Application.Module.Projects.QueryHandle
                 ListProject = ListProject.Where(x => x.IsVisible == request.IsVisible).ToList();
             if(request.Status.HasValue)
                 ListProject = ListProject.Where(x => x.Status == request.Status).ToList();
+            if (!string.IsNullOrEmpty(request.Search))
+            {
+                ListProject = ListProject.Where(x => ( x.Name.Trim().ToUpper().Contains(request.Search.Trim().ToUpper()) || x.Code.Trim().ToUpper().Contains(request.Search.Trim().ToUpper()))).ToList();
+            }
 
             if (request.PageIndex.HasValue && request.PageSize.HasValue)
             {

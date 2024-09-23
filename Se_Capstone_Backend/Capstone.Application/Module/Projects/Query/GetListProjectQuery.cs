@@ -19,15 +19,18 @@ namespace Capstone.Application.Module.Projects.Query
         public int? PageSize { get; set; }
         public bool? IsVisible {  get; set; }
         public ProjectStatus? Status { get; set; }
+        public string? Search { get; set; } 
+
         public string Token { get; set; } = string.Empty;
 
-        public GetListProjectQuery(int? pageIndex, int? pageSize, bool? isVisible, ProjectStatus? status, string token)
+        public GetListProjectQuery(int? pageIndex, int? pageSize, bool? isVisible, ProjectStatus? status, string token, string? search)
         {
             PageIndex = pageIndex;
             PageSize = pageSize;
             IsVisible = isVisible;
             Status = status;
             Token = token;
+            Search = search;    
         }
     }
 }

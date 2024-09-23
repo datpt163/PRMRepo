@@ -1,8 +1,9 @@
 ﻿using Capstone.Api.Common.Constant;
 using Capstone.Domain.Module.Auth.TokenBlackList;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace Capstone.Api.Middleware
 {
@@ -10,65 +11,98 @@ namespace Capstone.Api.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly ITokenBlacklistService _tokenBlacklistService;
+        private readonly IConfiguration _configuration;
 
-        public BlacklistedTokenMiddleware(RequestDelegate next, ITokenBlacklistService tokenBlacklistService)
+        public BlacklistedTokenMiddleware(RequestDelegate next, ITokenBlacklistService tokenBlacklistService, IConfiguration configuration)
         {
             _next = next;
             _tokenBlacklistService = tokenBlacklistService;
+            _configuration = configuration;
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
-            if (context.Request.Headers.TryGetValue("Authorization", out var tokenHeader))
+            Console.WriteLine("Start Check Black List Token!!!");
+
+            try
             {
-                var token = tokenHeader.ToString().Replace("Bearer ", "").Trim();
-
-                if (await _tokenBlacklistService.IsTokenBlacklistedAsync(token))
+                if (context.Request.Headers.TryGetValue("Authorization", out var tokenHeader))
                 {
-                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    await context.Response.WriteAsync("Token is blacklisted.");
-                    return;
+                    Console.WriteLine("In the fun check token!!!");
+                    var token = tokenHeader.ToString().Replace("Bearer ", "").Trim();
+
+                    if (await _tokenBlacklistService.IsTokenBlacklistedAsync(token))
+                    {
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        await context.Response.WriteAsync("Token is blacklisted.");
+                        return;
+                    }
+
+                    if (IsTokenExpired(token, out var errorMessage))
+                    {
+                        Console.WriteLine("Token expired!!!");
+
+                        context.Response.StatusCode = Token.TokenExpired;
+                        await context.Response.WriteAsync(errorMessage);
+                        return;
+                    }
                 }
 
-                if (IsTokenExpired(token, out var errorMessage))
-                {
-                    context.Response.StatusCode = Token.TokenExpired;
-                    await context.Response.WriteAsync(errorMessage);
-                    return;
-                }
+                await _next(context);
             }
-
-            await _next(context);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception occurred: {ex.Message}");
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                await context.Response.WriteAsync("An internal error occurred.");
+            }
         }
 
         private bool IsTokenExpired(string token, out string errorMessage)
         {
             errorMessage = string.Empty;
-
             var tokenHandler = new JwtSecurityTokenHandler();
+
+            var jwtSettings = _configuration.GetSection("JwtSettings");
+            string secretKey = jwtSettings["SecretKey"] ?? string.Empty;
+            string issuer = jwtSettings["Issuer"] ?? string.Empty;
+            string audience = jwtSettings["Audience"] ?? string.Empty;
+
             try
             {
-                var jwtToken = tokenHandler.ReadToken(token) as JwtSecurityToken;
-                if (jwtToken == null)
+                var validationParameters = new TokenValidationParameters
                 {
-                    errorMessage = "Invalid token.";
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)), 
+                    ValidateIssuer = true,
+                    ValidIssuer = issuer,  
+                    ValidateAudience = true,
+                    ValidAudience = audience,  
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                };
+
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
+
+                if (validatedToken is JwtSecurityToken jwtToken && jwtToken.ValidTo < DateTime.UtcNow)
+                {
+                    errorMessage = "Token has expired.";
                     return true;
                 }
-
-                var expirationClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.Exp);
-                if (expirationClaim != null && long.TryParse(expirationClaim.Value, out var expValue))
-                {
-                    var expirationDate = DateTimeOffset.FromUnixTimeSeconds(expValue).UtcDateTime;
-                    if (expirationDate < DateTime.UtcNow)
-                    {
-                        errorMessage = "Token has expired.";
-                        return true;
-                    }
-                }
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                errorMessage = "Token has expired.";
+                return true;
+            }
+            catch (SecurityTokenValidationException ex)
+            {
+                errorMessage = $"Invalid token: {ex.Message}";
+                return true;
             }
             catch (Exception ex)
             {
-                errorMessage = $"Invalid token: {ex.Message}";
+                errorMessage = $"An unexpected error occurred: {ex.Message}";
                 return true;
             }
 

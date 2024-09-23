@@ -6,6 +6,7 @@ using Capstone.Domain.Enums;
 using Capstone.Domain.Helpers;
 using Capstone.Infrastructure.Repository;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,16 +18,22 @@ namespace Capstone.Application.Module.Users.QueryHandle
     public class GetUserListQueryHandler : IRequestHandler<GetUserListQuery, PagingResultSP<UsersDto>>
     {
         private readonly IRepository<User> _userRepository;
+        private readonly UserManager<User> _userManager;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly RoleManager<Role> _roleManager;
 
-        public GetUserListQueryHandler(IRepository<User> userRepository)
+     public GetUserListQueryHandler(IRepository<User> userRepository, UserManager<User> userManager, IUnitOfWork unitOfWork, RoleManager<Role> roleManager)
         {
             _userRepository = userRepository;
+            _userManager = userManager;
+            _unitOfWork = unitOfWork;
+            _roleManager = roleManager; 
         }
 
         public async Task<PagingResultSP<UsersDto>> Handle(GetUserListQuery request, CancellationToken cancellationToken)
         {
             // Start building the query with filters
-            var usersQuery = _userRepository.GetQueryNoTracking().Include(user => user.Roles).Where(x => x.UserName !=null) ;
+            var usersQuery = _userRepository.GetQueryNoTracking().Where(x => x.UserName != null);
 
             if (!string.IsNullOrEmpty(request.FullName))
             {
@@ -34,11 +41,31 @@ namespace Capstone.Application.Module.Users.QueryHandle
             }
             if (!string.IsNullOrEmpty(request.RoleName))
             {
-                usersQuery = usersQuery.Where(user => user.Roles.Any(role => role.Name.Contains(request.RoleName)));
+                var role = _unitOfWork.Roles.FindOne(x => x.Name == request.RoleName.Trim().ToUpper());
+
+                if (role != null)
+                {
+                    var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name ?? "");
+                    usersQuery = usersQuery.Where(u => usersInRole.Select(ur => ur.Id).Contains(u.Id));
+                }
+                else
+                {
+                    usersQuery = Enumerable.Empty<User>().AsQueryable();
+                }
             }
-            if (request.RoleId !=null)
+            if (request.RoleId != null)
             {
-                usersQuery = usersQuery.Where(user => user.Roles.Any(role => role.Id == request.RoleId));
+                var role = _unitOfWork.Roles.FindOne(x => x.Id == request.RoleId);
+
+                if (role != null)
+                {
+                    var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name ?? "");
+                    usersQuery = usersQuery.Where(u => usersInRole.Select(ur => ur.Id).Contains(u.Id));
+                }
+                else
+                {
+                    usersQuery = Enumerable.Empty<User>().AsQueryable();
+                }
             }
 
             if (!string.IsNullOrEmpty(request.Phone))
@@ -76,9 +103,19 @@ namespace Capstone.Application.Module.Users.QueryHandle
 
 
             int skip = (request.PageIndex - 1) * request.PageSize;
-            var pagedUsersQuery = usersQuery.Skip(skip).Take(request.PageSize);
+            var pagedUsersQuery = usersQuery.Skip(skip).Take(request.PageSize).ToList();
 
-            var userList = await pagedUsersQuery
+            foreach (var user in pagedUsersQuery)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles != null && roles.Count > 0)
+                {
+                    var role = await _unitOfWork.Roles.FindOneAsync(x => x.Name != null && x.Name.Equals(roles.FirstOrDefault()));
+                    user.Roles = new List<Role>() { role };
+                }
+            }
+
+            var userList = pagedUsersQuery
                 .Select(user => new UsersDto
                 {
                     Id = user.Id,
@@ -88,21 +125,20 @@ namespace Capstone.Application.Module.Users.QueryHandle
                     Avatar = user.Avatar ?? string.Empty,
                     Address = user.Address,
                     Gender = (int)user.Gender,
-                    Status =(int)user.Status,
+                    Status = (int)user.Status,
                     Dob = user.Dob,
                     BankAccount = user.BankAccount,
                     BankAccountName = user.BankAccountName,
                     CreateDate = user.CreateDate,
                     UpdateDate = user.UpdateDate,
-                    RoleId = user.Roles.Select(r => r.Id.ToString()).FirstOrDefault(),
-                    RoleName = user.Roles.Select(r => r.Name).FirstOrDefault(),
+                    RoleId = user.Roles.Count() == 0 ? "" : user.Roles.Select(r => r.Id.ToString()).FirstOrDefault(),
+                    RoleName = user.Roles.Count() == 0 ? "" : user.Roles.Select(r => r.Name.ToString()).FirstOrDefault(),
                     UserName = user.UserName,
-                })
-                .ToListAsync(cancellationToken);
+                }).ToList();
 
-            int totalCount = await usersQuery.CountAsync(cancellationToken);
 
-            // Create PagingResultSP
+            int totalCount =  usersQuery.Count();
+
             var result = new PagingResultSP<UsersDto>(userList, totalCount, request.PageIndex, request.PageSize);
 
             return result;
