@@ -1,4 +1,5 @@
-﻿using Capstone.Domain.Module.Auth.TokenBlackList;
+﻿using Capstone.Api.Common.Constant;
+using Capstone.Domain.Module.Auth.TokenBlackList;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -41,7 +42,7 @@ namespace Capstone.Api.Middleware
                     {
                         Console.WriteLine("Token expired!!!");
 
-                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        context.Response.StatusCode = Token.TokenExpired;
                         await context.Response.WriteAsync(errorMessage);
                         return;
                     }
