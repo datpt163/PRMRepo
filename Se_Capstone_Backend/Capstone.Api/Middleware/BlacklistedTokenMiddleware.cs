@@ -42,7 +42,7 @@ namespace Capstone.Api.Middleware
                     {
                         Console.WriteLine("Token expired!!!");
 
-                        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                        context.Response.StatusCode = Token.TokenExpired;
                         await context.Response.WriteAsync(errorMessage);
                         return;
                     }
