@@ -46,7 +46,7 @@ namespace Capstone.Application.Module.Auth.QueryHandle
 
                 if (await _userManager.CheckPasswordAsync(user, request.Password))
                 {
-                    var accessToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddMinutes(1));
+                    var accessToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(1));
                     var refreshToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(30));
                     user.RefreshToken = refreshToken;
                     await _userManager.UpdateAsync(user);
