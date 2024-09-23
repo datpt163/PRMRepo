@@ -10,6 +10,6 @@ namespace Capstone.Application.Module.Auths.Query
 {
     public class RefreshTokenQuery : IRequest<ResponseMediator>
     {
-        public string RefreshToken { get; set; }
+        public string RefreshToken { get; set; } = string.Empty;
     }
 }

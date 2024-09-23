@@ -31,11 +31,13 @@ namespace Capstone.Application.Module.Auth.QueryHandle
         {
             _userManager = userManager;
             _jwtService = jwtService;
+            _jwtSettings = jwtSettings.Value;
+
         }
 
         public async Task<ResponseMediator> Handle(RefreshTokenQuery request, CancellationToken cancellationToken)
         {
-            User user = await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshToken == request.RefreshToken);
+            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshToken == request.RefreshToken, cancellationToken: cancellationToken);
 
             if (user == null)
             {
