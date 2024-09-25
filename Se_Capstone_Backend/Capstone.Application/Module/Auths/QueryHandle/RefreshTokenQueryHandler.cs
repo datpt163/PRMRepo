@@ -5,6 +5,7 @@ using Capstone.Application.Module.Auth.Response;
 using Capstone.Application.Module.Auths.Query;
 using Capstone.Application.Module.Auths.Response;
 using Capstone.Domain.Entities;
+using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -26,12 +27,14 @@ namespace Capstone.Application.Module.Auth.QueryHandle
         private readonly UserManager<User> _userManager;
         private readonly IJwtService _jwtService;
         private readonly JwtSettings _jwtSettings;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RefreshTokenQueryHandler(UserManager<User> userManager, IJwtService jwtService, IOptions<JwtSettings> jwtSettings)
+       public RefreshTokenQueryHandler(UserManager<User> userManager, IJwtService jwtService, IOptions<JwtSettings> jwtSettings, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _jwtService = jwtService;
             _jwtSettings = jwtSettings.Value;
+            _unitOfWork = unitOfWork;
 
         }
 
@@ -75,17 +78,19 @@ namespace Capstone.Application.Module.Auth.QueryHandle
                 }
 
                 // Tạo AccessToken mới
-                var accessToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(10));
+                var accessToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddMinutes(1));
                 var newRefreshToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(30));
 
                 user.RefreshToken = newRefreshToken;
                 await _userManager.UpdateAsync(user);
+                var roles = await _userManager.GetRolesAsync(user);
+                var role = _unitOfWork.Roles.FindOne(x => x.Name != null && x.Name == (roles.FirstOrDefault() == null ? "" : roles.FirstOrDefault()));
 
                 return new ResponseMediator("", new LoginResponse()
                 {
                     AccessToken = accessToken,
                     RefreshToken = newRefreshToken,
-                    User = new RegisterResponse(null, null, user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
+                    User = new RegisterResponse(role == null ? null : role.Id, role == null ? null : role.Name, user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
                                               user.Address ?? "", user.Gender, user.Dob, user.BankAccount, user.BankAccountName,
                                               user.CreateDate, user.UpdateDate, user.DeleteDate)
                 });

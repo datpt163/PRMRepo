@@ -116,5 +116,22 @@ namespace Capstone.Api.Module.Projects.Controlers
                 return ResponseNotFound(messageResponse: result.ErrorMessage);
             }
         }
+
+        [HttpPost("members")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles = "ADD_MEMBER_TO_PROJECT")]
+        public async Task<IActionResult> AddMember(AddMembersToProject request)
+        {
+            var result = await _mediator.Send(request);
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseNoContent();
+            else
+            {
+                if(result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                else
+                    return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+        }
     }
 }
