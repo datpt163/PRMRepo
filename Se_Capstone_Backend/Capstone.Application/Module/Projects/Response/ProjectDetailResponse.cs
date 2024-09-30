@@ -22,7 +22,7 @@ namespace Capstone.Application.Module.Projects.Response
         public bool IsVisible { get; set; } = false;
         public Guid? LeadId { get; set; }
         public string? LeadName { get; set; }
-        public List<UserForProjectDetailDTO> Member { get; set; } = new List<UserForProjectDetailDTO> { };
+        public List<UserForProjectDetailDTO> Members { get; set; } = new List<UserForProjectDetailDTO> { };
     }
 
     public class UserForProjectDetailDTO

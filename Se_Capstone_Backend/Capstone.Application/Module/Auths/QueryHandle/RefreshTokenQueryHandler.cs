@@ -78,7 +78,7 @@ namespace Capstone.Application.Module.Auth.QueryHandle
                 }
 
                 // Tạo AccessToken mới
-                var accessToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddMinutes(1));
+                var accessToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(10));
                 var newRefreshToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(30));
 
                 user.RefreshToken = newRefreshToken;
