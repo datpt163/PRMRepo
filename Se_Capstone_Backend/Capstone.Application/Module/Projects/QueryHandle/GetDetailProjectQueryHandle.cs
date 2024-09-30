@@ -37,7 +37,7 @@ namespace Capstone.Application.Module.Projects.QueryHandle
                 return new ResponseMediator("Project not found", null, 404);
 
             var projectMapper = _mapper.Map<ProjectDetailResponse>(project);
-            foreach(var p in projectMapper.Member)
+            foreach(var p in projectMapper.Members)
             {
                 User user = _unitOfWork.Users.FindOne(x => x.Id == p.Id);
                 if (user != null)
