@@ -16,9 +16,8 @@ using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Users.QueryHandle
 {
-    public class GetUserDetailQueryHandler : IRequestHandler<GetUserDetailQuery, UserDto>
+    public class GetUserDetailQueryHandler : IRequestHandler<GetUserDetailQuery, UserDto?>
     {
-        private readonly SeCapstoneContext _context;
         private readonly IRepository<User> _userRepository;
         private readonly UserManager<User> _userManager;
         private readonly IUnitOfWork _unitOfWork;

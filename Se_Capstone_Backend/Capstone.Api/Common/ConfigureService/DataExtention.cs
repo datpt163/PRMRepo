@@ -19,6 +19,7 @@ namespace Capstone.Api.Common.ConfigureService
             services.AddTransient<IRepository<Job>, Repository<Job>>();
             services.AddScoped<IRepository<User>, Repository<User>>();
             services.AddScoped<IRepository<Role>, Repository<Role>>();
+            services.AddScoped<IRepository<Applicant>, Repository<Applicant>>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
