@@ -40,15 +40,15 @@ namespace Capstone.Application.Common.RabbitMQ
 
                     var emailMessage = JsonConvert.DeserializeObject<EmailMessage>(message);
 
-                    var (success, errorMessage) = await _emailService.SendEmailAsync(emailMessage.ToEmail, emailMessage.Subject, emailMessage.Body);
+                    var (success, errorMessage) = await _emailService.SendEmailAsync(emailMessage?.ToEmail ?? string.Empty, emailMessage?.Subject ?? string.Empty, emailMessage?.Body ?? string.Empty);
 
                     if (success)
                     {
-                        _logger.LogInformation($"Email sent to {emailMessage.ToEmail}");
+                        _logger.LogInformation($"Email sent to {emailMessage?.ToEmail}");
                     }
                     else
                     {
-                        _logger.LogError($"Failed to send email to {emailMessage.ToEmail}: {errorMessage}");
+                        _logger.LogError($"Failed to send email to {emailMessage?.ToEmail}: {errorMessage}");
                     }
                 };
 

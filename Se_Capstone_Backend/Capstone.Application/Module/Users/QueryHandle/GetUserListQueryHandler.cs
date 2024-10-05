@@ -75,13 +75,14 @@ namespace Capstone.Application.Module.Users.QueryHandle
                     throw new ArgumentException("Invalid phone number format.");
                 }
 
-                usersQuery = usersQuery.Where(user => user.PhoneNumber.Contains(request.Phone));
+                usersQuery = usersQuery.Where(user => user.PhoneNumber != null && user.PhoneNumber.Contains(request.Phone));
             }
 
             if (!string.IsNullOrEmpty(request.Address))
             {
-                usersQuery = usersQuery.Where(user => user.Address.Contains(request.Address));
+                usersQuery = usersQuery.Where(user => user.Address != null && user.Address.Contains(request.Address));
             }
+
 
             if (request.Gender.HasValue)
             {
@@ -132,8 +133,8 @@ namespace Capstone.Application.Module.Users.QueryHandle
                     CreateDate = user.CreateDate,
                     UpdateDate = user.UpdateDate,
                     RoleId = user.Roles.Count() == 0 ? "" : user.Roles.Select(r => r.Id.ToString()).FirstOrDefault(),
-                    RoleName = user.Roles.Count() == 0 ? "" : user.Roles.Select(r => r.Name.ToString()).FirstOrDefault(),
-                    UserName = user.UserName,
+                    RoleName = user?.Roles?.Count() == 0 ? "" : user?.Roles?.Select(r => r?.Name?.ToString()).FirstOrDefault() ?? "",
+                    UserName = user?.UserName,
                 }).ToList();
 
 

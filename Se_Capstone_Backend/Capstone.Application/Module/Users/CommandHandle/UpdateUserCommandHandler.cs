@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Users.CommandHandle
 {
-    public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, UserDto>
+    public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, UserDto?>
     {
         private readonly IRepository<User> _userRepository;
         private readonly IRepository<Role> _roleRepository;
