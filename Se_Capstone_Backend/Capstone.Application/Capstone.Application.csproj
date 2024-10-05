@@ -30,12 +30,4 @@
     <ProjectReference Include="..\Capstone.Infrastructure\Capstone.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Module\Applicants\Command\" />
-    <Folder Include="Module\Applicants\CommandHandle\" />
-    <Folder Include="Module\Applicants\Response\" />
-    <Folder Include="Module\Applicants\QueryHandle\" />
-    <Folder Include="Module\Applicants\Query\" />
-  </ItemGroup>
-
 </Project>

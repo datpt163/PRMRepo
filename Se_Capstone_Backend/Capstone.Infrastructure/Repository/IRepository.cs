@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Capstone.Infrastructure.Repository
@@ -19,15 +19,13 @@ namespace Capstone.Infrastructure.Repository
 
         IQueryable<TEntity> GetQueryNoTracking(Expression<Func<TEntity, bool>> expression);
 
-        //DbContext GetDbContext();
-
         TEntity Single(Expression<Func<TEntity, bool>> criteria);
 
-        Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> criteria);
+        Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default);
 
         TEntity SingleOrDefault(Expression<Func<TEntity, bool>> criteria);
 
-        Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> criteria);
+        Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default);
 
         #endregion Get
 
@@ -37,10 +35,10 @@ namespace Capstone.Infrastructure.Repository
 
         TEntity FindOne(Expression<Func<TEntity, bool>> criteria);
 
-        Task<TEntity> FindOneAsync(Expression<Func<TEntity, bool>> criteria);
+        Task<TEntity> FindOneAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default);
 
         Task<TEntity> FindOneAsync(Expression<Func<TEntity, bool>> expression,
-            Expression<Func<TEntity, object>>[] includeExpressions);
+            Expression<Func<TEntity, object>>[] includeExpressions, CancellationToken cancellationToken = default);
 
         #endregion Find
 
@@ -50,21 +48,24 @@ namespace Capstone.Infrastructure.Repository
 
         int Count(Expression<Func<TEntity, bool>> criteria);
 
-        Task<int> CountAsync();
+        Task<int> CountAsync(CancellationToken cancellationToken = default);
 
-        Task<int> CountAsync(Expression<Func<TEntity, bool>> criteria);
+        Task<int> CountAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default);
 
-        Task<bool> GetAny(Expression<Func<TEntity, bool>> expression);
+        Task<bool> GetAnyAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken = default);
 
         #endregion Count
 
         #region Update
 
-        void Update(TEntity entity, Expression<Func<TEntity, bool>> criteria);
-
         void Update(TEntity entity);
 
         void UpdateRange(IEnumerable<TEntity> entities);
+
+        // New async method for updating
+        Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
+
+        Task UpdateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
 
         #endregion Update
 
@@ -74,6 +75,11 @@ namespace Capstone.Infrastructure.Repository
 
         void AddRange(IEnumerable<TEntity> entities);
 
+        // New async methods for adding
+        Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
+
+        Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+
         #endregion Add
 
         #region Remove
@@ -81,6 +87,11 @@ namespace Capstone.Infrastructure.Repository
         void Remove(TEntity entity);
 
         void RemoveRange(IEnumerable<TEntity> entities);
+
+        // New async methods for removing
+        Task RemoveAsync(TEntity entity, CancellationToken cancellationToken = default);
+
+        Task RemoveRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
 
         #endregion Remove
 
