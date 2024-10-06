@@ -50,14 +50,14 @@ namespace Capstone.Application.Module.Projects.QueryHandle
 
                 if (role != null && role.Name != null && role.Permissions.Select(x => x.Name).Contains("GET_ALL_PROJECT"))
                 {
-                    projectsQuery = await _unitOfWork.Projects.GetQuery().Include(c => c.Lead).ThenInclude(c => c.User).ToListAsync();
+                    projectsQuery = await _unitOfWork.Projects.GetQuery().Include(c => c.Lead).ToListAsync();
                 }
                 else
                 {
-                    if(user.Staff !=  null)
+                    if(user !=  null)
                     {
-                        projectsQuery = user.Staff.Projects.ToList();
-                        projectsQuery.AddRange(user.Staff.LeadProjects.ToList());
+                        projectsQuery = user.Projects.ToList();
+                        projectsQuery.AddRange(user.LeadProjects.ToList());
                     }
                 }
             }

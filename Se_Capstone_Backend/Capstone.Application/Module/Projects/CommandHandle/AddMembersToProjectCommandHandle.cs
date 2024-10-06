@@ -22,20 +22,20 @@ namespace Capstone.Application.Module.Projects.CommandHandle
 
         public async Task<ResponseMediator> Handle(AddMembersToProject request, CancellationToken cancellationToken)
         {
-            var project = _unitOfWork.Projects.Find(x => x.Id == request.ProjectId).Include(c => c.Staffs).FirstOrDefault();
+            var project = _unitOfWork.Projects.Find(x => x.Id == request.ProjectId).Include(c => c.Users).FirstOrDefault();
             if (project == null)
                 return new ResponseMediator("Project not found", null, 404);
             if(request.MemberIds.Count() == 0)
                 return new ResponseMediator("List member empty", null, 400);
 
-            project.Staffs = new List<Staff>();
+            project.Users = new List<User>();
             foreach (var s in request.MemberIds)
             {
-                var staff = _unitOfWork.Staffs.FindOne(x => x.Id == s);
+                var staff = _unitOfWork.Users.FindOne(x => x.Id == s);
                 if (staff == null)
                     return new ResponseMediator("Member not found", null, 404);
                 if(staff.Id != project.LeadId)
-                    project.Staffs.Add(staff);
+                    project.Users.Add(staff);
             }
             _unitOfWork.Projects.Update(project);
             await _unitOfWork.SaveChangesAsync();

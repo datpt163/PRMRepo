@@ -25,7 +25,7 @@ namespace Capstone.Application.Module.Auths.CommandHandle
 
         public async Task<ResponseMediator> Handle(ToggleProjectCommand request, CancellationToken cancellationToken)
         {
-            var project = _unitOfWork.Projects.Find(x => x.Id == request.Id).Include(c => c.Lead).ThenInclude(c => c.User).FirstOrDefault();
+            var project = _unitOfWork.Projects.Find(x => x.Id == request.Id).Include(c => c.Lead).FirstOrDefault();
             if (project == null)
                 return new ResponseMediator("Project not found", null, 404);
 
