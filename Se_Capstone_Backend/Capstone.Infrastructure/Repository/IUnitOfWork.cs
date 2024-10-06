@@ -20,7 +20,6 @@ namespace Capstone.Infrastructure.Repository
         public IRepository<Permission> Permissions { get; }
         public IRepository<Project> Projects { get; }
         public IRepository<Role> Roles { get; }
-        public IRepository<Staff> Staffs { get; }
         public IRepository<Status> Statuses { get; }
         public IRepository<User> Users { get; }
         public IRepository<GroupPermission> GroupPermissions { get; }

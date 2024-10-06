@@ -29,9 +29,8 @@ namespace Capstone.Domain.Entities
         public string CreatedBy { get; set; } = string.Empty;
         [MaxLength(100)]
         public string? UpdatedBy { get; set; } 
-        public Guid StaffId { get; set; }
-        public Staff? Staff { get; set; }
-
+        public Guid UserId { get; set; }
+        public User? user { get; set; }
         public Guid JobId { get; set; }
         public Job MainJob { get; set; } = new Job();
         public ICollection<Job> Jobs { get; set; } = new List<Job>();

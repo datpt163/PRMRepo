@@ -44,8 +44,8 @@ namespace Capstone.Domain.Entities
         public DateTime? UpdatedAt { get; set; }
         public bool IsVisible { get; set; } = false;
         public Guid? LeadId { get; set; }
-        public Staff? Lead { get; set; }
-        public ICollection<Staff> Staffs { get; set; } = new List<Staff>();
+        public User? Lead { get; set; }
+        public ICollection<User> Users { get; set; } = new List<User>();
         public ICollection<Issue> Issues { get; set; } = new List<Issue>();
 
     }

@@ -21,8 +21,8 @@ namespace Capstone.Domain.Entities
         public DateTime CreatedAt { get; set; }
         public bool IsChecked { get; set; }
         public bool IsDeleted { get; set; }
-        public Guid StaffId { get; set; }
+        public Guid UserId { get; set; }
 
-        public Staff? Staff { get; set; } 
+        public User? User { get; set; } 
     }
 }
