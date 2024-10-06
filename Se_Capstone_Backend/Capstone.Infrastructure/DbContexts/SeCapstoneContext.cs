@@ -35,7 +35,6 @@ namespace Capstone.Infrastructure.DbContexts
         public DbSet<LogEntry> LogEntries { get; set; }
         public DbSet<Article> Articles { get; set; }
         public DbSet<Project> Projects { get; set; }
-        public DbSet<Staff> Staffs { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Issue> Issues { get; set; }
         public DbSet<User> Users { get; set; }
@@ -85,9 +84,6 @@ namespace Capstone.Infrastructure.DbContexts
                .HasDefaultValueSql("gen_random_uuid()");
 
 
-            modelBuilder.Entity<Staff>()
-              .Property(e => e.Id);
-
             modelBuilder.Entity<Status>()
               .Property(e => e.Id)
               .HasDefaultValueSql("gen_random_uuid()");
@@ -121,19 +117,15 @@ namespace Capstone.Infrastructure.DbContexts
            .HasDefaultValue(ProjectStatus.InProgress);
 
             modelBuilder.Entity<Attendance>()
-            .HasOne(a => a.Staff)
+            .HasOne(a => a.User)
             .WithMany(s => s.Attendances)
-            .HasForeignKey(a => a.StaffId);
+            .HasForeignKey(a => a.UserId);
 
             modelBuilder.Entity<LeaveLog>()
-             .HasOne(l => l.Staff)
+             .HasOne(l => l.User)
              .WithMany(s => s.LeaveLogs)
-             .HasForeignKey(l => l.StaffId);
+             .HasForeignKey(l => l.UserId);
 
-            modelBuilder.Entity<Issue>()
-            .HasOne(l => l.Staff)
-            .WithMany(s => s.Issues)
-            .HasForeignKey(l => l.AssignedId);
 
             modelBuilder.Entity<Issue>()
               .HasOne(a => a.Label)
@@ -150,17 +142,6 @@ namespace Capstone.Infrastructure.DbContexts
               .WithMany(s => s.Issues)
               .HasForeignKey(a => a.ProjectId)
                .OnDelete(DeleteBehavior.Cascade); 
-
-            //modelBuilder.Entity<Applicant>()
-            //   .HasOne(a => a.Staff)
-            //    .WithMany(s => s.Applicants)
-            //    .HasForeignKey(a => a.StaffId);
-
-            modelBuilder.Entity<User>()
-            .HasOne(u => u.Staff)
-            .WithOne(s => s.User)
-            .HasForeignKey<Staff>(s => s.Id)
-            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Project>()
                   .HasOne(a => a.Lead)
@@ -187,11 +168,11 @@ namespace Capstone.Infrastructure.DbContexts
                   a => a.HasOne<Applicant>().WithMany().HasForeignKey("ApplicantId"));
 
             modelBuilder.Entity<Project>()
-             .HasMany(a => a.Staffs)
+             .HasMany(a => a.Users)
              .WithMany(j => j.Projects)
              .UsingEntity<Dictionary<string, object>>(
-                 "projectStaffs",
-                 j => j.HasOne<Staff>().WithMany().HasForeignKey("StaffId"),
+                 "projectUsers",
+                 j => j.HasOne<User>().WithMany().HasForeignKey("UserId"),
                  a => a.HasOne<Project>().WithMany().HasForeignKey("ProjectId"));
 
             modelBuilder.Entity<Permission>()

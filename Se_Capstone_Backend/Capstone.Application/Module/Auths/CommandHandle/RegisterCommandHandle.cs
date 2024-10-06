@@ -60,7 +60,6 @@ namespace Capstone.Application.Module.Users.CommandHandle
                 var createdUser = await _userManager.FindByNameAsync(request.UserName);
                 if (createdUser != null)
                 {
-                    _unitOfWork.Staffs.Add(new Staff() { Id = createdUser.Id, CreatedBy = createdUser.UserName ?? ""});
                     await _unitOfWork.SaveChangesAsync();
                     var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var resultConfirmEmail = await _userManager.ConfirmEmailAsync(user, confirmationToken);

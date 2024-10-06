@@ -3,6 +3,7 @@ using System;
 using Capstone.Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Capstone.Infrastructure.Migrations
 {
     [DbContext(typeof(SeCapstoneContext))]
-    partial class SeCapstoneContextModelSnapshot : ModelSnapshot
+    [Migration("20241004125023_DeleteStaffTable")]
+    partial class DeleteStaffTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,6 +44,7 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("createdBy");
 
                     b.Property<string>("CvLink")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("cvLink");
@@ -59,9 +63,9 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("isOnBoard");
 
-                    b.Property<Guid>("MainJobId")
+                    b.Property<Guid>("JobId")
                         .HasColumnType("uuid")
-                        .HasColumnName("mainJobId");
+                        .HasColumnName("jobId");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -88,9 +92,15 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("updatedBy");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("userId");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("MainJobId");
+                    b.HasIndex("JobId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("applicants");
                 });
@@ -920,11 +930,19 @@ namespace Capstone.Infrastructure.Migrations
                 {
                     b.HasOne("Capstone.Domain.Entities.Job", "MainJob")
                         .WithMany()
-                        .HasForeignKey("MainJobId")
+                        .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Capstone.Domain.Entities.User", "user")
+                        .WithMany("Applicants")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("MainJob");
+
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("Capstone.Domain.Entities.Attendance", b =>
@@ -1129,6 +1147,8 @@ namespace Capstone.Infrastructure.Migrations
 
             modelBuilder.Entity("Capstone.Domain.Entities.User", b =>
                 {
+                    b.Navigation("Applicants");
+
                     b.Navigation("Attendances");
 
                     b.Navigation("LeadProjects");

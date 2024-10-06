@@ -39,14 +39,11 @@ namespace Capstone.Application.Module.Projects.CommandHandle
             if (projectCheckCode != null)
                 return new ResponseMediator("Project code is exist", null);
 
-            if (request.StartDate.Date < DateTime.Now.Date || request.EndDate.Date < DateTime.Now.Date)
-                return new ResponseMediator("Start date and end date must be greater or equal than the current time", null);
-
             if (request.EndDate.Date < request.StartDate.Date)
                 return new ResponseMediator("End date must be greater or equal than the start date", null);
            
 
-            var project = _unitOfWork.Projects.Find(x => x.Id == request.Id).Include(c => c.Lead).ThenInclude(c => c.User).FirstOrDefault();
+            var project = _unitOfWork.Projects.Find(x => x.Id == request.Id).Include(c => c.Lead).FirstOrDefault();
             if (project == null)
                 return new ResponseMediator("Project not found", null, 404);
 

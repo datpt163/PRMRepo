@@ -90,10 +90,7 @@ namespace Capstone.Application.Common.Jwt
                     throw new SecurityTokenException("Invalid token");
                 }
                 var userId = Guid.Parse(userIdClaim.Value);
-                var account = await _unitOfWork.Users.Find(s => s.Id == userId).Include(c => c.Staff).ThenInclude(c => c.Projects).ThenInclude(c => c.Lead).ThenInclude(c => c.User)
-                    .Include(c => c.Staff).ThenInclude(c => c.LeadProjects)
-                                                                               //              .ThenInclude(c => c.Lead)                                            .ThenInclude(c => c.User)
-                                                                               .FirstOrDefaultAsync();
+                var account = await _unitOfWork.Users.Find(s => s.Id == userId).Include(c => c.Projects).ThenInclude(c => c.Lead).Include(c => c.LeadProjects).FirstOrDefaultAsync();
 
                 return account;
             }

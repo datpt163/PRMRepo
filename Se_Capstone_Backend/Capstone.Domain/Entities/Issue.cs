@@ -30,6 +30,5 @@ namespace Capstone.Domain.Entities
         public Label? Label { get; set; } 
         public Status? Status { get; set; } 
         public Project? Project { get; set; }
-        public Staff? Staff { get; set; }
     }
 }

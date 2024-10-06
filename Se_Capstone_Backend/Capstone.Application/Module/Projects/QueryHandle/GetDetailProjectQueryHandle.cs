@@ -31,7 +31,7 @@ namespace Capstone.Application.Module.Projects.QueryHandle
 
         public async Task<ResponseMediator> Handle(GetDetailProjectQuery request, CancellationToken cancellationToken)
         {
-            var project = await _unitOfWork.Projects.Find(x => x.Id == request.Id).Include(c => c.Lead).ThenInclude(c => c.User).Include(c => c.Staffs).ThenInclude(c => c.User).FirstOrDefaultAsync();
+            var project = await _unitOfWork.Projects.Find(x => x.Id == request.Id).Include(c => c.Lead).Include(c => c.Users).FirstOrDefaultAsync();
 
             if (project == null) 
                 return new ResponseMediator("Project not found", null, 404);
