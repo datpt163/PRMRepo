@@ -143,11 +143,6 @@ namespace Capstone.Infrastructure.DbContexts
               .HasForeignKey(a => a.ProjectId)
                .OnDelete(DeleteBehavior.Cascade); 
 
-            modelBuilder.Entity<Applicant>()
-               .HasOne(a => a.user)
-                .WithMany(s => s.Applicants)
-                .HasForeignKey(a => a.UserId);
-
             modelBuilder.Entity<Project>()
                   .HasOne(a => a.Lead)
                    .WithMany(s => s.LeadProjects)

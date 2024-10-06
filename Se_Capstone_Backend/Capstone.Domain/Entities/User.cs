@@ -27,7 +27,6 @@ namespace Capstone.Domain.Entities
         public User() { }
         public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
         public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
-        public ICollection<Applicant> Applicants { get; set; } = new List<Applicant>();
         public ICollection<Project> LeadProjects { get; set; } = new List<Project>();
         public ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
         public ICollection<LeaveLog> LeaveLogs { get; set; } = new List<LeaveLog>();
