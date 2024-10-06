@@ -29,7 +29,6 @@ namespace Capstone.Application.Module.Auths.CommandHandle
 
         public async Task<ResponseMediator> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
         {
-            bool checkPermissionUpdate = false;
             if (string.IsNullOrEmpty(request.Name))
             {
                 return new ResponseMediator("Role name empty", null,400);

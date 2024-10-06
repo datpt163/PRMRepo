@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Capstone.Infrastructure.Repository
@@ -17,58 +17,128 @@ namespace Capstone.Infrastructure.Repository
 
         public Repository(SeCapstoneContext context)
         {
-            Context = context;
+            Context = context ?? throw new ArgumentNullException(nameof(context));
             DbSet = Context.Set<TEntity>();
             _type = typeof(TEntity);
         }
 
         protected DbSet<TEntity> DbSet { get; }
 
-        public void Update(TEntity entity, Expression<Func<TEntity, bool>> criteria)
-        {
-            TEntity? original = FindOne(criteria);
-            Context.Entry(original).CurrentValues.SetValues(entity);
-        }
+        #region Update
 
         public void Update(TEntity entity)
         {
-            Context.Update(entity);
+            if (entity != null)
+            {
+                Context.Update(entity);
+            }
         }
 
         public void UpdateRange(IEnumerable<TEntity> entities)
         {
-            Context.UpdateRange(entities);
+            if (entities != null)
+            {
+                Context.UpdateRange(entities);
+            }
         }
 
-        //public void BulkUpdateRangeAsync(IEnumerable<TEntity> entities)
-        //{
-        //    Context.BulkUpdateAsync(entities);
-        //}
+        public Task UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        {
+            if (entity != null)
+            {
+                Context.Update(entity);
+            }
+            return Context.SaveChangesAsync(cancellationToken);
+        }
+
+        public Task UpdateRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
+        {
+            if (entities != null)
+            {
+                Context.UpdateRange(entities);
+            }
+            return Context.SaveChangesAsync(cancellationToken);
+        }
+
+        #endregion Update
+
+        #region Add
 
         public void Add(TEntity entity)
         {
-            if (entity != null) DbSet.Add(entity);
+            if (entity != null)
+            {
+                DbSet.Add(entity);
+            }
         }
 
         public void AddRange(IEnumerable<TEntity> entities)
         {
-            DbSet.AddRange(entities);
+            if (entities != null)
+            {
+                DbSet.AddRange(entities);
+            }
         }
 
-        //public void BulkAddRangeAsync(IEnumerable<TEntity> entities)
-        //{
-        //    Context.BulkInsertAsync(entities);
-        //}
-
-        public Task<int> CountAsync(Expression<Func<TEntity, bool>> criteria)
+        public Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
-            return GetQuery().CountAsync(criteria);
+            if (entity != null)
+            {
+                DbSet.Add(entity);
+            }
+            return Context.SaveChangesAsync(cancellationToken);
         }
 
-        public IDbContextTransaction BeginTransaction()
+        public Task AddRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
         {
-            return Context.Database.BeginTransaction();
+            if (entities != null)
+            {
+                DbSet.AddRange(entities);
+            }
+            return Context.SaveChangesAsync(cancellationToken);
         }
+
+        #endregion Add
+
+        #region Remove
+
+        public void Remove(TEntity entity)
+        {
+            if (entity != null)
+            {
+                DbSet.Remove(entity);
+            }
+        }
+
+        public void RemoveRange(IEnumerable<TEntity> entities)
+        {
+            if (entities != null)
+            {
+                DbSet.RemoveRange(entities);
+            }
+        }
+
+        public Task RemoveAsync(TEntity entity, CancellationToken cancellationToken = default)
+        {
+            if (entity != null)
+            {
+                DbSet.Remove(entity);
+            }
+            return Context.SaveChangesAsync(cancellationToken);
+        }
+
+        public Task RemoveRangeAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default)
+        {
+            if (entities != null)
+            {
+                DbSet.RemoveRange(entities);
+            }
+            return Context.SaveChangesAsync(cancellationToken);
+        }
+
+        #endregion Remove
+
+        #region Get
 
         public IQueryable<TEntity> GetQuery()
         {
@@ -90,16 +160,6 @@ namespace Capstone.Infrastructure.Repository
             return Context.Set<TEntity>().AsNoTracking().Where(expression);
         }
 
-        public async Task<bool> GetAny(Expression<Func<TEntity, bool>> expression)
-        {
-            return await Context.Set<TEntity>().AnyAsync(expression);
-        }
-
-        public DbContext GetDbContext()
-        {
-            return Context;
-        }
-
         public TEntity Single(Expression<Func<TEntity, bool>> criteria)
         {
             return GetQuery().Single(criteria);
@@ -110,12 +170,12 @@ namespace Capstone.Infrastructure.Repository
             return GetQuery().SingleAsync(criteria);
         }
 
-        public TEntity SingleOrDefault(Expression<Func<TEntity, bool>> criteria)
+        public TEntity? SingleOrDefault(Expression<Func<TEntity, bool>> criteria)
         {
             return GetQuery().SingleOrDefault(criteria);
         }
 
-        public Task<TEntity> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> criteria)
+        public Task<TEntity?> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> criteria)
         {
             return GetQuery().SingleOrDefaultAsync(criteria);
         }
@@ -125,17 +185,17 @@ namespace Capstone.Infrastructure.Repository
             return GetQuery().Where(criteria);
         }
 
-        public TEntity FindOne(Expression<Func<TEntity, bool>> criteria)
+        public TEntity? FindOne(Expression<Func<TEntity, bool>> criteria)
         {
             return GetQuery().Where(criteria).FirstOrDefault();
         }
 
-        public Task<TEntity> FindOneAsync(Expression<Func<TEntity, bool>> criteria)
+        public Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> criteria)
         {
             return GetQuery().Where(criteria).FirstOrDefaultAsync();
         }
 
-        public Task<TEntity> FindOneAsync(Expression<Func<TEntity, bool>> expression, Expression<Func<TEntity, object>>[] includeExpressions)
+        public Task<TEntity> FindOneAsync(Expression<Func<TEntity, bool>> expression, Expression<Func<TEntity, object>>[] includeExpressions, CancellationToken cancellationToken = default)
         {
             IQueryable<TEntity> includeQueryable = DbSet;
             foreach (Expression<Func<TEntity, object>>? includeExpression in includeExpressions)
@@ -143,7 +203,7 @@ namespace Capstone.Infrastructure.Repository
                 includeQueryable = includeQueryable.Include(includeExpression);
             }
 
-            return includeQueryable.FirstOrDefaultAsync(expression);
+            return includeQueryable.FirstOrDefaultAsync(expression, cancellationToken);
         }
 
         public int Count()
@@ -151,9 +211,9 @@ namespace Capstone.Infrastructure.Repository
             return GetQuery().Count();
         }
 
-        public Task<int> CountAsync()
+        public Task<int> CountAsync(CancellationToken cancellationToken = default)
         {
-            return GetQuery().CountAsync();
+            return GetQuery().CountAsync(cancellationToken);
         }
 
         public int Count(Expression<Func<TEntity, bool>> criteria)
@@ -161,47 +221,32 @@ namespace Capstone.Infrastructure.Repository
             return GetQuery().Count(criteria);
         }
 
-        public void Remove(TEntity entity)
+        public Task<int> CountAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken = default)
         {
-            if (entity != null) DbSet.Remove(entity);
+            return GetQuery().CountAsync(criteria, cancellationToken);
         }
 
-        public void RemoveRange(IEnumerable<TEntity> entities)
+        public async Task<bool> GetAnyAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken = default)
         {
-            DbSet.RemoveRange(entities);
+            return await Context.Set<TEntity>().AnyAsync(expression, cancellationToken);
         }
 
-        //public void BulkDeleteAsync(IEnumerable<TEntity> entities)
-        //{
-        //    Context.BulkDeleteAsync(entities);
-        //}
+        #endregion Get
 
-        public void Reload(TEntity entity)
-        {
-            Context.Entry(entity).Reload();
-        }
+        #region Sql
 
         public IQueryable<TEntity> GetDataFromQuery(string query)
         {
             return Context.Set<TEntity>().FromSqlRaw(query);
         }
 
-        /// <summary>
-        /// Check model have a specific property
-        /// </summary>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        protected bool HasProperty(string property)
-        {
-            return _type.GetProperty(property) != null;
-        }
+        #endregion Sql
 
-        protected void SetProperty(TEntity entity, string property, object value)
+        public void Reload(TEntity entity)
         {
-            if (value != null)
+            if (entity != null)
             {
-                object? parseValue = Guid.TryParse(value.ToString(), out Guid guid) ? guid : value;
-                entity.GetType().GetProperty(property).SetValue(entity, parseValue);
+                Context.Entry(entity).Reload();
             }
         }
 
@@ -213,6 +258,21 @@ namespace Capstone.Infrastructure.Repository
         public async ValueTask DisposeAsync()
         {
             await Context.DisposeAsync();
+        }
+
+        public Task<TEntity> SingleAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken)
+        {
+            return GetQuery().SingleAsync(criteria, cancellationToken);
+        }
+
+        public Task<TEntity?> SingleOrDefaultAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken)
+        {
+            return GetQuery().SingleOrDefaultAsync(criteria, cancellationToken);
+        }
+
+        public Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> criteria, CancellationToken cancellationToken)
+        {
+            return GetQuery().Where(criteria).FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

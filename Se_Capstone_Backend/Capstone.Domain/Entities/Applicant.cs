@@ -20,7 +20,7 @@ namespace Capstone.Domain.Entities
         [MaxLength(100)]
         public string PhoneNumber { get; set; } = string.Empty;
         [MaxLength(100)]
-        public string CvLink { get; set; } = string.Empty;
+        public string? CvLink { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
@@ -29,9 +29,7 @@ namespace Capstone.Domain.Entities
         public string CreatedBy { get; set; } = string.Empty;
         [MaxLength(100)]
         public string? UpdatedBy { get; set; } 
-        public Guid UserId { get; set; }
-        public User? user { get; set; }
-        public Guid JobId { get; set; }
+        public Guid MainJobId { get; set; }
         public Job MainJob { get; set; } = new Job();
         public ICollection<Job> Jobs { get; set; } = new List<Job>();
     }

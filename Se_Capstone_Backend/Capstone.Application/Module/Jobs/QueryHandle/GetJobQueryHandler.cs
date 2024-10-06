@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Capstone.Application.Module.Jobs.QueryHandle
 {
-    public class GetJobQueryHandler : IRequestHandler<GetJobQuery, JobDto>
+    public class GetJobQueryHandler : IRequestHandler<GetJobQuery, JobDto?>
     {
         private readonly IRepository<Job> _jobRepository;
 
@@ -18,7 +18,7 @@ namespace Capstone.Application.Module.Jobs.QueryHandle
             _jobRepository = jobRepository;
         }
 
-        public async Task<JobDto> Handle(GetJobQuery request, CancellationToken cancellationToken)
+        public async Task<JobDto?> Handle(GetJobQuery request, CancellationToken cancellationToken)
         {
             var job = _jobRepository.GetQuery().FirstOrDefault(x => x.Id == request.Id && !x.IsDeleted);
             if (job == null)

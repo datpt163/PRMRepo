@@ -33,7 +33,7 @@ namespace Capstone.Application.Module.Auth.QueryHandle
             }
             catch (Exception ex)
             {
-                return new LogoutResponse { Success = false, ErrorMessage = "An error occurred while processing your request." };
+                return new LogoutResponse { Success = false, ErrorMessage = "An error occurred while processing your request." + ex.Message };
             }
         }
     }

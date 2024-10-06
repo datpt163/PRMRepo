@@ -161,7 +161,7 @@ namespace Capstone.Infrastructure.DbContexts
             modelBuilder.Entity<Applicant>()
            .HasOne(a => a.MainJob)
            .WithMany()
-           .HasForeignKey(a => a.JobId)
+           .HasForeignKey(a => a.MainJobId)
            .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Applicant>()
