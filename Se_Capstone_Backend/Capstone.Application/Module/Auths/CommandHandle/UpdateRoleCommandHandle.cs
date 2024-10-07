@@ -2,6 +2,7 @@
 using Capstone.Application.Module.Auths.Command;
 using Capstone.Application.Module.Auths.Model;
 using Capstone.Domain.Entities;
+using Capstone.Domain.Module.Auth.TokenBlackList;
 using Capstone.Infrastructure.Redis;
 using Capstone.Infrastructure.Repository;
 using MediatR;
@@ -20,8 +21,10 @@ namespace Capstone.Application.Module.Auths.CommandHandle
         private readonly RoleManager<Role> _roleManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly RedisContext _redis;
-        public UpdateRoleCommandHandle(RoleManager<Role> roleManager, IUnitOfWork unitOfWork, RedisContext redis)
+        private readonly ITokenBlacklistService _tokenBlacklistService;
+        public UpdateRoleCommandHandle(RoleManager<Role> roleManager, IUnitOfWork unitOfWork, RedisContext redis, ITokenBlacklistService tokenBlacklistService)
         {
+            _tokenBlacklistService = tokenBlacklistService;
             _roleManager = roleManager;
             _unitOfWork = unitOfWork;
             _redis = redis;
@@ -84,18 +87,31 @@ namespace Capstone.Application.Module.Auths.CommandHandle
                         bool arePermissionsIdentical = !rolePermissionIds.Except(request.PermissionsId).Any()
                                            && !request.PermissionsId.Except(rolePermissionIds).Any();
 
-                        if(!arePermissionsIdentical) {
+                        if (!arePermissionsIdentical)
+                        {
                             var listMonitorToken = _redis.GetData<List<MonitorTokenModel>>("ListMonitorToken");
                             if (listMonitorToken != null)
                             {
+                                var tokensToRemove = new List<MonitorTokenModel>();
+
                                 foreach (var monitorToken in listMonitorToken)
                                 {
                                     if (monitorToken.RoleId == request.Id)
-                                        monitorToken.Status = true;
+                                    {
+                                        await _tokenBlacklistService.BlacklistTokenAsync(monitorToken.Token);
+                                        tokensToRemove.Add(monitorToken);
+                                    }
                                 }
+
+                                foreach (var tokenToRemove in tokensToRemove)
+                                {
+                                    listMonitorToken.Remove(tokenToRemove);
+                                }
+
                                 _redis.SetData<List<MonitorTokenModel>>("ListMonitorToken", listMonitorToken, DateTime.Now.AddYears(10));
                             }
                         }
+
 
                         return new ResponseMediator("", new { id = createdRole.Id, name = createdRole.Name, description = createdRole.Description, permissions = createdRole.Permissions });
                     }
