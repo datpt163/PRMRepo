@@ -45,6 +45,8 @@ namespace Capstone.Domain.Entities
         public bool IsVisible { get; set; } = false;
         public Guid? LeadId { get; set; }
         public User? Lead { get; set; }
+        public ICollection<Status> Statuses { get; set; } = new List<Status>();
+        public ICollection<Label> Labels { get; set; } = new List<Label>(); 
         public ICollection<User> Users { get; set; } = new List<User>();
         public ICollection<Issue> Issues { get; set; } = new List<Issue>();
 

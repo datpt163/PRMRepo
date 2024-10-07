@@ -11,10 +11,10 @@ namespace Capstone.Domain.Entities
         public Guid Id { get; set; }
         [MaxLength(100)]
         public string Title { get; set; } = string.Empty;
-
         [MaxLength(100)]
-        public string Description { get; set; } = string.Empty;
-        public bool? IsDeleted { get; set; }
+        public string? Description { get; set; } = string.Empty;
+        public Guid ProjectId { get; set; }
+        public Project Project { get; set; } = null!;
         public ICollection<Issue> Issues { get; set; } = new List<Issue>();
     }
 }

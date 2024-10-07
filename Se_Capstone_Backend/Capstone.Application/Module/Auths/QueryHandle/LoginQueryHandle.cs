@@ -20,6 +20,7 @@ using StackExchange.Redis;
 using Capstone.Infrastructure.Redis;
 using Capstone.Application.Module.Auths.Model;
 using CloudinaryDotNet.Actions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Capstone.Application.Module.Auth.QueryHandle
 {
@@ -53,7 +54,7 @@ namespace Capstone.Application.Module.Auth.QueryHandle
                     
                     if (roles.FirstOrDefault() != null)
                     {
-                        var role = _unitOfWork.Roles.Find(x => x.Name == roles.FirstOrDefault()).FirstOrDefault();
+                        var role = _unitOfWork.Roles.Find(x => x.Name == roles.FirstOrDefault()).Include(c => c.Permissions).FirstOrDefault();
                         if(role != null)
                         {
                             var listCheckToken = _redis.GetData<List<MonitorTokenModel>>("ListMonitorToken");
@@ -75,6 +76,7 @@ namespace Capstone.Application.Module.Auth.QueryHandle
                                 User = new RegisterResponse(role.Id, role.Name, user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
                                             user.Address ?? "", user.Gender, user.Dob, user.BankAccount, user.BankAccountName,
                                             user.CreateDate, user.UpdateDate, user.DeleteDate)
+                                { Permissions = role.Permissions}
                             });
                         }
                     }
