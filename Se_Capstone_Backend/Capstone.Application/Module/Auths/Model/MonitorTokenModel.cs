@@ -10,6 +10,5 @@ namespace Capstone.Application.Module.Auths.Model
     {
         public Guid RoleId { get; set; }
         public string Token {  get; set; } = string.Empty;
-        public bool Status { get; set; } = false;
     }
 }

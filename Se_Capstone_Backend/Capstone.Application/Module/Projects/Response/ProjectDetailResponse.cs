@@ -23,6 +23,7 @@ namespace Capstone.Application.Module.Projects.Response
         public Guid? LeadId { get; set; }
         public string? LeadName { get; set; }
         public string? LeadPosition { get; set; }
+        public string? LeadAvatar { get; set; }
         public List<UserForProjectDetailDTO> Members { get; set; } = new List<UserForProjectDetailDTO> { };
     }
 
@@ -33,5 +34,6 @@ namespace Capstone.Application.Module.Projects.Response
         public string UserName { get; set; } = string.Empty;
         public string? RoleName { get; set; }
         public string? PositionName { get; set; }
+        public string? Avatar { get; set; }
     }
 }

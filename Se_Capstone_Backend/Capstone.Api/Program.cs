@@ -59,7 +59,6 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 builder.Services.AddGreetingService(builder.Configuration);
 var app = builder.Build();
 app.UseMiddleware<BlacklistedTokenMiddleware>();
-app.UseMiddleware<MirrorTokenMiddleware>();
 //if (app.Environment.IsDevelopment())
 //{
 app.UseSwagger();
