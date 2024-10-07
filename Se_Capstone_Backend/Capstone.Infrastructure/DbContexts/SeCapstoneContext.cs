@@ -37,6 +37,7 @@ namespace Capstone.Infrastructure.DbContexts
         public DbSet<Project> Projects { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Issue> Issues { get; set; }
+        public DbSet<Position> Positions { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<GroupPermission> GroupPermissions { get; set; }
 
@@ -70,6 +71,10 @@ namespace Capstone.Infrastructure.DbContexts
             modelBuilder.Entity<LeaveLog>()
                .Property(e => e.Id)
                .HasDefaultValueSql("gen_random_uuid()");
+
+            modelBuilder.Entity<Position>()
+              .Property(e => e.Id)
+              .HasDefaultValueSql("gen_random_uuid()");
 
             modelBuilder.Entity<LogEntry>()
                .Property(e => e.Id)
@@ -158,6 +163,12 @@ namespace Capstone.Infrastructure.DbContexts
            .WithMany()
            .HasForeignKey(a => a.MainJobId)
            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>()
+          .HasOne(a => a.Position)
+          .WithMany(x => x.Users)
+          .HasForeignKey(a => a.PositionId)
+          .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<Applicant>()
               .HasMany(a => a.Jobs)

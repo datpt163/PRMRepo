@@ -44,6 +44,10 @@ namespace Capstone.Application.Module.Users.CommandHandle
             if (role == null)
                 return new ResponseMediator("Role not found", null, 404);
 
+            var position = _unitOfWork.Positions.FindOne(x => x.Id == request.PositionId);
+            if (position == null)
+                return new ResponseMediator("Position not found", null, 404);
+
             var existingEmailAccount = await _userManager.FindByEmailAsync(request.Email);
             if (existingEmailAccount != null)
                 return new ResponseMediator("Account with this email already exists", null, 400);
@@ -52,7 +56,7 @@ namespace Capstone.Application.Module.Users.CommandHandle
             if (existingUserNameAccount != null)
                 return new ResponseMediator("User name is already exists", null, 400);
 
-            var user = new User(request.Email, request.Address, request.Gender, request.Dob, request.Phone, request.UserName, request.FullName);
+            var user = new User(request.Email, request.Address, request.Gender, request.Dob, request.Phone, request.UserName, request.FullName) { PositionId = request.PositionId};
             var result = await _userManager.CreateAsync(user, request.Password);
           
             if (result.Succeeded)
@@ -64,10 +68,10 @@ namespace Capstone.Application.Module.Users.CommandHandle
                     var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var resultConfirmEmail = await _userManager.ConfirmEmailAsync(user, confirmationToken);
                     var responseSave = await _userManager.FindByNameAsync(request.UserName);
-                    var responseUser = new CreateUserResponse(role.Id, role.Name ?? "", responseSave.Status , responseSave.Email ?? "", responseSave.Id, responseSave.UserName ?? "", responseSave.FullName,  responseSave.PhoneNumber ?? "", responseSave.Avatar ?? "",
-                                             responseSave.Address ?? "" , responseSave.Gender, responseSave.Dob, responseSave.BankAccount, responseSave.BankAccountName,
-                                             responseSave.CreateDate, responseSave.UpdateDate, responseSave.DeleteDate);;
-
+                    var responseUser = new CreateUserResponse(role.Id, role.Name ?? "", responseSave.Status, responseSave.Email ?? "", responseSave.Id, responseSave.UserName ?? "", responseSave.FullName, responseSave.PhoneNumber ?? "", responseSave.Avatar ?? "",
+                                             responseSave.Address ?? "", responseSave.Gender, responseSave.Dob, responseSave.BankAccount, responseSave.BankAccountName,
+                                             responseSave.CreateDate, responseSave.UpdateDate, responseSave.DeleteDate)
+                    { PositionName = position.Name};
                     await _userManager.AddToRoleAsync(user, role.Name ?? "");
                     return new ResponseMediator("", responseUser);
                 }

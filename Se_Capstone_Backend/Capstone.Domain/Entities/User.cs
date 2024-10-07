@@ -23,14 +23,15 @@ namespace Capstone.Domain.Entities
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public DateTime? DeleteDate { get; set; }
+        public Guid? PositionId { get; set; }
         public string? RefreshToken { get; set; }
         public User() { }
+        public Position? Position { get; set; }
         public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
         public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
         public ICollection<Project> LeadProjects { get; set; } = new List<Project>();
         public ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
         public ICollection<LeaveLog> LeaveLogs { get; set; } = new List<LeaveLog>();
-
 
         public User(string email, string address, Gender gender, DateTime dob, string phone, string userName, string fullName)
         {

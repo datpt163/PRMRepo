@@ -26,6 +26,7 @@ namespace Capstone.Application.Module.Auths.Response
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public DateTime? DeleteDate { get; set; }
+        public string? PositionName {  get; set; }
         public Guid RoleId { get; set; }
         public string RoleName { get; set; }
 
