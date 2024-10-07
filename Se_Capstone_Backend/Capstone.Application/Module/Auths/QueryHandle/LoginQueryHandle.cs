@@ -61,12 +61,12 @@ namespace Capstone.Application.Module.Auth.QueryHandle
                             if (listCheckToken != null)
                             {
 
-                                listCheckToken.Add(new MonitorTokenModel() { RoleId = role.Id, Token = accessToken, Status = false });
+                                listCheckToken.Add(new MonitorTokenModel() { RoleId = role.Id, Token = accessToken});
                                 _redis.SetData<List<MonitorTokenModel>>("ListMonitorToken", listCheckToken, DateTime.Now.AddYears(20));
                             }
                             else
                             {
-                                _redis.SetData<List<MonitorTokenModel>>("ListMonitorToken", new List<MonitorTokenModel>() { new MonitorTokenModel() { RoleId = role.Id, Token = accessToken, Status = false} }, DateTime.Now.AddYears(20));
+                                _redis.SetData<List<MonitorTokenModel>>("ListMonitorToken", new List<MonitorTokenModel>() { new MonitorTokenModel() { RoleId = role.Id, Token = accessToken} }, DateTime.Now.AddYears(20));
                             }
 
                             return new ResponseMediator("", new LoginResponse()
