@@ -10,6 +10,7 @@ using Capstone.Domain.Entities;
 using Capstone.Infrastructure.Repository;
 using Capstone.Application.Module.Jobs.Query;
 using Capstone.Api.Module.Jobs.Request;
+using static Google.Apis.Requests.BatchRequest;
 
 namespace Capstone.Api.Module.Jobs.Controllers
 {
@@ -73,10 +74,14 @@ namespace Capstone.Api.Module.Jobs.Controllers
             {
                 Title = request.Title,
                 Description = request.Description,
+                IsDeleted = request.IsDeleted
             };
-            var jobDtos = await _mediator.Send(query);
-            return ResponseOk(jobDtos, "Jobs retrieved successfully");
+
+            var response = await _mediator.Send(query);
+
+            return ResponseOk(response.Data, response.Paging, "Jobs retrieved successfully");
         }
+
 
     }
 }

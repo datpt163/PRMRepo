@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using Capstone.Infrastructure.Repository;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Capstone.Application.Module.Jobs.QueryHandle
 {
@@ -20,7 +21,7 @@ namespace Capstone.Application.Module.Jobs.QueryHandle
 
         public async Task<JobDto?> Handle(GetJobQuery request, CancellationToken cancellationToken)
         {
-            var job = _jobRepository.GetQuery().FirstOrDefault(x => x.Id == request.Id && !x.IsDeleted);
+            var job =  await _jobRepository.GetQuery().FirstOrDefaultAsync(x => x.Id == request.Id);
             if (job == null)
             {
                 return null;

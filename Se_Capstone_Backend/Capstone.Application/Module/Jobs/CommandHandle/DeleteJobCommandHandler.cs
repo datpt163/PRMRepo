@@ -11,10 +11,12 @@ namespace Capstone.Application.Module.Jobs.CommandHandle
     public class DeleteJobCommandHandler : IRequestHandler<DeleteJobCommand, bool>
     {
         private readonly IRepository<Job> _jobRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteJobCommandHandler(IRepository<Job> jobRepository)
+        public DeleteJobCommandHandler(IRepository<Job> jobRepository, IUnitOfWork unitOfWork)
         {
             _jobRepository = jobRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<bool> Handle(DeleteJobCommand request, CancellationToken cancellationToken)
@@ -26,7 +28,9 @@ namespace Capstone.Application.Module.Jobs.CommandHandle
             }
 
             job.IsDeleted = true;
-            _jobRepository.Add(job);
+            await _jobRepository.AddAsync(job);
+            await _unitOfWork.SaveChangesAsync();
+
             return true;
         }
     }
