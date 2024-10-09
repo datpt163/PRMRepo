@@ -1,6 +1,8 @@
 ﻿using Capstone.Api.Common.ResponseApi.Controllers;
 using Capstone.Application.Module.Applicants.Command;
 using Capstone.Application.Module.Applicants.Query;
+using Capstone.Application.Module.Applicants.Response;
+using Capstone.Application.Module.Jobs.Command;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -68,5 +70,17 @@ namespace Capstone.Api.Module.Applicants.Controllers
             return ResponseCreated(applicantDto);
         }
 
+        // PUT api/applicants
+        [HttpPut]
+        [AllowAnonymous]
+        public async Task<IActionResult> Update([FromBody] UpdateApplicantCommand command)
+        {
+            var applicantDto = await _mediator.Send(command);
+            if (applicantDto == null)
+            {
+                return ResponseNotFound("Applicant not found or has been deleted");
+            }
+            return ResponseOk(applicantDto, "Applicant updated successfully");
+        }
     }
 }
