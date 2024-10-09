@@ -23,7 +23,7 @@ namespace Capstone.Api.Module.Applicants.Controllers
         // GET api/applicants
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetApplicants([FromQuery] GetApplicantListQuery query) // Changed FromBody to FromQuery for GET
+        public async Task<IActionResult> GetApplicants([FromQuery] GetApplicantListQuery query) 
         {
             var response = await _mediator.Send(query);
             return ResponseOk(response.Data, response.Paging);

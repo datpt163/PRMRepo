@@ -12,10 +12,12 @@ namespace Capstone.Application.Module.Jobs.CommandHandle
     public class UpdateJobCommandHandler : IRequestHandler<UpdateJobCommand, JobDto?>
     {
         private readonly IRepository<Job> _jobRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateJobCommandHandler(IRepository<Job> jobRepository)
+        public UpdateJobCommandHandler(IRepository<Job> jobRepository, IUnitOfWork unitOfWork)
         {
             _jobRepository = jobRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<JobDto?> Handle(UpdateJobCommand request, CancellationToken cancellationToken)
@@ -32,11 +34,11 @@ namespace Capstone.Application.Module.Jobs.CommandHandle
             if(!string.IsNullOrEmpty(request.Description))
             job.Description = request.Description;
 
-            job.UpdateAt = DateTime.UtcNow;
+            job.UpdateAt = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
             job.UpdatedBy = "Admin";
 
-            _jobRepository.Update(job);
-
+            await _jobRepository.UpdateAsync(job);
+            await _unitOfWork.SaveChangesAsync();
             return new JobDto
             {
                 Id = job.Id,
