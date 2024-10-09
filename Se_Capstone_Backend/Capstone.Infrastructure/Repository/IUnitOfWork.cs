@@ -23,6 +23,7 @@ namespace Capstone.Infrastructure.Repository
         public IRepository<Status> Statuses { get; }
         public IRepository<User> Users { get; }
         public IRepository<Position> Positions { get; }
+        public IRepository<Comment> Comments { get; }
         public IRepository<GroupPermission> GroupPermissions { get; }
         int SaveChanges();
 

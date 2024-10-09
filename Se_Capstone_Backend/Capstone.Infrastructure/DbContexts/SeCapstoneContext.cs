@@ -38,6 +38,7 @@ namespace Capstone.Infrastructure.DbContexts
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Issue> Issues { get; set; }
         public DbSet<Position> Positions { get; set; }
+        public DbSet<Comment> Comments { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<GroupPermission> GroupPermissions { get; set; }
 
@@ -55,6 +56,9 @@ namespace Capstone.Infrastructure.DbContexts
             modelBuilder.Entity<Attendance>()
                .Property(e => e.Id)
                .HasDefaultValueSql("gen_random_uuid()");
+            modelBuilder.Entity<Comment>()
+              .Property(e => e.Id)
+              .HasDefaultValueSql("gen_random_uuid()");
 
             modelBuilder.Entity<Issue>()
                .Property(e => e.Id)
@@ -137,6 +141,39 @@ namespace Capstone.Infrastructure.DbContexts
                .WithMany(s => s.Issues)
                .HasForeignKey(a => a.LabelId);
 
+            modelBuilder.Entity<Comment>()
+            .HasOne(a => a.User)
+             .WithMany(s => s.Comments)
+             .HasForeignKey(a => a.UserId);
+
+            modelBuilder.Entity<Label>()
+          .HasOne(a => a.Project)
+           .WithMany(s => s.Labels)
+           .HasForeignKey(a => a.ProjectId);
+
+            modelBuilder.Entity<Status>()
+        .HasOne(a => a.Project)
+         .WithMany(s => s.Statuses)
+         .HasForeignKey(a => a.ProjectId);
+
+
+            modelBuilder.Entity<Comment>()
+            .HasOne(a => a.Issue)
+             .WithMany(s => s.Comments)
+             .HasForeignKey(a => a.IssueId);
+
+            modelBuilder.Entity<Issue>()
+            .HasOne(a => a.ParentIssue)
+            .WithMany(s => s.SubIssues)
+            .HasForeignKey(a => a.ParentIssueId);
+
+            modelBuilder.Entity<Issue>()
+           .HasOne(a => a.LastUpdateBy)
+           .WithMany(s => s.IssuesUpdate)
+           .HasForeignKey(a => a.LastUpdateById);
+
+
+
             modelBuilder.Entity<Issue>()
              .HasOne(a => a.Status)
               .WithMany(s => s.Issues)
@@ -146,7 +183,7 @@ namespace Capstone.Infrastructure.DbContexts
              .HasOne(a => a.Project)
               .WithMany(s => s.Issues)
               .HasForeignKey(a => a.ProjectId)
-               .OnDelete(DeleteBehavior.Cascade); 
+               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Project>()
                   .HasOne(a => a.Lead)
