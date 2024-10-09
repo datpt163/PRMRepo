@@ -21,13 +21,17 @@ namespace Capstone.Application.Module.Jobs.CommandHandle
         public async Task<JobDto?> Handle(UpdateJobCommand request, CancellationToken cancellationToken)
         {
             var job = _jobRepository.GetQuery().FirstOrDefault(x=> x.Id ==request.Id);
-            if (job == null || job.IsDeleted)
+            if (job == null)
             {
                 return null;
             }
-
+            if (request.Isdeleted != null)
+            job.IsDeleted = (bool)request.Isdeleted;
+            if(!string.IsNullOrEmpty(request.Title))
             job.Title = request.Title;
+            if(!string.IsNullOrEmpty(request.Description))
             job.Description = request.Description;
+
             job.UpdateAt = DateTime.UtcNow;
             job.UpdatedBy = "Admin";
 

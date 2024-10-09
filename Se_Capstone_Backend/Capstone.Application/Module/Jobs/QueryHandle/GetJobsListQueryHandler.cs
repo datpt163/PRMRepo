@@ -22,16 +22,21 @@ namespace Capstone.Application.Module.Jobs.QueryHandle
         public async Task<List<JobDto>> Handle(GetJobsListQuery request, CancellationToken cancellationToken)
         {
             var query = _jobRepository.GetQuery().AsQueryable();
-            query = query.Where(x => !x.IsDeleted);
+
+            if (request.IsDeleted != null)
+            {
+                query = query.Where(x => x.IsDeleted == request.IsDeleted);
+            }
 
             if (!string.IsNullOrEmpty(request.Title))
             {
-                query = query.Where(x => x.Title.Contains(request.Title));
+                query = query.Where(x => x.Title.ToLower().Contains(request.Title.ToLower()));
+
             }
 
             if (!string.IsNullOrEmpty(request.Description))
             {
-                query = query.Where(x => x.Description.Contains(request.Description));
+                query = query.Where(x => x.Description.ToLower().Contains(request.Description.ToLower()));
             }
 
 
