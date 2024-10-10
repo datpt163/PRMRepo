@@ -42,13 +42,15 @@ namespace Capstone.Application.Module.Auths.QueryHandle
                 if (role != null) {
                     return new ResponseMediator("", new RegisterResponse(role.Id, role.Name, user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
                                               user.Address ?? "", user.Gender, user.Dob, user.BankAccount, user.BankAccountName,
-                                              user.CreateDate, user.UpdateDate, user.DeleteDate));
+                                              user.CreateDate, user.UpdateDate, user.DeleteDate)
+                    { PositionName = user.Position != null ? user.Position.Name : ""});
                 }
             }
 
             var responseUser = new RegisterResponse( null, null, user.Status, user.Email ?? "", user.Id, user.UserName ?? "", user.FullName, user.PhoneNumber ?? "", user.Avatar ?? "",
                                           user.Address ?? "", user.Gender, user.Dob, user.BankAccount, user.BankAccountName,
-                                          user.CreateDate, user.UpdateDate, user.DeleteDate);
+                                          user.CreateDate, user.UpdateDate, user.DeleteDate)
+            { PositionName = user.Position != null ? user.Position.Name : "" };
             return new ResponseMediator("", responseUser);
         }
     }
