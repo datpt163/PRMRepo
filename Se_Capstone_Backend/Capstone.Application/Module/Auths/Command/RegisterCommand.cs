@@ -50,7 +50,7 @@ namespace Capstone.Application.Module.Auth.Command
         public Gender Gender { get; set; }
         public DateTime Dob { get; set; }
         public string Phone { get; set; } = string.Empty;
-        public Guid PostionId { get; set; }
+        public Guid PositionId { get; set; }
         public Guid RoleId { get; set; }
     }
 }

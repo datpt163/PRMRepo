@@ -30,7 +30,8 @@ namespace Capstone.Application.Module.Auths.Response
         public DateTime? DeleteDate { get; set; }
         public Guid? RoleId { get; set; }
         public object? RoleName { get; set; }
-       public ICollection<Permission> Permissions { get; set; } = new List<Permission>();
+        public string? PositionName { get; set; }
+        public ICollection<Permission> Permissions { get; set; } = new List<Permission>();
 
         public RegisterResponse(Guid? roleId, object? roles, UserStatus status, string email, Guid id, string userName, string fullName, string phone, string avatar, string address, Gender? gender, 
             DateTime? dob, string? bankAccount, string? bankAccountName, DateTime createDate, DateTime? updateDate, DateTime? deleteDate)
