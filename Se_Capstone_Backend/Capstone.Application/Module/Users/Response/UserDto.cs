@@ -25,5 +25,6 @@ namespace Capstone.Application.Module.Users.Response
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public string? UserName { get; set;}
+        public string? PositionName { get; set; }
     }
 }
