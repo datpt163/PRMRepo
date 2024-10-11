@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Capstone.Domain.Entities
 {
@@ -16,7 +17,9 @@ namespace Capstone.Domain.Entities
         public int Position { get; set; }
         public string Color { get; set; } = string.Empty;
         public Guid ProjectId { get; set; }
+        [JsonIgnore]
         public Project Project { get; set; } = null!;
+        [JsonIgnore]
         public ICollection<Issue> Issues { get; set; } = new List<Issue>();
     }
 }
