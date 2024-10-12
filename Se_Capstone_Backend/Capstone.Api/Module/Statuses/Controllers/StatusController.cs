@@ -1,34 +1,34 @@
 ﻿using Capstone.Api.Common.ResponseApi.Controllers;
 using Capstone.Api.Common.ResponseApi.Model;
 using Capstone.Api.Module.Labels.Requests;
+using Capstone.Api.Module.Statuses.Requests;
 using Capstone.Application.Module.Labels.Command;
 using Capstone.Application.Module.Labels.Query;
-using Capstone.Application.Module.Projects.Command;
-using Capstone.Application.Module.Projects.Query;
-using Capstone.Domain.Enums;
+using Capstone.Application.Module.Status.Command;
+using Capstone.Application.Module.Status.Query;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace Capstone.Api.Module.Labels.Controllers
+namespace Capstone.Api.Module.Statuses.Controllers
 {
-    [Route("api/labels")]
+    [Route("api/status")]
     [ApiController]
-    public class LabelController : BaseController
+    public class StatusController : BaseController
     {
         private readonly IMediator _mediator;
 
-        public LabelController(IMediator mediator)
+        public StatusController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
         [HttpPost]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "ADD_LABEL")]
-        public async Task<IActionResult> CreateLabel([FromBody] CreateLabelCommand request)
+        [Authorize(Roles = "ADD_STATUS_PROJECT")]
+        public async Task<IActionResult> CreateStatus([FromBody] CreateStatusCommand request)
         {
             var result = await _mediator.Send(request);
             if (string.IsNullOrEmpty(result.ErrorMessage))
@@ -43,10 +43,10 @@ namespace Capstone.Api.Module.Labels.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "READ_LIST_LABEL")]
-        public async Task<IActionResult> GetListLabel(Guid? projectId)
+        [Authorize(Roles = "READ_LIST_STATUS_PROJECT")]
+        public async Task<IActionResult> GetListStatus(Guid? projectId)
         {
-            var result = await _mediator.Send(new GetListLabelQuery() { projectId = projectId });
+            var result = await _mediator.Send(new GetListStatusQuery() { projectId = projectId });
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data);
             else
@@ -57,10 +57,10 @@ namespace Capstone.Api.Module.Labels.Controllers
 
         [HttpDelete("{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "DELETE_LABEL")]
-        public async Task<IActionResult> DeleteLabel(Guid id, [FromBody] DeleteLabelRequest newLabel)
+        [Authorize(Roles = "DELETE_STATUS_PROJECT")]
+        public async Task<IActionResult> DeleteLabel(Guid id, [FromBody] DeleteStatusRequest newStatus)
         {
-            var result = await _mediator.Send(new DeleteLabelCommand() { Id = id, NewLabelId = newLabel.newLabelId });
+            var result = await _mediator.Send(new DeleteStatusCommand() { Id = id, NewStatusId = newStatus.newStatusId });
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseNoContent();
             else
@@ -73,10 +73,10 @@ namespace Capstone.Api.Module.Labels.Controllers
 
         [HttpPut("{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "UPDATE_LABEL")]
-        public async Task<IActionResult> UpdateLabel(Guid id, [FromBody] UpdateLabelRequest request)
+        [Authorize(Roles = "UPDATE_STATUS_PROJECT")]
+        public async Task<IActionResult> UpdateLabel(Guid id, [FromBody] UpdateStatusRequest request)
         {
-            var result = await _mediator.Send(new UpdateLabelCommand() { Id = id, Title = request.Title, Description = request.Description });
+            var result = await _mediator.Send(new UpdateStatusCommand() { Id = id, Name = request.Name, Description = request.Description, Color = request.Color });
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data);
             else

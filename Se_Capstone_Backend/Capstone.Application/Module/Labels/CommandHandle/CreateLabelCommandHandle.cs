@@ -30,8 +30,7 @@ namespace Capstone.Application.Module.Labels.CommandHandle
                 return new ResponseMediator("Project not found", null, 404);
             if (project.Labels.Select(x => x.Title.Trim().ToUpper()).Contains(request.Title.Trim().ToUpper()))
                 return new ResponseMediator("This Label is availble", null, 400);
-
-            var label = new Capstone.Domain.Entities.Label() { Title = request.Title, ProjectId = request.ProjectId, Description = request.Description };
+            var label = new Capstone.Domain.Entities.Label() { Title = request.Title, ProjectId = request.ProjectId, Description = request.Description};
             _unitOfWork.Labels.Add(label);
             await _unitOfWork.SaveChangesAsync();
             return new ResponseMediator("", label);
