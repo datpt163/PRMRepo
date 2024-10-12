@@ -27,12 +27,12 @@ namespace Capstone.Application.Module.Status.CommandHandle
             if (string.IsNullOrEmpty(request.Color))
                 return new ResponseMediator("Color empty", null, 400);
 
-            var project = _unitOfWork.Projects.Find(x => x.Id == request.ProjectId).Include(c => c.Status).FirstOrDefault();
+            var project = _unitOfWork.Projects.Find(x => x.Id == request.ProjectId).Include(c => c.Statuses).FirstOrDefault();
             if (project == null)
                 return new ResponseMediator("Project not found", null, 404);
 
             if (project.Statuses.Select(x => x.Name.Trim().ToUpper()).Contains(request.Name.Trim().ToUpper()))
-                return new ResponseMediator("This Label is availble", null, 400);
+                return new ResponseMediator("This Status is availble", null, 400);
 
             var position = 1;
             if(project.Statuses.Count() != 0) { 

@@ -27,7 +27,7 @@ namespace Capstone.Api.Module.Statuses.Controllers
 
         [HttpPost]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        //[Authorize(Roles = "ADD_LABEL")]
+        [Authorize(Roles = "ADD_STATUS_PROJECT")]
         public async Task<IActionResult> CreateStatus([FromBody] CreateStatusCommand request)
         {
             var result = await _mediator.Send(request);
@@ -43,7 +43,7 @@ namespace Capstone.Api.Module.Statuses.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = "READ_LABELS")]
+        [Authorize(Roles = "READ_LIST_STATUS_PROJECT")]
         public async Task<IActionResult> GetListStatus(Guid? projectId)
         {
             var result = await _mediator.Send(new GetListStatusQuery() { projectId = projectId });
@@ -57,7 +57,7 @@ namespace Capstone.Api.Module.Statuses.Controllers
 
         [HttpDelete("{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        //[Authorize(Roles = "DELETE_LABEL")]
+        [Authorize(Roles = "DELETE_STATUS_PROJECT")]
         public async Task<IActionResult> DeleteLabel(Guid id, [FromBody] DeleteStatusRequest newStatus)
         {
             var result = await _mediator.Send(new DeleteStatusCommand() { Id = id, NewStatusId = newStatus.newStatusId });
@@ -71,20 +71,20 @@ namespace Capstone.Api.Module.Statuses.Controllers
             }
         }
 
-        //[HttpPut("{id}")]
-        //[SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        //[Authorize(Roles = "UPDATE_LABEL")]
-        //public async Task<IActionResult> UpdateLabel(Guid id, [FromBody] UpdateLabelRequest request)
-        //{
-        //    var result = await _mediator.Send(new UpdateLabelCommand() { Id = id, Title = request.Title, Description = request.Description });
-        //    if (string.IsNullOrEmpty(result.ErrorMessage))
-        //        return ResponseOk(result.Data);
-        //    else
-        //    {
-        //        if (result.StatusCode == 404)
-        //            return ResponseNotFound(messageResponse: result.ErrorMessage);
-        //        return ResponseBadRequest(messageResponse: result.ErrorMessage);
-        //    }
-        //}
+        [HttpPut("{id}")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles = "UPDATE_STATUS_PROJECT")]
+        public async Task<IActionResult> UpdateLabel(Guid id, [FromBody] UpdateStatusRequest request)
+        {
+            var result = await _mediator.Send(new UpdateStatusCommand() { Id = id, Name = request.Name, Description = request.Description, Color = request.Color });
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(result.Data);
+            else
+            {
+                if (result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+        }
     }
 }

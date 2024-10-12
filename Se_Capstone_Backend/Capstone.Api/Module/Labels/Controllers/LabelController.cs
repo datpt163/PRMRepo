@@ -43,7 +43,7 @@ namespace Capstone.Api.Module.Labels.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "READ_LABELS")]
+        [Authorize(Roles = "READ_LIST_LABEL")]
         public async Task<IActionResult> GetListLabel(Guid? projectId)
         {
             var result = await _mediator.Send(new GetListLabelQuery() { projectId = projectId });
