@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: capstone-api
+    ports:
+      - "80:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=${DB_CONNECTION_STRING} 
+    depends_on:
+      - db
+    networks:
+      - capstone-net
+
+  db:
+    image: postgres:latest 
+    container_name: capstone-db
+    environment:
+      - POSTGRES_USER=yourusername
+      - POSTGRES_PASSWORD=yourpassword
+      - POSTGRES_DB=capstone
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - capstone-net
+
+networks:
+  capstone-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
