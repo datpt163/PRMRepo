@@ -1,24 +1,23 @@
-# Dockerfile bên ngoài (nếu bạn cần)
-
-# Sử dụng hình ảnh nền .NET SDK để xây dựng tất cả các ứng dụng
+# Sử dụng hình ảnh nền .NET SDK để xây dựng ứng dụng
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # Đặt thư mục làm việc
 WORKDIR /app
 
-# Sao chép tất cả các dự án
-COPY ./Capstone.Api/Capstone.Api.csproj ./Capstone.Api/
-COPY ./Capstone.Application/Capstone.Application.csproj ./Capstone.Application/
-COPY ./Capstone.Domain/Capstone.Domain.csproj ./Capstone.Domain/
+# Sao chép tất cả tệp .csproj và khôi phục các phụ thuộc
+COPY ./Se_Capstone_Backend/Capstone.Api/Capstone.Api.csproj ./Se_Capstone_Backend/Capstone.Api/
+COPY ./Se_Capstone_Backend/Capstone.Infrastructure/Capstone.Infrastructure.csproj ./Se_Capstone_Backend/Capstone.Infrastructure/
+COPY ./Se_Capstone_Backend/Capstone.Application/Capstone.Application.csproj ./Se_Capstone_Backend/Capstone.Application/
+COPY ./Se_Capstone_Backend/Capstone.Domain/Capstone.Domain.csproj ./Se_Capstone_Backend/Capstone.Domain/
 
-# Khôi phục các phụ thuộc
-RUN dotnet restore ./Capstone.Api/Capstone.Api.csproj
+# Khôi phục các phụ thuộc cho Capstone.Api
+RUN dotnet restore ./Se_Capstone_Backend/Capstone.Api/Capstone.Api.csproj
 
-# Sao chép mã nguồn
-COPY . .
+# Sao chép tất cả mã nguồn vào thư mục làm việc
+COPY ./Se_Capstone_Backend/. .
 
 # Xây dựng ứng dụng
-RUN dotnet publish ./Capstone.Api/Capstone.Api.csproj -c Release -o out
+RUN dotnet publish ./Se_Capstone_Backend/Capstone.Api/Capstone.Api.csproj -c Release -o out
 
 # Tạo hình ảnh chạy với .NET ASP.NET
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
