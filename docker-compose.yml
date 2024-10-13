@@ -1,9 +1,11 @@
+version: '3.8'
+
 services:
   api:
     build:
       context: .
-      dockerfile: Dockerfile  # Đường dẫn đến Dockerfile
+      dockerfile: Dockerfile
     ports:
-      - "80:80"  # Chỉnh sửa nếu cần thiết cho ứng dụng của bạn
+      - "5191:80"  # Port mapping
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development  # Hoặc 'Production' nếu cần
+      ASPNETCORE_ENVIRONMENT: Development
