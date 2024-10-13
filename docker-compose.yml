@@ -2,11 +2,9 @@ version: '3.8'
 
 services:
   web:
-    image: capstoneapi:latest
+    image: capstone-api
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./Se_Capstone_Backend
+      dockerfile: Capstone.Api/Dockerfile
     ports:
       - "80:80"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
