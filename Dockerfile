@@ -1,19 +1,19 @@
-# Sử dụng image .NET SDK để build ứng dụng
+# Use the SDK image for building the app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Sao chép csproj và restore dependencies
-COPY *.csproj ./
+# Copy the project files and restore dependencies
+COPY ./Se_Capstone_Backend/*.sln ./
+COPY ./Se_Capstone_Backend/Capstone.Api/*.csproj ./Capstone.Api/
 RUN dotnet restore
 
-# Sao chép tất cả các file còn lại và build ứng dụng
-COPY . ./
+# Copy the rest of the files and build the app
+COPY ./Se_Capstone_Backend/Capstone.Api/. ./Capstone.Api/
+WORKDIR /app/Capstone.Api
 RUN dotnet publish -c Release -o out
 
-# Sử dụng image .NET runtime để chạy ứng dụng
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+# Use the runtime image for running the app
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=build /app/out ./
-
-# Chạy ứng dụng
+COPY --from=build /app/Capstone.Api/out ./
 ENTRYPOINT ["dotnet", "Capstone.Api.dll"]
