@@ -1,32 +1,25 @@
-# Sử dụng hình ảnh nền .NET SDK để xây dựng ứng dụng
+# Use the SDK image for building the application
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-
-# Đặt thư mục làm việc
 WORKDIR /app
 
-# Sao chép tất cả tệp .csproj và khôi phục các phụ thuộc
-COPY ./Se_Capstone_Backend/Capstone.Api/Capstone.Api.csproj ./Se_Capstone_Backend/Capstone.Api/
-COPY ./Se_Capstone_Backend/Capstone.Infrastructure/Capstone.Infrastructure.csproj ./Se_Capstone_Backend/Capstone.Infrastructure/
-COPY ./Se_Capstone_Backend/Capstone.Application/Capstone.Application.csproj ./Se_Capstone_Backend/Capstone.Application/
-COPY ./Se_Capstone_Backend/Capstone.Domain/Capstone.Domain.csproj ./Se_Capstone_Backend/Capstone.Domain/
+# Copy the solution and project files
+COPY ./Se_Capstone_Backend/*.sln ./
+COPY ./Se_Capstone_Backend/Capstone.Api/*.csproj ./Capstone.Api/
+COPY ./Se_Capstone_Backend/Capstone.Infrastructure/*.csproj ./Capstone.Infrastructure/
+COPY ./Se_Capstone_Backend/Capstone.Application/*.csproj ./Capstone.Application/
+COPY ./Se_Capstone_Backend/Capstone.Domain/*.csproj ./Capstone.Domain/
 
-# Khôi phục các phụ thuộc cho Capstone.Api
-RUN dotnet restore ./Se_Capstone_Backend/Capstone.Api/Capstone.Api.csproj
+# Restore dependencies
+RUN dotnet restore
 
-# Sao chép tất cả mã nguồn vào thư mục làm việc
+# Copy the entire project
 COPY ./Se_Capstone_Backend/. .
 
-# Xây dựng ứng dụng
-RUN dotnet publish ./Se_Capstone_Backend/Capstone.Api/Capstone.Api.csproj -c Release -o out
+# Build the application
+RUN dotnet publish ./Capstone.Api/Capstone.Api.csproj -c Release -o out
 
-# Tạo hình ảnh chạy với .NET ASP.NET
+# Create the runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
-
-# Đặt thư mục làm việc
 WORKDIR /app
-
-# Sao chép thư mục xuất bản từ hình ảnh xây dựng
-COPY --from=build /app/out ./
-
-# Chạy ứng dụng
+COPY --from=build /app/out .
 ENTRYPOINT ["dotnet", "Capstone.Api.dll"]
