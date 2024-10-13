@@ -26,5 +26,5 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker build -t your-image-name:latest ./Se_Capstone_Backend/Capstone.Api
-        docker push your-image-name:latest
+        docker build -t be:latest ./Se_Capstone_Backend/Capstone.Api
+        docker push be:latest
