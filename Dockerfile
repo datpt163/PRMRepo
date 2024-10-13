@@ -1,19 +1,19 @@
-# Stage 1: Build the application
+# Sử dụng image .NET SDK để build ứng dụng
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copy csproj and restore as distinct layers
-COPY *.sln .
-COPY Capstone.Api/*.csproj ./Capstone.Api/
+# Sao chép csproj và restore dependencies
+COPY *.csproj ./
 RUN dotnet restore
 
-# Copy everything else and build
-COPY . .
-WORKDIR /app/Capstone.Api
-RUN dotnet publish -c Release -o /app/out
+# Sao chép tất cả các file còn lại và build ứng dụng
+COPY . ./
+RUN dotnet publish -c Release -o out
 
-# Stage 2: Create runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+# Sử dụng image .NET runtime để chạy ứng dụng
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
-COPY --from=build /app/out .
+COPY --from=build /app/out ./
+
+# Chạy ứng dụng
 ENTRYPOINT ["dotnet", "Capstone.Api.dll"]
