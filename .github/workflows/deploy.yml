@@ -47,7 +47,11 @@ jobs:
             docker rm capstone-api || true
 
             docker rmi phongnv0910/capstone-api:latest || true
-            docker rmi $(docker images -f "dangling=true" -q) || true
+            
+            dangling_images=\$(docker images -f "dangling=true" -q)
+            if [ ! -z "\$dangling_images" ]; then
+              docker rmi -f \$dangling_images || true
+            fi
             # Run the new container
             docker run -d -p 8080:8080 --name capstone-api phongnv0910/capstone-api:latest
           EOF
