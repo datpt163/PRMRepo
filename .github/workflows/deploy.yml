@@ -24,7 +24,7 @@ jobs:
         run: |
           echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
 
-      - name: Push Docker Image
+      - name: Tag and Push Docker Image
         run: |
           docker tag capstone-api ${DOCKERHUB_USERNAME}/capstone-api:latest
           docker push ${DOCKERHUB_USERNAME}/capstone-api:latest
@@ -33,10 +33,11 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SERVER_IP: ${{ secrets.SERVER_IP }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key
           chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@$SERVER_IP << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@$SERVER_IP << EOF
             # Pull the latest image from Docker Hub
             docker pull ${DOCKERHUB_USERNAME}/capstone-api:latest
             
