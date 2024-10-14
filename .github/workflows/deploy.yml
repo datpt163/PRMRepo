@@ -17,6 +17,33 @@ jobs:
         run: |
           docker build -t capstone-api .
 
-      - name: Run Docker Container
+      - name: Login to Docker Hub
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |
-          docker run -d -p 80:80 --name capstone-api capstone-api
+          echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+
+      - name: Push Docker Image
+        run: |
+          docker tag capstone-api ${DOCKERHUB_USERNAME}/capstone-api:latest
+          docker push ${DOCKERHUB_USERNAME}/capstone-api:latest
+
+      - name: SSH into the server and deploy
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key
+          chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@$SERVER_IP << 'EOF'
+            # Pull the latest image from Docker Hub
+            docker pull ${DOCKERHUB_USERNAME}/capstone-api:latest
+            
+            # Stop and remove the existing container if it exists
+            docker stop capstone-api || true
+            docker rm capstone-api || true
+
+            # Run the new container
+            docker run -d -p 8080:8080 --name capstone-api ${DOCKERHUB_USERNAME}/capstone-api:latest
+          EOF
