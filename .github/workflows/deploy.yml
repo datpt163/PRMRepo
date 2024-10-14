@@ -26,14 +26,12 @@ jobs:
 
       - name: Verify DockerHub Username
         run: |
-          echo "DockerHub Username: '${DOCKERHUB_USERNAME}'"
+          echo "DockerHub Username: '${{ secrets.DOCKERHUB_USERNAME }}'"
 
       - name: Tag and Push Docker Image
         run: |
-          echo "Tagging the Docker image..."
-          docker tag capstone-api "${DOCKERHUB_USERNAME}/capstone-api:latest"
-          echo "Pushing the Docker image..."
-          docker push "${DOCKERHUB_USERNAME}/capstone-api:latest"
+          docker tag capstone-api ${DOCKERHUB_USERNAME}/capstone-api:latest
+          docker push ${DOCKERHUB_USERNAME}/capstone-api:latest
 
       - name: SSH into the server and deploy
         env:
@@ -45,12 +43,12 @@ jobs:
           chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ubuntu@$SERVER_IP << EOF
             # Pull the latest image from Docker Hub
-            docker pull "${DOCKERHUB_USERNAME}/capstone-api:latest"
+            docker pull ${DOCKERHUB_USERNAME}/capstone-api:latest
             
             # Stop and remove the existing container if it exists
             docker stop capstone-api || true
             docker rm capstone-api || true
 
             # Run the new container
-            docker run -d -p 8080:8080 --name capstone-api "${DOCKERHUB_USERNAME}/capstone-api:latest"
+            docker run -d -p 8080:8080 --name capstone-api ${DOCKERHUB_USERNAME}/capstone-api:latest
           EOF
