@@ -1,0 +1,57 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build Docker Image
+        run: |
+          docker build -t capstone-api .
+
+      - name: Login to Docker Hub
+        env:
+          DOCKERHUB_USERNAME: phongnv0910 
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+        run: |
+          echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+
+      - name: Tag and Push Docker Image
+        run: |
+          echo "Tagging the Docker image..."
+          docker tag capstone-api phongnv0910/capstone-api:latest
+          echo "Pushing the Docker image..."
+          docker push phongnv0910/capstone-api:latest
+
+      - name: SSH into the server and deploy
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+        run: |
+          echo "$SSH_PRIVATE_KEY" > private_key
+          chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@$SERVER_IP << EOF
+            # Pull the latest image from Docker Hub
+            docker pull phongnv0910/capstone-api:latest
+            
+            # Stop and remove the existing container if it exists
+            docker stop capstone-api || true
+            docker rm capstone-api || true
+
+            docker rmi phongnv0910/capstone-api:latest || true
+            
+            dangling_images=\$(docker images -f "dangling=true" -q)
+            if [ ! -z "\$dangling_images" ]; then
+              docker rmi -f \$dangling_images || true
+            fi
+            # Run the new container
+            docker run -d -p 8080:8080 --name capstone-api phongnv0910/capstone-api:latest
+          EOF
