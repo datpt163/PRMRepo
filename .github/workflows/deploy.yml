@@ -1,57 +1,100 @@
-name: Deploy
+name: Build and deploy ASP.Net Core app to Azure Web App - SECapstoneBE
 
 on:
   push:
     branches:
-      - main
+      - dev
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Build Docker Image
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Display working directory before restore
+        run: pwd
+
+      - name: Restore dependencies
+        run: dotnet restore ./Se_Capstone_Backend/Se_Capstone_Backend.sln
+
+      - name: Display working directory before build
+        run: pwd
+
+      - name: Run SonarCloud Scanner
+        continue-on-error: true
         run: |
-          docker build -t capstone-api .
+          export PATH="$PATH:/home/runner/.dotnet/tools"
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet sonarscanner begin /k:"SE-Capstone_BE" /o:"se-capstone" /d:sonar.login="811e67a45699f27c738f66a7e9b00d2ef5203af1"
+          dotnet build ./Se_Capstone_Backend/Capstone.Api/Capstone.Api.csproj --configuration Release --no-restore
+          dotnet sonarscanner end /d:sonar.login="811e67a45699f27c738f66a7e9b00d2ef5203af1"
 
-      - name: Login to Docker Hub
-        env:
-          DOCKERHUB_USERNAME: phongnv0910 
-          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Display working directory before publish
+        run: pwd
+
+      - name: Publish with dotnet
         run: |
-          echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+          dotnet publish ./Se_Capstone_Backend/Capstone.Api/Capstone.Api.csproj -c Release -o ${{ github.workspace }}/myapp
+          echo "Contents of myapp directory after publish:"
+          ls -R ${{ github.workspace }}/myapp
 
-      - name: Tag and Push Docker Image
+      - name: Verify build output
+        run: ls -R ${{ github.workspace }}/myapp
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: .net-app
+          path: ${{ github.workspace }}/myapp
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write
+
+    steps:
+      - name: Display working directory before download
+        run: pwd
+
+      - name: List available artifacts
+        run: ls ${{ github.workspace }}
+
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: .net-app
+          path: ${{ github.workspace }}/myapp
+
+      - name: Display working directory after download
+        run: pwd
+
+      - name: List files after download
         run: |
-          echo "Tagging the Docker image..."
-          docker tag capstone-api phongnv0910/capstone-api:latest
-          echo "Pushing the Docker image..."
-          docker push phongnv0910/capstone-api:latest
+          echo "Contents of myapp directory after download:"
+          ls -R ${{ github.workspace }}/myapp
 
-      - name: SSH into the server and deploy
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SERVER_IP: ${{ secrets.SERVER_IP }}
-        run: |
-          echo "$SSH_PRIVATE_KEY" > private_key
-          chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@$SERVER_IP << EOF
-            # Pull the latest image from Docker Hub
-            docker pull phongnv0910/capstone-api:latest
-            
-            # Stop and remove the existing container if it exists
-            docker stop capstone-api || true
-            docker rm capstone-api || true
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_EF2C0FDD1EDA447D91CE12F2B79F7792 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A64CD2A5F7BF4F34B161FB029FA8B13B }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1C27DEC71EFF4D0BAA4A8DC8037768C2 }}
 
-            docker rmi phongnv0910/capstone-api:latest || true
-            
-            dangling_images=\$(docker images -f "dangling=true" -q)
-            if [ ! -z "\$dangling_images" ]; then
-              docker rmi -f \$dangling_images || true
-            fi
-            # Run the new container
-            docker run -d -p 8080:8080 --name capstone-api phongnv0910/capstone-api:latest
-          EOF
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'SECapstoneBE'
+          slot-name: 'Production'
+          package: ${{ github.workspace }}/myapp
