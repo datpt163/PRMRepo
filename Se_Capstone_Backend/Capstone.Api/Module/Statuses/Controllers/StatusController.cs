@@ -14,7 +14,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Capstone.Api.Module.Statuses.Controllers
 {
-    [Route("api/status")]
+    [Route("api/statuses")]
     [ApiController]
     public class StatusController : BaseController
     {
