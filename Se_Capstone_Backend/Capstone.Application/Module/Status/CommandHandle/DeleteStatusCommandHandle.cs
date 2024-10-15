@@ -26,7 +26,7 @@ namespace Capstone.Application.Module.Status.CommandHandle
             if (status.Issues.Count != 0)
             {
                 if (!request.NewStatusId.HasValue)
-                    return new ResponseMediator("New Status null", null, 400);
+                    return new ResponseMediator("New status null", null, 400);
                 var newStatus = _unitOfWork.Statuses.Find(x => x.Id == request.NewStatusId).FirstOrDefault();
                 if (newStatus == null)
                     return new ResponseMediator("New status not found", null, 404);

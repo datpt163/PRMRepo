@@ -23,7 +23,7 @@ namespace Capstone.Application.Module.Labels.CommandHandle
         {
             var label = _unitOfWork.Labels.Find(x => x.Id == request.Id).Include(c => c.Issues).Include(c => c.Project).FirstOrDefault();
             if (label == null)
-                return new ResponseMediator("label not found", null, 404);
+                return new ResponseMediator("Label not found", null, 404);
             if(label.Issues.Count == 0)
             {
                 _unitOfWork.Labels.Remove(label);
@@ -33,7 +33,7 @@ namespace Capstone.Application.Module.Labels.CommandHandle
             else
             {
                 if(!request.NewLabelId.HasValue)
-                    return new ResponseMediator("New Label null", null, 400);
+                    return new ResponseMediator("New label null", null, 400);
                 var newLabel = _unitOfWork.Labels.Find(x => x.Id == request.NewLabelId).FirstOrDefault();
                 if(newLabel == null)
                     return new ResponseMediator("new label not found", null, 404);
