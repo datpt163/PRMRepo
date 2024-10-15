@@ -32,7 +32,7 @@ namespace Capstone.Application.Module.Status.CommandHandle
                 return new ResponseMediator("Project not found", null, 404);
 
             if (project.Statuses.Select(x => x.Name.Trim().ToUpper()).Contains(request.Name.Trim().ToUpper()))
-                return new ResponseMediator("This Status is availble", null, 400);
+                return new ResponseMediator("This name status is availble", null, 400);
 
             var position = 1;
             if(project.Statuses.Count() != 0) { 

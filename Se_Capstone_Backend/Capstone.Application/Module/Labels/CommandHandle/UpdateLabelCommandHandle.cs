@@ -28,7 +28,7 @@ namespace Capstone.Application.Module.Labels.CommandHandle
 
             var labelCheckDuplicateTitle = _unitOfWork.Labels.FindOne(x => x.Id != request.Id && x.ProjectId == label.ProjectId && x.Title.Trim().ToUpper() == request.Title.Trim().ToUpper());
             if(labelCheckDuplicateTitle != null)
-                return new ResponseMediator("Title duplicate", null, 400);
+                return new ResponseMediator("This title label is availble", null, 400);
 
             label.Title = request.Title;
             label.Description = request.Description;

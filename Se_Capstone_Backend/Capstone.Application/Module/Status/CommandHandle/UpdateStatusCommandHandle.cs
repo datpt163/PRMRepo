@@ -31,7 +31,7 @@ namespace Capstone.Application.Module.Status.CommandHandle
 
             var statusCheckDuplicateTitle = _unitOfWork.Statuses.FindOne(x => x.Id != request.Id && x.ProjectId == status.ProjectId && x.Name.Trim().ToUpper() == request.Name.Trim().ToUpper());
             if (statusCheckDuplicateTitle != null)
-                return new ResponseMediator("Name duplicate", null, 400);
+                return new ResponseMediator("This name status is availble", null, 400);
 
             status.Name = request.Name;
             status.Description = request.Description;

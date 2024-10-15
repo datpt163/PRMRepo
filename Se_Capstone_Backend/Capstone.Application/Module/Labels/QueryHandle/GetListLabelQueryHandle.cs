@@ -21,11 +21,16 @@ namespace Capstone.Application.Module.Labels.QueryHandle
 
         public async Task<ResponseMediator> Handle(GetListLabelQuery request, CancellationToken cancellationToken)
         {
-            var labels = await _unitOfWork.Labels.GetQuery().ToListAsync();
+            if (!request.projectId.HasValue)
+                return new ResponseMediator("Label id null", null);
 
-            if (request.projectId.HasValue)
-                labels = labels.Where(x => x.ProjectId == request.projectId).ToList();
-
+            var labels = await _unitOfWork.Labels.GetQuery(x => x.ProjectId == request.projectId).Include(c => c.Issues).Select(x => new
+            {
+                Id = x.Id,
+                Title = x.Title,
+                Description = x.Description,
+                IssueCount = x.Issues.Count,
+            }).ToListAsync();
             return new ResponseMediator("",labels);
         }
     }

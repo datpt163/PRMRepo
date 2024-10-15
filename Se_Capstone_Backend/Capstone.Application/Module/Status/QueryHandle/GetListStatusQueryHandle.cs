@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,11 +23,18 @@ namespace Capstone.Application.Module.Status.QueryHandle
 
         public async Task<ResponseMediator> Handle(GetListStatusQuery request, CancellationToken cancellationToken)
         {
-            var statuses = await _unitOfWork.Statuses.GetQuery().ToListAsync();
+            if (!request.projectId.HasValue)
+                return new ResponseMediator("Project id null", null);
 
-            if (request.projectId.HasValue)
-                statuses = statuses.Where(x => x.ProjectId == request.projectId).OrderBy(x => x.Position).ToList();
-
+            var statuses = await _unitOfWork.Statuses.GetQuery(x => x.ProjectId == request.projectId).Include(x => x.Issues).OrderBy(x => x.Position).Select(x => new
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                Position = x.Position,
+                Color = x.Color,
+                IssueCount = x.Issues.Count,
+            }).ToListAsync();
             return new ResponseMediator("", statuses);
         }
     }
