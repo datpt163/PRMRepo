@@ -65,10 +65,25 @@ namespace Capstone.Application.Module.Projects.CommandHandle
 
             _unitOfWork.Projects.Add(projectCreate);
             await _unitOfWork.SaveChangesAsync();
+            _unitOfWork.Statuses.AddRange(CreateDefaultStatus(projectCreate.Id));
+            await _unitOfWork.SaveChangesAsync();
+
             var response =  _mappper.Map<ProjectDTO>(projectCreate);
             response.LeadId = userDto.Id;
             response.LeadName = userDto.Name;
             return new ResponseMediator("", response);
+        }
+
+        public List<Domain.Entities.Status> CreateDefaultStatus(Guid projectId)
+        {
+            return new List<Domain.Entities.Status>() { 
+                new Domain.Entities.Status() {Name = "Backlog", Color = "blackAlpha", Description = "Plan to do in this phase", Position = 1, ProjectId = projectId} ,
+                new Domain.Entities.Status() {Name = "Todo", Color = "telegram", Description = "Plan to do in this week", Position = 2, ProjectId = projectId},
+                new Domain.Entities.Status() {Name = "In progress", Color = "telegram", Description = "Tasks that you are working on", Position = 3, ProjectId = projectId},
+                new Domain.Entities.Status() {Name = "In review", Color = "telegram", Description = "This task is waiting for review", Position = 4, ProjectId = projectId},
+                new Domain.Entities.Status() {Name = "Done", Color = "green", Description = "This task is completed", Position = 5, ProjectId = projectId},
+                new Domain.Entities.Status() {Name = "Cancelled", Color = "yellow", Description = "Tasks that are decided not to execute anymore", Position = 6, ProjectId = projectId},
+            };
         }
     }
 }
