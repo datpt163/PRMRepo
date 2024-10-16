@@ -1,6 +1,7 @@
 using Capstone.Api.Common.ConfigureService;
 using Capstone.Api.Middleware;
 using Capstone.Api.Module.Auth.Validator;
+using Capstone.Api.Module.Statuses.SignalR;
 using Capstone.Application;
 using Capstone.Application.Common.Email;
 using Capstone.Application.Common.Jwt;
@@ -23,18 +24,21 @@ builder.Services.AddControllers()
         fv.RegisterValidatorsFromAssemblyContaining<RegisterCommandValidator>());
 
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddEndpointsApiExplorer();
+var corsUrls = builder.Configuration.GetSection("Cors:Urls").Get<string[]>() ?? Array.Empty<string>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
         policy =>
         {
-            policy.AllowAnyOrigin()
+           
+            policy.WithOrigins(corsUrls)
                   .AllowAnyHeader()
-                  .AllowAnyMethod();
+                  .AllowAnyMethod()
+                .AllowCredentials(); 
         });
 });
+builder.Services.AddSignalR();
 builder.Services.AddSwaggerService();
 builder.Services.AddDataService(builder.Configuration);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AssemblyReference.Assembly));
@@ -62,14 +66,13 @@ app.UseMiddleware<BlacklistedTokenMiddleware>();
 //if (app.Environment.IsDevelopment())
 //{
 app.UseSwagger();
-    app.UseSwaggerUI(); 
+    app.UseSwaggerUI();
 //}
-
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
 #region MigrateDbContext
 //using (var scope = app.Services.CreateScope())
 //{
@@ -77,5 +80,5 @@ app.MapControllers();
 //    dbContext.Database.Migrate();
 //}
 #endregion
-app.UseCors("AllowAll");
+app.MapHub<StatusHub>("/statusHub");
 app.Run();
