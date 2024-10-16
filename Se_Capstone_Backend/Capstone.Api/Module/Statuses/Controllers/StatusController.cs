@@ -43,7 +43,6 @@ namespace Capstone.Api.Module.Statuses.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "READ_LIST_STATUS_PROJECT")]
         public async Task<IActionResult> GetListStatus(Guid? projectId)
         {
             var result = await _mediator.Send(new GetListStatusQuery() { projectId = projectId });
