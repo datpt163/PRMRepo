@@ -1,5 +1,7 @@
 ﻿using Capstone.Application.Common.Jwt;
+using Capstone.Application.Module.Status.ConsumerRabbitMq.Message;
 using Capstone.Infrastructure.Repository;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -12,11 +14,13 @@ namespace Capstone.Api.Module.Statuses.SignalR
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IJwtService _jwtService;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public StatusHub(IUnitOfWork unitOfWork, IJwtService jwtService)
+        public StatusHub(IUnitOfWork unitOfWork, IJwtService jwtService, IPublishEndpoint publishEndpoint)
         {
             _unitOfWork = unitOfWork;
             _jwtService = jwtService;
+            _publishEndpoint = publishEndpoint;
         }
 
         public async Task JoinGroup(string groupId)
@@ -30,6 +34,7 @@ namespace Capstone.Api.Module.Statuses.SignalR
             {
                 var httpContext = Context.GetHttpContext();
                 var token = httpContext?.Request.Headers["Authorization"].ToString()?.Replace("Bearer ", "");
+              
                 var user = await _jwtService.VerifyTokenAsync(token ?? "");
                 if (user == null)
                     throw new Exception("Not found user");
@@ -41,23 +46,7 @@ namespace Capstone.Api.Module.Statuses.SignalR
                     throw new Exception("Some thing wrong with position");
                 if(position == status.Position)
                     throw new Exception("Old position same new position");
-
-                if(position > status.Position)
-                {
-                    foreach (var s in status.Project.Statuses)
-                        if (s.Position > status.Position && s.Position <= position)
-                            s.Position -= 1;
-                }
-                else
-                {
-                    foreach (var s in status.Project.Statuses)
-                        if (s.Position < status.Position && s.Position >= position)
-                            s.Position += 1;
-                }
-                status.Position = position;
-                _unitOfWork.Statuses.Update(status);
-                await _unitOfWork.SaveChangesAsync();
-
+                await _publishEndpoint.Publish(new OrderStatusMessage() { Status = status, Position = position });
                 await Clients.Group(groupId).SendAsync("StatusOrderResponse", user.Id);
 
             }
