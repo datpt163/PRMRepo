@@ -6,11 +6,13 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Capstone.Domain.Entities.Common;
 using Capstone.Domain.Enums;
 namespace Capstone.Domain.Entities
 {
     [Table("issues")]
-    public class Issue
+    public class Issue : BaseEntity
+
     {
         public Guid Id { get; set; }
         [MaxLength(100)]

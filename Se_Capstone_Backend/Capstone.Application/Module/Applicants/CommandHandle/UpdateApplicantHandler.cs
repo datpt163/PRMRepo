@@ -63,7 +63,7 @@ public class UpdateApplicantCommandHandler : IRequestHandler<UpdateApplicantComm
                 }
             }
         }
-        applicant.UpdateAt = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+        applicant.UpdatedAt = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
         await _applicantRepository.UpdateAsync(applicant);
 
         var applicantDto = new ApplicantDto

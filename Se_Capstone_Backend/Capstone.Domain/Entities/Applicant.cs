@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Capstone.Domain.Entities.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace Capstone.Domain.Entities
 {
     [Table("applicants")]
-    public class Applicant
+    public class Applicant : BaseEntity
     {
         public Guid Id { get; set; }
         [MaxLength(100)]
@@ -20,15 +21,8 @@ namespace Capstone.Domain.Entities
         [MaxLength(100)]
         public string PhoneNumber { get; set; } = string.Empty;
         [MaxLength(100)]
-        public string? CvLink { get; set; } = string.Empty;
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdateAt { get; set; }
-        public bool IsDeleted { get; set; }
+        public string? CvLink { get; set; } = string.Empty; 
         public bool? IsOnBoard { get; set; }
-        [MaxLength(100)]
-        public string CreatedBy { get; set; } = string.Empty;
-        [MaxLength(100)]
-        public string? UpdatedBy { get; set; } 
         public Guid MainJobId { get; set; }
         public Job MainJob { get; set; } = new Job();
         public ICollection<Job> Jobs { get; set; } = new List<Job>();

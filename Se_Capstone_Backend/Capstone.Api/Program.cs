@@ -11,10 +11,13 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
+using System.Globalization;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -62,23 +65,46 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 });
 builder.Services.AddGreetingService(builder.Configuration);
 var app = builder.Build();
+
+#region Cultures
+var supportedCultures = new[]
+    {
+        new CultureInfo("en"),
+        new CultureInfo("vi")
+    };
+
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("en"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+});
+#endregion
+
 app.UseMiddleware<BlacklistedTokenMiddleware>();
+
 //if (app.Environment.IsDevelopment())
 //{
 app.UseSwagger();
-    app.UseSwaggerUI();
+app.UseSwaggerUI();
+app.UseDeveloperExceptionPage();
 //}
+
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
 #region MigrateDbContext
-//using (var scope = app.Services.CreateScope())
-//{
-//    var dbContext = scope.ServiceProvider.GetRequiredService<ManageEmployeeDbContext>();
-//    dbContext.Database.Migrate();
-//}
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<SeCapstoneContext>();
+    dbContext.Database.Migrate();
+}
 #endregion
+
+
+
 app.MapHub<StatusHub>("/statusHub");
 app.Run();

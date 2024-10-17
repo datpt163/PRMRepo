@@ -3,6 +3,7 @@ using System;
 using Capstone.Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Capstone.Infrastructure.Migrations
 {
     [DbContext(typeof(SeCapstoneContext))]
-    partial class SeCapstoneContextModelSnapshot : ModelSnapshot
+    [Migration("20241017084352_RemoveCommonFeild")]
+    partial class RemoveCommonFeild
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,15 +33,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("createdAt");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("createdBy");
-
                     b.Property<string>("CvLink")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
@@ -49,10 +43,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("email");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isDeleted");
 
                     b.Property<bool?>("IsOnBoard")
                         .HasColumnType("boolean")
@@ -78,15 +68,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("startDate");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("updatedAt");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("updatedBy");
-
                     b.HasKey("Id");
 
                     b.HasIndex("MainJobId");
@@ -101,15 +82,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("createdAt");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("createdBy");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -127,24 +99,11 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("image");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isDeleted");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("title");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("updatedAt");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("updatedBy");
 
                     b.HasKey("Id");
 
@@ -163,15 +122,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("createAt");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("createdAt");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("createdBy");
-
                     b.Property<bool>("IsCheckIn")
                         .HasColumnType("boolean")
                         .HasColumnName("isCheckIn");
@@ -180,22 +130,9 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("isChecked");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isDeleted");
-
                     b.Property<DateTime?>("TimeStamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("timeStamp");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("updatedAt");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("updatedBy");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
@@ -221,31 +158,9 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("content");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("createdAt");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("createdBy");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isDeleted");
-
                     b.Property<Guid>("IssueId")
                         .HasColumnType("uuid")
                         .HasColumnName("issueId");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("updatedAt");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("updatedBy");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
@@ -291,15 +206,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("assignedId");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("createdAt");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("createdBy");
-
                     b.Property<string>("Description")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
@@ -317,10 +223,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("integer")
                         .HasColumnName("index");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isDeleted");
 
                     b.Property<Guid>("LabelId")
                         .HasColumnType("uuid")
@@ -369,15 +271,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnName("subject");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("updatedAt");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("updatedBy");
-
                     b.HasKey("Id");
 
                     b.HasIndex("LabelId");
@@ -401,39 +294,17 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("createdAt");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("createdBy");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("description");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isDeleted");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("title");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("updatedAt");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("updatedBy");
 
                     b.HasKey("Id");
 
@@ -478,15 +349,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("createdAt");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("createdBy");
-
                     b.Property<DateTime?>("EndTime")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("endTime");
@@ -498,10 +360,6 @@ namespace Capstone.Infrastructure.Migrations
                     b.Property<bool>("IsChecked")
                         .HasColumnType("boolean")
                         .HasColumnName("isChecked");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isDeleted");
 
                     b.Property<bool>("IsFullDay")
                         .HasColumnType("boolean")
@@ -525,15 +383,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("title");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("updatedAt");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("updatedBy");
-
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
                         .HasColumnName("userId");
@@ -553,15 +402,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("createdAt");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("createdBy");
-
                     b.Property<string>("ErrorMessage")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
@@ -571,23 +411,10 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("isChecked");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isDeleted");
-
                     b.Property<string>("Title")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("title");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("updatedAt");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("updatedBy");
 
                     b.HasKey("Id");
 
@@ -657,15 +484,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("code");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("createdAt");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("createdBy");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -675,10 +493,6 @@ namespace Capstone.Infrastructure.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("endDate");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("boolean")
-                        .HasColumnName("isDeleted");
 
                     b.Property<bool>("IsVisible")
                         .HasColumnType("boolean")
@@ -703,15 +517,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("smallint")
                         .HasDefaultValue((short)2)
                         .HasColumnName("status");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("updatedAt");
-
-                    b.Property<Guid?>("UpdatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("uuid")
-                        .HasColumnName("updatedBy");
 
                     b.HasKey("Id");
 

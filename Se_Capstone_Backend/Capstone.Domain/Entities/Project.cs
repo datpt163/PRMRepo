@@ -1,4 +1,5 @@
-﻿using Capstone.Domain.Enums;
+﻿using Capstone.Domain.Entities.Common;
+using Capstone.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +9,8 @@ using System.Text.Json.Serialization;
 namespace Capstone.Domain.Entities
 {
     [Table("projects")]
-    public class Project
+    public class Project : BaseEntity
+
     {
         public Project()
         {
@@ -40,8 +42,6 @@ namespace Capstone.Domain.Entities
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public ProjectStatus Status { get; set; } = ProjectStatus.NotStarted;
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
         public bool IsVisible { get; set; } = false;
         public Guid? LeadId { get; set; }
         public User? Lead { get; set; }
