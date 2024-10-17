@@ -28,7 +28,7 @@ namespace Capstone.Application.Module.Jobs.CommandHandle
                 Title = request.Title,
                 Description = request.Description,
                 CreatedAt = DateTime.Now,
-                CreatedBy = "Admin",
+                CreatedBy = null,
                 IsDeleted = false
             };
 
@@ -40,7 +40,7 @@ namespace Capstone.Application.Module.Jobs.CommandHandle
                 Title = job.Title,
                 Description = job.Description,
                 CreatedAt = job.CreatedAt,
-                UpdateAt = job.UpdateAt,
+                UpdateAt = job.UpdatedAt,
                 IsDeleted = job.IsDeleted,
                 CreatedBy = job.CreatedBy,
                 UpdatedBy = job.UpdatedBy
