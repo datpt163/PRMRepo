@@ -1,8 +1,8 @@
 ﻿using Capstone.Api.Common.ResponseApi.Controllers;
+using Capstone.Api.Resources;
 using Capstone.Application.Module.Applicants.Command;
 using Capstone.Application.Module.Applicants.Query;
 using Capstone.Application.Module.Applicants.Response;
-using Capstone.Application.Module.Jobs.Command;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Capstone.Api.Module.Applicants.Controllers
 {
     [ApiController]
-    [Route("api/applicants")] // Updated route
+    [Route("api/applicants")]
     public class ApplicantsController : BaseController
     {
         private readonly IMediator _mediator;
@@ -22,16 +22,14 @@ namespace Capstone.Api.Module.Applicants.Controllers
             _mediator = mediator;
         }
 
-        // GET api/applicants
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetApplicants([FromQuery] GetApplicantListQuery query) 
+        public async Task<IActionResult> GetApplicants([FromQuery] GetApplicantListQuery query)
         {
             var response = await _mediator.Send(query);
-            return ResponseOk(response.Data, response.Paging);
+            return ResponseOk(response.Data, response.Paging, Messages.ApplicantsRetrievedSuccessfully);
         }
 
-        // GET api/applicants/{id}
         [HttpGet("{id:guid}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetApplicantDetail(Guid id)
@@ -40,12 +38,11 @@ namespace Capstone.Api.Module.Applicants.Controllers
             var applicant = await _mediator.Send(query);
             if (applicant == null)
             {
-                return ResponseNotFound("Applicant not found");
+                return ResponseNotFound(Messages.ApplicantNotFound);
             }
-            return ResponseOk(dataResponse: applicant);
+            return ResponseOk(dataResponse: applicant, Messages.ApplicantRetrievedSuccessfully);
         }
 
-        // DELETE api/applicants/{id}
         [HttpDelete("{id:guid}")]
         [AllowAnonymous]
         public async Task<IActionResult> DeleteApplicant(Guid id)
@@ -55,22 +52,20 @@ namespace Capstone.Api.Module.Applicants.Controllers
 
             if (result == null)
             {
-                return ResponseNotFound("Applicant not found or deletion failed.");
+                return ResponseNotFound(Messages.ApplicantNotFoundOrDeletionFailed);
             }
 
-            return ResponseOk(dataResponse: result, "Applicant deleted successfully.");
+            return ResponseOk(dataResponse: result, Messages.ApplicantDeletedSuccessfully);
         }
 
-        // POST api/applicants/add
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> AddApplicant([FromForm] AddApplicantCommand command)
         {
             var applicantDto = await _mediator.Send(command);
-            return ResponseCreated(applicantDto);
+            return ResponseCreated(applicantDto, Messages.ApplicantCreatedSuccessfully);
         }
 
-        // PUT api/applicants
         [HttpPut]
         [AllowAnonymous]
         public async Task<IActionResult> Update([FromBody] UpdateApplicantCommand command)
@@ -78,9 +73,9 @@ namespace Capstone.Api.Module.Applicants.Controllers
             var applicantDto = await _mediator.Send(command);
             if (applicantDto == null)
             {
-                return ResponseNotFound("Applicant not found or has been deleted");
+                return ResponseNotFound(Messages.ApplicantNotFoundOrDeleted);
             }
-            return ResponseOk(applicantDto, "Applicant updated successfully");
+            return ResponseOk(applicantDto, Messages.ApplicantUpdatedSuccessfully);
         }
     }
 }

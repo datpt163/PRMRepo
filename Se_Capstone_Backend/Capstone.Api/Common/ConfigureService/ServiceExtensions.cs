@@ -43,6 +43,10 @@ namespace Capstone.Api.Common.ConfigureService
 
             #endregion
 
+            #region Localization
+            services.AddLocalization(options => options.ResourcesPath = "Resources"); 
+            #endregion
+
             #region Middleware
             #endregion
 

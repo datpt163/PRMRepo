@@ -34,8 +34,8 @@ namespace Capstone.Application.Module.Jobs.CommandHandle
             if(!string.IsNullOrEmpty(request.Description))
             job.Description = request.Description;
 
-            job.UpdateAt = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
-            job.UpdatedBy = "Admin";
+            job.UpdatedAt = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+            job.UpdatedBy = null;
 
             await _jobRepository.UpdateAsync(job);
             await _unitOfWork.SaveChangesAsync();
@@ -45,7 +45,7 @@ namespace Capstone.Application.Module.Jobs.CommandHandle
                 Title = job.Title,
                 Description = job.Description,
                 CreatedAt = job.CreatedAt,
-                UpdateAt = job.UpdateAt,
+                UpdateAt = job.UpdatedAt,
                 IsDeleted = job.IsDeleted,
                 CreatedBy = job.CreatedBy,
                 UpdatedBy = job.UpdatedBy
