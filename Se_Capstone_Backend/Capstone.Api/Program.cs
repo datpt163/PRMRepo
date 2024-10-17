@@ -50,6 +50,8 @@ builder.Services.AddIdentity<User, Capstone.Domain.Entities.Role>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddAuthSerivce(builder.Configuration);
+builder.Services.AddMassTransitService(builder.Configuration);
+
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
         options.TokenLifespan = TimeSpan.FromDays(1));
