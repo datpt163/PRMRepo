@@ -2,6 +2,7 @@
 using Capstone.Domain.Entities;
 using Capstone.Infrastructure.Repository;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +22,8 @@ namespace Capstone.Application.Module.Status.ConsumerRabbitMq
         public async Task Consume(ConsumeContext<OrderStatusMessage> context)
         {
             var position = context.Message.Position;
-            var status = context.Message.Status;
-            if(status != null)
+            var status = _unitOfWork.Statuses.Find(x => x.Id == context.Message.Status.Id).Include(c => c.Project).ThenInclude(c => c.Statuses).FirstOrDefault();
+            if (status != null)
             {
                 if (position > status.Position)
                 {

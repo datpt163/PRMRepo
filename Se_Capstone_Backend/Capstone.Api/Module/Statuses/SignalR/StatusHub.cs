@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 namespace Capstone.Api.Module.Statuses.SignalR
 {
-    [Authorize]
     public class StatusHub : Hub
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -27,17 +26,11 @@ namespace Capstone.Api.Module.Statuses.SignalR
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, groupId);
         }
-
         public async Task StatusOrderRequest(string groupId, Guid statusId, int position)
         {
             try
             {
                 var httpContext = Context.GetHttpContext();
-                var token = httpContext?.Request.Headers["Authorization"].ToString()?.Replace("Bearer ", "");
-              
-                var user = await _jwtService.VerifyTokenAsync(token ?? "");
-                if (user == null)
-                    throw new Exception("Not found user");
 
                 var status = _unitOfWork.Statuses.Find(x => x.Id == statusId).Include(c => c.Project).ThenInclude(c => c.Statuses).FirstOrDefault();
                 if (status == null)
@@ -47,7 +40,7 @@ namespace Capstone.Api.Module.Statuses.SignalR
                 if(position == status.Position)
                     throw new Exception("Old position same new position");
                 await _publishEndpoint.Publish(new OrderStatusMessage() { Status = status, Position = position });
-                await Clients.Group(groupId).SendAsync("StatusOrderResponse", user.Id);
+                await Clients.Group(groupId).SendAsync("StatusOrderResponse", "Success");
 
             }
             catch (Exception ex)
