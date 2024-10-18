@@ -34,7 +34,7 @@ namespace Capstone.Application.Module.Status.CommandHandle
             if (project.Statuses.Select(x => x.Name.Trim().ToUpper()).Contains(request.Name.Trim().ToUpper()))
                 return new ResponseMediator("This name status is availble", null, 400);
 
-            var position = 1;
+            var position = 0;
             if(project.Statuses.Count() != 0) { 
                 position = project.Statuses.Count() + 1;
             }
