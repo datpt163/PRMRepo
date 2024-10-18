@@ -36,8 +36,8 @@ namespace Capstone.Application.Module.Projects.QueryHandle
 
         public async Task<PagingResultSP<ProjectDTO>> Handle(GetListProjectQuery request, CancellationToken cancellationToken)
         {
-            if(request.Status.HasValue)
-            if (!(request.Status == ProjectStatus.NotStarted || request.Status == ProjectStatus.InProgress || request.Status == ProjectStatus.Finished))
+            if (request.Status.HasValue)
+                if (!(request.Status == ProjectStatus.NotStarted || request.Status == ProjectStatus.InProgress || request.Status == ProjectStatus.Finished))
                     return new PagingResultSP<ProjectDTO>() { ErrorMessage = "Status must more than 0 or less than 4" };
 
             var projectsQuery = new List<Project>();
@@ -54,29 +54,29 @@ namespace Capstone.Application.Module.Projects.QueryHandle
                 }
                 else
                 {
-                    if(user !=  null)
+                    if (user != null)
                     {
                         projectsQuery = user.Projects.ToList();
                         projectsQuery.AddRange(user.LeadProjects.ToList());
                     }
                 }
             }
-          
+
             var ListProject = _mapper.Map<List<ProjectDTO>>(projectsQuery);
 
             if (request.IsVisible.HasValue)
                 ListProject = ListProject.Where(x => x.IsVisible == request.IsVisible).ToList();
-            if(request.Status.HasValue)
+            if (request.Status.HasValue)
                 ListProject = ListProject.Where(x => x.Status == request.Status).ToList();
             if (!string.IsNullOrEmpty(request.Search))
             {
-                ListProject = ListProject.Where(x => ( x.Name.Trim().ToUpper().Contains(request.Search.Trim().ToUpper()) || x.Code.Trim().ToUpper().Contains(request.Search.Trim().ToUpper()))).ToList();
+                ListProject = ListProject.Where(x => (x.Name.Trim().ToUpper().Contains(request.Search.Trim().ToUpper()) || x.Code.Trim().ToUpper().Contains(request.Search.Trim().ToUpper()))).ToList();
             }
 
             if (request.PageIndex.HasValue && request.PageSize.HasValue)
             {
                 if (request.PageIndex.Value < 1 || request.PageSize.Value < 0)
-                    return new PagingResultSP<ProjectDTO>() {ErrorMessage = "PageIndex, PageSize must >= 0"};
+                    return new PagingResultSP<ProjectDTO>() { ErrorMessage = "PageIndex, PageSize must >= 0" };
 
                 int skip = (request.PageIndex.Value - 1) * request.PageSize.Value;
                 var projectPaing = ListProject.OrderByDescending(c => c.CreatedAt).Skip(skip).Take(request.PageSize.Value).ToList();
@@ -84,7 +84,7 @@ namespace Capstone.Application.Module.Projects.QueryHandle
                 var result = new PagingResultSP<ProjectDTO>(projectPaing, totalCount, request.PageIndex.Value, request.PageSize.Value);
                 return result;
             }
-            return new PagingResultSP<ProjectDTO>() {Data = ListProject.OrderByDescending(c => c.CreatedAt).ToList()};
+            return new PagingResultSP<ProjectDTO>() { Data = ListProject.OrderByDescending(c => c.CreatedAt).ToList() };
         }
     }
 }

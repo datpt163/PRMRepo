@@ -9,12 +9,12 @@ namespace Capstone.Application.Module.Jobs.Response
     public class JobDto
     {
         public Guid Id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public DateTime? CreatedAt { get; set; }
         public DateTime? UpdateAt { get; set; }
         public bool IsDeleted { get; set; }
-        public string CreatedBy { get; set; }
-        public string? UpdatedBy { get; set; }
+        public Guid? CreatedBy { get; set; }
+        public Guid? UpdatedBy { get; set; }
     }
 }
