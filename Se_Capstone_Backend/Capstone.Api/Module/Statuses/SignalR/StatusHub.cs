@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 namespace Capstone.Api.Module.Statuses.SignalR
 {
+    [Authorize]
     public class StatusHub : Hub
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -22,8 +23,22 @@ namespace Capstone.Api.Module.Statuses.SignalR
             _publishEndpoint = publishEndpoint;
         }
 
+        public override async Task OnConnectedAsync()
+        {
+            try
+            {
+                Console.WriteLine("Connnect success");
+                await base.OnConnectedAsync(); // Gọi lại phương thức gốc để đảm bảo các xử lý mặc định được thực thi
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Connnect Fail" + ex.Message);
+            }
+        }
+
         public async Task JoinGroup(string groupId)
         {
+            Console.WriteLine("Join group success success");
             await Groups.AddToGroupAsync(Context.ConnectionId, groupId);
         }
         public async Task StatusOrderRequest(string groupId, Guid statusId, int position)
@@ -47,7 +62,6 @@ namespace Capstone.Api.Module.Statuses.SignalR
             {
                Console.WriteLine(ex.ToString());
             }
-
         }
     }
 
