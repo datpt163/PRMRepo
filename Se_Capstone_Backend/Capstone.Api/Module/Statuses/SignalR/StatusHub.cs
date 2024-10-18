@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 namespace Capstone.Api.Module.Statuses.SignalR
 {
-   
+     [Authorize]
     public class StatusHub : Hub
     {
         private readonly IUnitOfWork _unitOfWork;
