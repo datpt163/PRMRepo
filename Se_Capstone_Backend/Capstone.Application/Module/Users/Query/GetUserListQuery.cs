@@ -7,7 +7,9 @@ namespace Capstone.Application.Module.Users.Query
 {
     public class GetUserListQuery : PagingQuery, IRequest<PagingResultSP<UsersDto>>
     {
+        public string? Search { get; set; } = string.Empty;
         public string? FullName { get; set; } = string.Empty;
+        public string? Email { get; set; } = string.Empty;
         public string? Phone { get; set; } = string.Empty;
         public string? Address { get; set; } = null;
         public int? Gender { get; set; } = null;

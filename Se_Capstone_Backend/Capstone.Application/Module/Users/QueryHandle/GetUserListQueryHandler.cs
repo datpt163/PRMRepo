@@ -32,12 +32,35 @@ namespace Capstone.Application.Module.Users.QueryHandle
 
         public async Task<PagingResultSP<UsersDto>> Handle(GetUserListQuery request, CancellationToken cancellationToken)
         {
-            // Start building the query with filters
             var usersQuery = _userRepository.GetQueryNoTracking().Where(x => x.UserName != null);
 
+            
+            if (!string.IsNullOrEmpty(request.Phone))
+            {
+                if (!PhoneNumberValidator.Validate(request.Phone))
+                {
+                    throw new ArgumentException("Invalid phone number format.");
+                }
+
+                usersQuery = usersQuery.Where(user => user.PhoneNumber != null && user.PhoneNumber.Contains(request.Phone));
+            }
+
+            if (!string.IsNullOrEmpty(request.Search))
+            {
+                usersQuery = usersQuery.Where(user =>
+                    (user.PhoneNumber != null && user.PhoneNumber.Contains(request.Search)) ||
+                    (user.FullName.ToLower().Contains(request.Search.ToLower())) ||
+                    (request.Email != null && user.Email != null && user.Email.ToLower().Contains(request.Email.ToLower()))
+                );
+
+            }
             if (!string.IsNullOrEmpty(request.FullName))
             {
-                usersQuery = usersQuery.Where(user => user.FullName.Contains(request.FullName));
+                usersQuery = usersQuery.Where(user => user.FullName.ToLower().Contains(request.FullName.ToLower()));
+            }
+            if (!string.IsNullOrEmpty(request.Email))
+            {
+                usersQuery = usersQuery.Where(user => user.Email != null && user.Email.ToLower().Contains(request.Email.ToLower()));
             }
             if (!string.IsNullOrEmpty(request.RoleName))
             {
@@ -68,21 +91,11 @@ namespace Capstone.Application.Module.Users.QueryHandle
                 }
             }
 
-            if (!string.IsNullOrEmpty(request.Phone))
-            {
-                if (!PhoneNumberValidator.Validate(request.Phone))
-                {
-                    throw new ArgumentException("Invalid phone number format.");
-                }
-
-                usersQuery = usersQuery.Where(user => user.PhoneNumber != null && user.PhoneNumber.Contains(request.Phone));
-            }
 
             if (!string.IsNullOrEmpty(request.Address))
             {
                 usersQuery = usersQuery.Where(user => user.Address != null && user.Address.Contains(request.Address));
             }
-
 
             if (request.Gender.HasValue)
             {
