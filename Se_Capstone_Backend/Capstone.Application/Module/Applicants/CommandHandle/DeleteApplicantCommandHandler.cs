@@ -39,7 +39,12 @@ namespace Capstone.Application.Module.Applicants.CommandHandler
                 Email = applicant.Email,
                 StartDate = applicant.StartDate,
                 PhoneNumber = applicant.PhoneNumber,
-                CvLink = applicant.CvLink
+                CvLink = applicant.CvLink,
+                CreatedAt = applicant.CreatedAt,
+                CreatedBy = applicant.CreatedBy,
+                UpdatedAt = applicant.UpdatedAt,
+                UpdatedBy = applicant.UpdatedBy,
+                IsDeleted = true,
             };
 
             applicant.IsDeleted = true;

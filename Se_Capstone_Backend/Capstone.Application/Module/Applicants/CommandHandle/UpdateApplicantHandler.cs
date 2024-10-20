@@ -1,11 +1,14 @@
 ﻿using Capstone.Application.Common.Cloudinaries;
 using Capstone.Application.Module.Applicants.Response;
 using Capstone.Domain.Entities;
+using Capstone.Domain.Helpers;
+using Capstone.Infrastructure.Helpers;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 public class UpdateApplicantCommandHandler : IRequestHandler<UpdateApplicantCommand, ApplicantDto?>
 {
@@ -29,6 +32,22 @@ public class UpdateApplicantCommandHandler : IRequestHandler<UpdateApplicantComm
             return null;
         }
 
+        if (!string.IsNullOrEmpty(request.Email))
+        {
+            if (!EmailHelper.IsValidEmail(request.Email))
+            {
+                throw new ArgumentException("Invalid email format.");
+            }
+        }
+
+        if (!string.IsNullOrEmpty(request.PhoneNumber))
+        {
+            if (!PhoneNumberValidator.Validate(request.PhoneNumber))
+            {
+                throw new ArgumentException("Invalid phone number format.");
+            }
+
+        }
         applicant.Name = request.Name;
         applicant.Email = request.Email;
         applicant.StartDate = request.StartDate;
@@ -73,7 +92,12 @@ public class UpdateApplicantCommandHandler : IRequestHandler<UpdateApplicantComm
             Email = applicant.Email,
             StartDate = applicant.StartDate,
             PhoneNumber = applicant.PhoneNumber,
-            CvLink = applicant.CvLink
+            CvLink = applicant.CvLink,
+            CreatedAt = applicant.CreatedAt,
+            CreatedBy = applicant.CreatedBy,
+            UpdatedAt = applicant.UpdatedAt,
+            UpdatedBy = applicant.UpdatedBy,
+            IsDeleted = applicant.IsDeleted,
         };
 
         return applicantDto;

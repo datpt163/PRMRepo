@@ -10,6 +10,7 @@ namespace Capstone.Application.Module.Applicants.Query
     {
         public string? Name { get; set; } = string.Empty;
         public string? Email { get; set; } = string.Empty;
+        public string? PhoneNumber { get; set; } = string.Empty;
         public bool? IsOnBoard { get; set; } = null;
         public DateTime? StartDateFrom { get; set; } = null;
         public DateTime? StartDateTo { get; set; } = null;
