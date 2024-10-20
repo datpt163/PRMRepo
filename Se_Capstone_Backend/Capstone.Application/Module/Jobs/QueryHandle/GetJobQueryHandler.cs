@@ -33,7 +33,7 @@ namespace Capstone.Application.Module.Jobs.QueryHandle
                 Title = job.Title,
                 Description = job.Description,
                 CreatedAt = job.CreatedAt,
-                UpdateAt = job.UpdatedAt,
+                UpdatedAt = job.UpdatedAt,
                 IsDeleted = job.IsDeleted,
                 CreatedBy = job.CreatedBy,
                 UpdatedBy = job.UpdatedBy

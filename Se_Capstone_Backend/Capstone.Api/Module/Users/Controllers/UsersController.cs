@@ -77,6 +77,25 @@ namespace Capstone.Api.Module.Users.Controllers
             return ResponseOk(dataResponse: updatedUser);
         }
 
+        [HttpPut("toggle-status")]
+        public async Task<IActionResult> ToggleUserStatus([FromForm] ToggleUserStatusRequest request)
+        {
+            var command = new ToggleUserStatusCommand
+            {
+                UserId = request.UserId
+            };
+
+            var isToggled = await _mediator.Send(command);
+
+            if (!isToggled)
+            {
+                return ResponseNotFound("User not found or status toggle failed.");
+            }
+
+            return ResponseOk(isToggled ,"User status updated successfully.");
+        }
+
+
         [HttpGet("get-by-permission")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         public async Task<IActionResult> GetByPermission(string permissionName)
