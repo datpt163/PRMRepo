@@ -2,6 +2,8 @@
 using Capstone.Application.Module.Applicants.Command;
 using Capstone.Application.Module.Applicants.Response;
 using Capstone.Domain.Entities;
+using Capstone.Domain.Helpers;
+using Capstone.Infrastructure.Helpers;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using System.IO;
@@ -25,6 +27,21 @@ namespace Capstone.Application.Module.Applicants.CommandHandler
 
         public async Task<ApplicantDto> Handle(AddApplicantCommand command, CancellationToken cancellationToken)
         {
+            if (!string.IsNullOrEmpty(command.Email))
+            {
+                if (!EmailHelper.IsValidEmail(command.Email))
+                {
+                    throw new ArgumentException("Invalid email format.");
+                }
+            }
+            if (!string.IsNullOrEmpty(command.PhoneNumber))
+            {
+                if (!PhoneNumberValidator.Validate(command.PhoneNumber))
+                {
+                    throw new ArgumentException("Invalid phone number format.");
+                }
+
+            }
             string? cvUrl = null;
             if (command.CvFile != null)
             {

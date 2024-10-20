@@ -21,6 +21,7 @@ using Capstone.Infrastructure.Redis;
 using Capstone.Application.Module.Auths.Model;
 using CloudinaryDotNet.Actions;
 using Microsoft.EntityFrameworkCore;
+using Capstone.Infrastructure.Helpers;
 
 namespace Capstone.Application.Module.Auth.QueryHandle
 {
@@ -40,6 +41,14 @@ namespace Capstone.Application.Module.Auth.QueryHandle
 
         public async Task<ResponseMediator> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
+            if (!string.IsNullOrEmpty(request.Email))
+            {
+                if (!EmailHelper.IsValidEmail(request.Email))
+                {
+                    throw new ArgumentException("Invalid email format.");
+                }
+            }
+
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user != null)
             {

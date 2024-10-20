@@ -2,6 +2,8 @@
 using Capstone.Application.Module.Applicants.Query;
 using Capstone.Application.Module.Applicants.Response;
 using Capstone.Domain.Entities;
+using Capstone.Domain.Helpers;
+using Capstone.Infrastructure.Helpers;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,15 +27,30 @@ namespace Capstone.Application.Module.Applicants.QueryHandle
         {
             var applicantsQuery = _applicantRepository.GetQueryNoTracking()
                 .Where(x => !x.IsDeleted);
+            if (!string.IsNullOrEmpty(request.Email))
+            {
+                if (!EmailHelper.IsValidEmail(request.Email))
+                {
+                    throw new ArgumentException("Invalid email format.");
+                }
+                applicantsQuery = applicantsQuery.Where(a => a.Email.Contains(request.Email));
+            }
+
+            if (!string.IsNullOrEmpty(request.PhoneNumber))
+            {
+                if (!PhoneNumberValidator.Validate(request.PhoneNumber))
+                {
+                    throw new ArgumentException("Invalid phone number format.");
+                }
+                applicantsQuery = applicantsQuery.Where(a => a.PhoneNumber != null && a.PhoneNumber.ToLower().Contains(request.PhoneNumber.ToLower()));
+
+            }
 
             if (!string.IsNullOrEmpty(request.Name))
             {
                 applicantsQuery = applicantsQuery.Where(a => a.Name.Contains(request.Name));
             }
-            if (!string.IsNullOrEmpty(request.Email))
-            {
-                applicantsQuery = applicantsQuery.Where(a => a.Email.Contains(request.Email));
-            }
+
             if (request.IsOnBoard.HasValue)
             {
                 applicantsQuery = applicantsQuery.Where(a => a.IsOnBoard == request.IsOnBoard.Value);
