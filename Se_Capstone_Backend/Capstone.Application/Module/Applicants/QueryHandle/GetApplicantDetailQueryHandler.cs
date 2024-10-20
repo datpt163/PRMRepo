@@ -30,7 +30,12 @@ namespace Capstone.Application.Module.Applicants.QueryHandler
                 Email = applicant.Email,
                 StartDate = applicant.StartDate,
                 PhoneNumber = applicant.PhoneNumber,
-                CvLink = applicant.CvLink
+                CvLink = applicant.CvLink,
+                CreatedAt = applicant.CreatedAt,
+                CreatedBy = applicant.CreatedBy,
+                UpdatedAt = applicant.UpdatedAt,
+                UpdatedBy = applicant.UpdatedBy,
+                IsDeleted = applicant.IsDeleted,
             };
         }
     }

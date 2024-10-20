@@ -69,6 +69,11 @@ namespace Capstone.Application.Module.Applicants.QueryHandle
                     StartDate = a.StartDate,
                     PhoneNumber = a.PhoneNumber,
                     CvLink = a.CvLink,
+                    CreatedAt = a.CreatedAt,
+                    CreatedBy = a.CreatedBy,
+                    UpdatedAt = a.UpdatedAt,
+                    UpdatedBy = a.UpdatedBy,
+                    IsDeleted = a.IsDeleted,
                 }).ToListAsync(cancellationToken);
 
             return new PagingResultSP<ApplicantDto>(pagedApplicants, totalCount, request.PageIndex, request.PageSize);
