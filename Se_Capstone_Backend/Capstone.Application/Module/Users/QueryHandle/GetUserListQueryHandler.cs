@@ -4,6 +4,7 @@ using Capstone.Application.Module.Users.Response;
 using Capstone.Domain.Entities;
 using Capstone.Domain.Enums;
 using Capstone.Domain.Helpers;
+using Capstone.Infrastructure.Helpers;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -44,6 +45,14 @@ namespace Capstone.Application.Module.Users.QueryHandle
 
                 usersQuery = usersQuery.Where(user => user.PhoneNumber != null && user.PhoneNumber.Contains(request.Phone));
             }
+            if (!string.IsNullOrEmpty(request.Email))
+            {
+                if (!EmailHelper.IsValidEmail(request.Email))
+                {
+                    throw new ArgumentException("Invalid email format.");
+                }
+                usersQuery = usersQuery.Where(user => user.Email != null && user.Email.ToLower().Contains(request.Email.ToLower()));
+            }
 
             if (!string.IsNullOrEmpty(request.Search))
             {
@@ -58,10 +67,7 @@ namespace Capstone.Application.Module.Users.QueryHandle
             {
                 usersQuery = usersQuery.Where(user => user.FullName.ToLower().Contains(request.FullName.ToLower()));
             }
-            if (!string.IsNullOrEmpty(request.Email))
-            {
-                usersQuery = usersQuery.Where(user => user.Email != null && user.Email.ToLower().Contains(request.Email.ToLower()));
-            }
+            
             if (!string.IsNullOrEmpty(request.RoleName))
             {
                 var role = _unitOfWork.Roles.FindOne(x => x.Name == request.RoleName.Trim().ToUpper());
