@@ -45,7 +45,7 @@ namespace Capstone.Application.Module.Jobs.CommandHandle
                 Title = job.Title,
                 Description = job.Description,
                 CreatedAt = job.CreatedAt,
-                UpdateAt = job.UpdatedAt,
+                UpdatedAt = job.UpdatedAt,
                 IsDeleted = job.IsDeleted,
                 CreatedBy = job.CreatedBy,
                 UpdatedBy = job.UpdatedBy

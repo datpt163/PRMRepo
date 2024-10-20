@@ -26,9 +26,8 @@ namespace Capstone.Application.Module.Jobs.CommandHandle
             {
                 return false;
             }
-
             job.IsDeleted = true;
-            await _jobRepository.AddAsync(job);
+            await _jobRepository.UpdateAsync(job);
             await _unitOfWork.SaveChangesAsync();
 
             return true;

@@ -68,17 +68,10 @@ namespace Capstone.Api.Module.Jobs.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetList([FromQuery] GetJobsListRequest request)
+        public async Task<IActionResult> GetList([FromQuery] GetJobsListQuery request)
         {
-            var query = new GetJobsListQuery
-            {
-                Title = request.Title,
-                Description = request.Description,
-                IsDeleted = request.IsDeleted
-            };
 
-            var response = await _mediator.Send(query);
-
+            var response = await _mediator.Send(request);
             return ResponseOk(response.Data, response.Paging, "Jobs retrieved successfully");
         }
 
