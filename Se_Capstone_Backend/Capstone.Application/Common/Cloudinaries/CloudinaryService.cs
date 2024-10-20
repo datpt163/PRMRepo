@@ -2,6 +2,7 @@
 using CloudinaryDotNet.Actions;
 using Microsoft.Extensions.Configuration;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Capstone.Application.Common.Cloudinaries
@@ -63,9 +64,17 @@ namespace Capstone.Application.Common.Cloudinaries
                 Overwrite = true,
             };
 
+
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+            if (uploadResult.StatusCode != HttpStatusCode.OK)
+            {
+                throw new Exception("Upload failed: " + uploadResult.Error.Message);
+            }
+
             return uploadResult.SecureUrl.AbsoluteUri;
         }
+
 
         public async Task<bool> DeletePdfByUrlAsync(string pdfUrl)
         {
