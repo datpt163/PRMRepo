@@ -18,7 +18,6 @@ namespace Capstone.Application.Localization
                 { "ApplicantNotFound", "Applicant not found." },
                 { "ApplicantDeleted", "Applicant deleted successfully." },
                 { "ApplicantUpdated", "Applicant updated successfully." },
-
             };
         }
 

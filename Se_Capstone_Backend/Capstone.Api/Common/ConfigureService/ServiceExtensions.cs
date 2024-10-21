@@ -1,5 +1,6 @@
 ﻿using Capstone.Application.Common.Cloudinaries;
 using Capstone.Application.Common.Email;
+using Capstone.Application.Common.FileService;
 using Capstone.Application.Common.Gpt;
 using Capstone.Application.Common.Helper;
 using Capstone.Application.Common.RabbitMQ;
@@ -25,6 +26,8 @@ namespace Capstone.Api.Common.ConfigureService
                 var rabbitMQSettings = sp.GetRequiredService<IOptions<RabbitMQSettings>>().Value;
                 return new RabbitMQProducer(rabbitMQSettings.HostName, rabbitMQSettings.QueueName);
             });
+
+            services.AddScoped<IFileService, FileService>();
 
             services.AddSingleton(sp =>
             {

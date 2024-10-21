@@ -36,7 +36,7 @@ namespace Capstone.Application.Module.Status.CommandHandle
 
             var position = 0;
             if(project.Statuses.Count() != 0) { 
-                position = project.Statuses.Count() + 1;
+                position = project.Statuses.Count();
             }
 
             var status = new Capstone.Domain.Entities.Status() { Name = request.Name, ProjectId = request.ProjectId, Description = request.Description,Color = request.Color, Position = position};
