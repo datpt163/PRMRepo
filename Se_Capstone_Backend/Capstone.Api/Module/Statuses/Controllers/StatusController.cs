@@ -42,6 +42,22 @@ namespace Capstone.Api.Module.Statuses.Controllers
             }
         }
 
+        [HttpPost("default")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles = "ADD_STATUS_DEFAULT")]
+        public async Task<IActionResult> CreateStatusDefault([FromBody] CreateStatusDefaultCommand request)
+        {
+            var result = await _mediator.Send(request);
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(result.Data);
+            else
+            {
+                if (result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetListStatus(Guid? projectId)
         {
@@ -54,12 +70,40 @@ namespace Capstone.Api.Module.Statuses.Controllers
             }
         }
 
+        [HttpGet("default")]
+        public async Task<IActionResult> GetListStatusDefault()
+        {
+            var result = await _mediator.Send(new GetListStatusDefaultQuery());
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(result.Data);
+            else
+            {
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+        }
+
         [HttpDelete("{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [Authorize(Roles = "DELETE_STATUS_PROJECT")]
-        public async Task<IActionResult> DeleteLabel(Guid id, [FromBody] DeleteStatusRequest newStatus)
+        public async Task<IActionResult> DeleteStatus(Guid id, [FromBody] DeleteStatusRequest newStatus)
         {
             var result = await _mediator.Send(new DeleteStatusCommand() { Id = id, NewStatusId = newStatus.newStatusId });
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseNoContent();
+            else
+            {
+                if (result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+        }
+
+        [HttpDelete("default/{id}")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles = "DELETE_STATUS_DEFAULT")]
+        public async Task<IActionResult> DeleteStatusDefault(Guid id)
+        {
+            var result = await _mediator.Send(new DeleteStatusDefaultCommand() { Id = id });
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseNoContent();
             else
@@ -73,9 +117,26 @@ namespace Capstone.Api.Module.Statuses.Controllers
         [HttpPut("{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [Authorize(Roles = "UPDATE_STATUS_PROJECT")]
-        public async Task<IActionResult> UpdateLabel(Guid id, [FromBody] UpdateStatusRequest request)
+        public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateStatusRequest request)
         {
             var result = await _mediator.Send(new UpdateStatusCommand() { Id = id, Name = request.Name, Description = request.Description, Color = request.Color });
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(result.Data);
+            else
+            {
+                if (result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+        }
+
+
+        [HttpPut("default/{id}")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles = "UPDATE_STATUS_DEFAULT")]
+        public async Task<IActionResult> UpdateStatusDefault(Guid id, [FromBody] UpdateStatusDefaultRequest request)
+        {
+            var result = await _mediator.Send(new UpdateStatusDefaultCommand() { Id = id, Name = request.Name, Description = request.Description, Color = request.Color });
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data);
             else
