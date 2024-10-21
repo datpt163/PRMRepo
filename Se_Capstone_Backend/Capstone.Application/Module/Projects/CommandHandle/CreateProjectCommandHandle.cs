@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Capstone.Application.Common.FileService;
 using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Projects.Command;
 using Capstone.Application.Module.Projects.Response;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Projects.CommandHandle
@@ -20,12 +22,13 @@ namespace Capstone.Application.Module.Projects.CommandHandle
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mappper;
-
-        public CreateProjectCommandHandle(IUnitOfWork unitOfWork, UserManager<User> userManager, IMapper mapper)
+        private readonly IFileService _fileService;
+        public CreateProjectCommandHandle(IUnitOfWork unitOfWork, UserManager<User> userManager, IMapper mapper, IFileService fileService)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _mappper = mapper;
+            _fileService = fileService;
         }
         public async Task<ResponseMediator> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
         {
@@ -44,15 +47,15 @@ namespace Capstone.Application.Module.Projects.CommandHandle
             {
                 var user = _unitOfWork.Users.Find(u => u.Id == request.LeadId).FirstOrDefault();
                 if (user == null)
-                    return new ResponseMediator("Team lead not found", null,404);
+                    return new ResponseMediator("Team lead not found", null, 404);
                 var roles = await _userManager.GetRolesAsync(user);
                 if (roles == null || roles.Count == 0)
-                    return new ResponseMediator("This user not have role to become a leader", null);
+                    return new ResponseMediator("This user not have lead project permission to become a leader", null);
 
                 var role = _unitOfWork.Roles.Find(x => x.Name != null && x.Name.Equals(roles.FirstOrDefault())).Include(c => c.Permissions).FirstOrDefault();
-                if ( role == null)
+                if (role == null)
                     return new ResponseMediator("This user not have role to become a leader", null);
-                
+
                 if (!role.Permissions.Any(x => x.Name == "IS_PROJECT_LEAD"))
                     return new ResponseMediator("This user not have role to become a leader", null);
 
@@ -65,25 +68,21 @@ namespace Capstone.Application.Module.Projects.CommandHandle
 
             _unitOfWork.Projects.Add(projectCreate);
             await _unitOfWork.SaveChangesAsync();
-            _unitOfWork.Statuses.AddRange(CreateDefaultStatus(projectCreate.Id));
+            _unitOfWork.Statuses.AddRange(await CreateDefaultStatus(projectCreate.Id));
             await _unitOfWork.SaveChangesAsync();
 
-            var response =  _mappper.Map<ProjectDTO>(projectCreate);
+            var response = _mappper.Map<ProjectDTO>(projectCreate);
             response.LeadId = userDto.Id;
             response.LeadName = userDto.Name;
             return new ResponseMediator("", response);
         }
 
-        public List<Domain.Entities.Status> CreateDefaultStatus(Guid projectId)
+        public async Task<List<Domain.Entities.Status>> CreateDefaultStatus(Guid projectId)
         {
-            return new List<Domain.Entities.Status>() { 
-                new Domain.Entities.Status() {Name = "Backlog", Color = "blackAlpha", Description = "Plan to do in this phase", Position = 0, ProjectId = projectId} ,
-                new Domain.Entities.Status() {Name = "Todo", Color = "blue", Description = "Plan to do in this week", Position = 1, ProjectId = projectId},
-                new Domain.Entities.Status() {Name = "In progress", Color = "blue", Description = "Tasks that you are working on", Position = 2, ProjectId = projectId},
-                new Domain.Entities.Status() {Name = "In review", Color = "blue", Description = "This task is waiting for review", Position = 3, ProjectId = projectId},
-                new Domain.Entities.Status() {Name = "Done", Color = "green", Description = "This task is completed", Position = 4, ProjectId = projectId},
-                new Domain.Entities.Status() {Name = "Cancelled", Color = "yellow", Description = "Tasks that are decided not to execute anymore", Position = 5, ProjectId = projectId},
-            };
+            var statuses = JsonSerializer.Deserialize<List<Domain.Entities.Status>>(await _fileService.ReadFileAsync("Module\\Projects\\Default\\DefaultStatus.json")) ?? new List<Domain.Entities.Status>();
+            foreach (var s in statuses)
+                s.ProjectId = projectId;
+            return statuses;
         }
     }
 }
