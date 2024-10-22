@@ -6,6 +6,7 @@ using Capstone.Application.Module.Auths.Command;
 using Capstone.Application.Module.Auths.Response;
 using Capstone.Application.Module.Projects.Command;
 using Capstone.Application.Module.Projects.Query;
+using Capstone.Application.Module.Projects.Request;
 using Capstone.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -132,6 +133,44 @@ namespace Capstone.Api.Module.Projects.Controlers
                 else
                     return ResponseBadRequest(messageResponse: result.ErrorMessage);
             }
+        }
+
+
+        [HttpPost("calculate-effort")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [AllowAnonymous]
+        public async Task<IActionResult> CalculateEffort([FromBody] ProjectEffortCalculationRequest request)
+        {
+            if (request == null || string.IsNullOrEmpty(request.ProjectName) || request.Tasks == null || !request.Tasks.Any())
+            {
+                return ResponseBadRequest("Invalid input data.");
+            }
+
+            var result = await _mediator.Send(new CalculateEffortMetricsQuery
+            {
+                ProjectName = request.ProjectName,
+                Tasks = request.Tasks,
+                IsCalculateDetails = request.IsCalculateDetails
+            });
+
+            return ResponseOk(result);
+        }
+
+        [HttpPost("details")]
+        public async Task<IActionResult> GetProjectDetails([FromBody] GetProjectDetailsRequest request)
+        {
+            if (request == null || request.ProjectId == Guid.Empty)
+            {
+                return ResponseBadRequest("Invalid input data.");
+            }
+
+            var result = await _mediator.Send(new GetProjectDetailsQuery
+            {
+                ProjectId = request.ProjectId,
+                StartTime = request.StartTime,
+                EndTime = request.EndTime
+            });
+            return ResponseOk(result);
         }
     }
 }
