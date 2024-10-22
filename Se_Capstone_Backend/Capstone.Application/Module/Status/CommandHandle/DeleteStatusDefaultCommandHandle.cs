@@ -30,7 +30,7 @@ namespace Capstone.Application.Module.Status.CommandHandle
             string path = Path.Combine(module, project, folder, fileName);
             var statuses = JsonSerializer.Deserialize<List<Domain.Entities.Status>>(await _fileService.ReadFileAsync(path)) ?? new List<Domain.Entities.Status>();
             if (statuses.Count() == 1)
-                return new ResponseMediator("Cannot delete all status default", null, 400);
+                return new ResponseMediator("Cannot delete all default status", null, 400);
 
             var status = statuses.FirstOrDefault(x => x.Id == request.Id);
             if (status == null)
