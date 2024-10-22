@@ -34,6 +34,7 @@ namespace Capstone.Application.Common.FileService
             try
             {
                 var absolutePath = GetAbsolutePath(relativePath);
+                    Console.WriteLine(absolutePath);
                 return await File.ReadAllTextAsync(absolutePath);
             }
             catch (Exception ex)
