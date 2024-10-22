@@ -1,4 +1,5 @@
-﻿using Capstone.Application.Module.Users.Command;
+﻿using Capstone.Application.Common.TokenService;
+using Capstone.Application.Module.Users.Command;
 using Capstone.Domain.Entities;
 using Capstone.Domain.Enums;
 using Capstone.Infrastructure.Repository;
@@ -16,10 +17,13 @@ namespace Capstone.Application.Module.Users.CommandHandle
     {
         private readonly IRepository<User> _userRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public ToggleUserStatusCommandHandler(IRepository<User> userRepository, IUnitOfWork unitOfWork)
+        private readonly ITokenRevocationService _tokenRevocationService;
+
+        public ToggleUserStatusCommandHandler(IRepository<User> userRepository, IUnitOfWork unitOfWork, ITokenRevocationService tokenRevocationService)
         {
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
+            _tokenRevocationService = tokenRevocationService;
         }
 
         public async Task<bool> Handle(ToggleUserStatusCommand command, CancellationToken cancellationToken)
@@ -37,6 +41,7 @@ namespace Capstone.Application.Module.Users.CommandHandle
             }
             else
             {
+                await _tokenRevocationService.RevocationTokenAsync(user.Id);
                 user.Status = UserStatus.Inacitve;
 
             }
