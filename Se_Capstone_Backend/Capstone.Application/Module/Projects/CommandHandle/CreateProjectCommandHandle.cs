@@ -84,7 +84,12 @@ namespace Capstone.Application.Module.Projects.CommandHandle
 
         public async Task<List<Domain.Entities.Status>> CreateDefaultStatus(Guid projectId)
         {
-            var statuses = JsonSerializer.Deserialize<List<Domain.Entities.Status>>(await _fileService.ReadFileAsync("Module\\Projects\\Default\\DefaultStatus.json")) ?? new List<Domain.Entities.Status>();
+            string module = "Module";
+            string project = "Projects";
+            string folder = "Default";
+            string fileName = "DefaultStatus.json";
+            string path = Path.Combine(module, project, folder, fileName);
+            var statuses = JsonSerializer.Deserialize<List<Domain.Entities.Status>>(await _fileService.ReadFileAsync(path)) ?? new List<Domain.Entities.Status>();
             foreach (var s in statuses)
                 s.ProjectId = projectId;
             return statuses;
