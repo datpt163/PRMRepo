@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq.Dynamic.Core;
 
 namespace Capstone.Application.Module.Users.QueryHandle
 {
@@ -121,9 +122,7 @@ namespace Capstone.Application.Module.Users.QueryHandle
                 usersQuery = usersQuery.Where(user => user.Dob <= request.DobTo.Value);
             }
 
-
-            int skip = (request.PageIndex - 1) * request.PageSize;
-            var pagedUsersQuery = usersQuery.Skip(skip).Take(request.PageSize).ToList();
+            var pagedUsersQuery = usersQuery.OrderByAndPaginate(request).ToList();
 
             foreach (var user in pagedUsersQuery)
             {

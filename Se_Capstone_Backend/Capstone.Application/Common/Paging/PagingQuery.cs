@@ -14,7 +14,7 @@ namespace Capstone.Application.Common.Paging
             PageIndex = 1;
             PageSize = 10;
             OrderBy = string.Empty;
-            OrderByDesc = "asc";
+            OrderByDesc = string.Empty;
         }
 
         /// <summary>
