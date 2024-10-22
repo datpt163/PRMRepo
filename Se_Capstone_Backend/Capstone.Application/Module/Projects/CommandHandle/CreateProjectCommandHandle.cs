@@ -5,6 +5,7 @@ using Capstone.Application.Module.Projects.Command;
 using Capstone.Application.Module.Projects.Response;
 using Capstone.Domain.Entities;
 using Capstone.Infrastructure.Repository;
+using CloudinaryDotNet.Actions;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -68,8 +69,12 @@ namespace Capstone.Application.Module.Projects.CommandHandle
 
             _unitOfWork.Projects.Add(projectCreate);
             await _unitOfWork.SaveChangesAsync();
-            _unitOfWork.Statuses.AddRange(await CreateDefaultStatus(projectCreate.Id));
-            await _unitOfWork.SaveChangesAsync();
+            var defaultStatueses = await CreateDefaultStatus(projectCreate.Id);
+            var listDefaultStatus = new List<Domain.Entities.Status>();
+            foreach (var s in defaultStatueses)
+                listDefaultStatus.Add(new Domain.Entities.Status() { Name = s.Name, Position = s.Position, Description = s.Description, ProjectId = s.ProjectId, Color = s.Color });
+            _unitOfWork.Statuses.AddRange(listDefaultStatus);
+                await _unitOfWork.SaveChangesAsync();
 
             var response = _mappper.Map<ProjectDTO>(projectCreate);
             response.LeadId = userDto.Id;
