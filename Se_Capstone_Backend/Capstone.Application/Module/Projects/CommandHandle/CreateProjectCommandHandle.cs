@@ -74,7 +74,12 @@ namespace Capstone.Application.Module.Projects.CommandHandle
             foreach (var s in defaultStatueses)
                 listDefaultStatus.Add(new Domain.Entities.Status() { Name = s.Name, Position = s.Position, Description = s.Description, ProjectId = s.ProjectId, Color = s.Color });
             _unitOfWork.Statuses.AddRange(listDefaultStatus);
-                await _unitOfWork.SaveChangesAsync();
+            var defaultLabels = await CreateDefaultLabels(projectCreate.Id);
+            var listDefaultLabels = new List<Label>();
+            foreach (var s in defaultLabels)
+                listDefaultLabels.Add(new Label() { Title = s.Title, Description = s.Description, ProjectId = s.ProjectId,});
+            _unitOfWork.Labels.AddRange(listDefaultLabels);
+            await _unitOfWork.SaveChangesAsync();
 
             var response = _mappper.Map<ProjectDTO>(projectCreate);
             response.LeadId = userDto.Id;
@@ -93,6 +98,19 @@ namespace Capstone.Application.Module.Projects.CommandHandle
             foreach (var s in statuses)
                 s.ProjectId = projectId;
             return statuses;
+        }
+
+        public async Task<List<Label>> CreateDefaultLabels(Guid projectId)
+        {
+            string module = "Module";
+            string project = "Projects";
+            string folder = "Default";
+            string fileName = "DefaultLabel.json";
+            string path = Path.Combine(module, project, folder, fileName);
+            var labels = JsonSerializer.Deserialize<List<Label>>(await _fileService.ReadFileAsync(path)) ?? new List<Label>();
+            foreach (var s in labels)
+                s.ProjectId = projectId;
+            return labels;
         }
     }
 }

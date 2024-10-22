@@ -44,7 +44,7 @@ namespace Capstone.Api.Module.Statuses.Controllers
 
         [HttpPost("default")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "ADD_STATUS_DEFAULT")]
+        [Authorize(Roles = "ADD_DEFAULT_STATUS")]
         public async Task<IActionResult> CreateStatusDefault([FromBody] CreateStatusDefaultCommand request)
         {
             var result = await _mediator.Send(request);
@@ -100,7 +100,7 @@ namespace Capstone.Api.Module.Statuses.Controllers
 
         [HttpDelete("default/{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "DELETE_STATUS_DEFAULT")]
+        [Authorize(Roles = "DELETE_DEFAULT_STATUS")]
         public async Task<IActionResult> DeleteStatusDefault(Guid id)
         {
             var result = await _mediator.Send(new DeleteStatusDefaultCommand() { Id = id });
@@ -133,7 +133,7 @@ namespace Capstone.Api.Module.Statuses.Controllers
 
         [HttpPut("default/{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "UPDATE_STATUS_DEFAULT")]
+        [Authorize(Roles = "UPDATE_DEFAULT_STATUS")]
         public async Task<IActionResult> UpdateStatusDefault(Guid id, [FromBody] UpdateStatusDefaultRequest request)
         {
             var result = await _mediator.Send(new UpdateStatusDefaultCommand() { Id = id, Name = request.Name, Description = request.Description, Color = request.Color });
