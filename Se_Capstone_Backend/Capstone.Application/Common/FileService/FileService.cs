@@ -12,14 +12,7 @@ namespace Capstone.Application.Common.FileService
         private string GetAbsolutePath(string relativePath)
         {
             string binPath = AppDomain.CurrentDomain.BaseDirectory;
-            string currentDir = Directory.GetCurrentDirectory();
-            string context = AppContext.BaseDirectory;
-            string e = Environment.CurrentDirectory;
-            Console.WriteLine("binPath: " + currentDir);
-            Console.WriteLine("currentDir: " + binPath);
-            Console.WriteLine("context: " + context);
-            Console.WriteLine("Environment: " + e);
-            return Path.Combine(currentDir, relativePath);
+            return Path.Combine(binPath, relativePath);
         }
 
         public async Task WriteFileAsync(string relativePath, string content)

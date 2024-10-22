@@ -22,7 +22,12 @@ namespace Capstone.Application.Module.Status.CommandHandle
 
         public async Task<ResponseMediator> Handle(CreateStatusDefaultCommand request, CancellationToken cancellationToken)
         {
-            var statuses = JsonSerializer.Deserialize<List<Domain.Entities.Status>>(await _fileService.ReadFileAsync("Module\\Projects\\Default\\DefaultStatus.json")) ?? new List<Domain.Entities.Status>();
+            string module = "Module";
+            string project = "Projects";
+            string folder = "Default";
+            string fileName = "DefaultStatus.json";
+            string path = Path.Combine(module, project, folder, fileName);
+            var statuses = JsonSerializer.Deserialize<List<Domain.Entities.Status>>(await _fileService.ReadFileAsync(path)) ?? new List<Domain.Entities.Status>();
             if (string.IsNullOrEmpty(request.Name))
                 return new ResponseMediator("Name empty", null, 400);
 
@@ -40,7 +45,7 @@ namespace Capstone.Application.Module.Status.CommandHandle
 
             var status = new Capstone.Domain.Entities.Status() { Id = Guid.NewGuid(), Name = request.Name, Description = request.Description, Color = request.Color, Position = position };
             statuses.Add(status);
-            await _fileService.WriteFileAsync("Module\\Projects\\Default\\DefaultStatus.json", JsonSerializer.Serialize(statuses));
+            await _fileService.WriteFileAsync(path, JsonSerializer.Serialize(statuses));
             return new ResponseMediator("", new { ID = status.Id, Name = status.Name, Description = request.Description, Color = request.Color, Position = position } );
         }
     }

@@ -21,7 +21,12 @@ namespace Capstone.Application.Module.Status.QueryHandle
         }
         public async Task<ResponseMediator> Handle(GetListStatusDefaultQuery request, CancellationToken cancellationToken)
         {
-            var statuses = (JsonSerializer.Deserialize<List<Domain.Entities.Status>>(await _fileService.ReadFileAsync("Module\\Projects\\Default\\DefaultStatus.json")))?? new List<Domain.Entities.Status>();
+            string module = "Module";
+            string project = "Projects";
+            string folder = "Default";
+            string fileName = "DefaultStatus.json";
+            string path = Path.Combine(module, project, folder, fileName);
+            var statuses = (JsonSerializer.Deserialize<List<Domain.Entities.Status>>(await _fileService.ReadFileAsync(path)))?? new List<Domain.Entities.Status>();
             
             return new ResponseMediator("", statuses.Select(x => new
             {

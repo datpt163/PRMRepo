@@ -23,8 +23,12 @@ namespace Capstone.Application.Module.Status.CommandHandle
 
         public async Task<ResponseMediator> Handle(DeleteStatusDefaultCommand request, CancellationToken cancellationToken)
         {
-         
-            var statuses = JsonSerializer.Deserialize<List<Domain.Entities.Status>>(await _fileService.ReadFileAsync("Module\\Projects\\Default\\DefaultStatus.json")) ?? new List<Domain.Entities.Status>();
+            string module = "Module";
+            string project = "Projects";
+            string folder = "Default";
+            string fileName = "DefaultStatus.json";
+            string path = Path.Combine(module, project, folder, fileName);
+            var statuses = JsonSerializer.Deserialize<List<Domain.Entities.Status>>(await _fileService.ReadFileAsync(path)) ?? new List<Domain.Entities.Status>();
             var status = statuses.FirstOrDefault(x => x.Id == request.Id);
             if (status == null)
                 return new ResponseMediator("Status not found", null, 404);
@@ -35,7 +39,7 @@ namespace Capstone.Application.Module.Status.CommandHandle
                     stat.Position = stat.Position - 1;
             }
             statuses.Remove(status);
-            await _fileService.WriteFileAsync("Module\\Projects\\Default\\DefaultStatus.json", JsonSerializer.Serialize(statuses));
+            await _fileService.WriteFileAsync(path, JsonSerializer.Serialize(statuses));
             return new ResponseMediator("", null);
         }
     }
