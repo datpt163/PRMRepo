@@ -18,7 +18,7 @@ namespace Capstone.Infrastructure.Redis
             _cacheDb = redis.GetDatabase();
         }
 
-        public T? GetData<T>(string key) where T : class
+        public T? GetData<T>(string key)
         {
             var value = _cacheDb.StringGet(key).ToString();
             if (!string.IsNullOrEmpty(value))
@@ -26,7 +26,7 @@ namespace Capstone.Infrastructure.Redis
                 var response = JsonSerializer.Deserialize<T>(value);
                 return response;
             }
-            return null;
+            return default(T);
         }
 
         public bool SetData<T>(string key, T value, DateTime expirationTime)

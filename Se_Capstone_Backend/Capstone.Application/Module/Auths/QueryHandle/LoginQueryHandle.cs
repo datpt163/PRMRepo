@@ -56,11 +56,13 @@ namespace Capstone.Application.Module.Auth.QueryHandle
 
                 if (await _userManager.CheckPasswordAsync(user, request.Password))
                 {
+                    if(user.Status != Domain.Enums.UserStatus.Active)
+                        return new ResponseMediator("Account inactive", null, 400);
                     var accessToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(10));
                     var refreshToken = await _jwtService.GenerateJwtTokenAsync(user, DateTime.Now.AddDays(30));
                     user.RefreshToken = refreshToken;
                     await _userManager.UpdateAsync(user);
-                    
+                    _redis.RemoveData("ListMonitorToken");
                     if (roles.FirstOrDefault() != null)
                     {
                         var role = _unitOfWork.Roles.Find(x => x.Name == roles.FirstOrDefault()).Include(c => c.Permissions).FirstOrDefault();
