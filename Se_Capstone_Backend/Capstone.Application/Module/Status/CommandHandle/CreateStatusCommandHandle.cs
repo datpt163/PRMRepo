@@ -21,6 +21,7 @@ namespace Capstone.Application.Module.Status.CommandHandle
 
         public async Task<ResponseMediator> Handle(CreateStatusCommand request, CancellationToken cancellationToken)
         {
+          
             if (string.IsNullOrEmpty(request.Name))
                 return new ResponseMediator("Name empty", null, 400);
 
