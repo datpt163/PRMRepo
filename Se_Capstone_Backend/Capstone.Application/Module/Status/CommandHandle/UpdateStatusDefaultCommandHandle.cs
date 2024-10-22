@@ -41,7 +41,12 @@ namespace Capstone.Application.Module.Status.CommandHandle
             status.Name = request.Name;
             status.Description = request.Description;
             status.Color = request.Color;
-            await _fileService.WriteFileAsync("Module\\Projects\\Default\\DefaultStatus.json", JsonSerializer.Serialize(statuses));
+            string module = "Module";
+            string project = "Projects";
+            string folder = "Default";
+            string fileName = "DefaultStatus.json";
+            string path = Path.Combine(module, project, folder, fileName);
+            await _fileService.WriteFileAsync(path, JsonSerializer.Serialize(statuses));
             return new ResponseMediator("", status);
         }
     }
