@@ -1,10 +1,22 @@
-{
-  "exclude": [
-    "**/bin",
-    "**/bower_components",
-    "**/jspm_packages",
-    "**/node_modules",
-    "**/obj",
-    "**/platforms"
-  ]
-}
+[
+  {
+    "Id": "ab8b3891-ab2f-429c-8293-3ea01bf1c296",
+    "Title": "Research",
+    "Description": "Plan to do in this phase"
+  },
+  {
+    "Id": "ab8b3891-ab2f-429c-8293-3ea01bf1c295",
+    "Title": "Planning",
+    "Description": "Plan to do in this week"
+  },
+  {
+    "Id": "ab8b3891-ab2f-429c-8293-3ea01bf1c293",
+    "Title": "Documentation",
+    "Description": "This task is waiting for review"
+  },
+  {
+    "Id": "ab8b3891-ab2f-429c-8293-3ea01bf1c291",
+    "Title": "Question",
+    "Description": "This task is waiting for review"
+  }
+]
