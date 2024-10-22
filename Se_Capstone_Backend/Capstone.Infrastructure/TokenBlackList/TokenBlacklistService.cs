@@ -14,17 +14,17 @@ namespace Capstone.Domain.Module.Auth.TokenBlackList
             _redisContext = redisContext;
         }
 
-        public async Task<bool> BlacklistTokenAsync(string token)
+        public async Task<bool> BlacklistTokenAsync(string token, int authorizeCode)
         {
             var key = GetRedisKey(token);
-            var result = await Task.Run(() => _redisContext.SetData(key, true, DateTime.UtcNow.Add(_tokenExpiryDuration)));
+            var result = await Task.Run(() => _redisContext.SetData(key, authorizeCode, DateTime.UtcNow.Add(_tokenExpiryDuration)));
             return result;
         }
 
-        public async Task<bool> IsTokenBlacklistedAsync(string token)
+        public async Task<int?> IsTokenBlacklistedAsync(string token)
         {
             var key = GetRedisKey(token);
-            return await Task.Run(() => _redisContext.GetData<string>(key) != null);
+            return await Task.Run(() => _redisContext.GetData<int?>(key));
         }
 
         private static string GetRedisKey(string token)

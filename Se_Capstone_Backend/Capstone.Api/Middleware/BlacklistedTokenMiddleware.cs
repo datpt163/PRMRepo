@@ -31,9 +31,11 @@ namespace Capstone.Api.Middleware
                     Console.WriteLine("In the fun check token!!!");
                     var token = tokenHeader.ToString().Replace("Bearer ", "").Trim();
 
-                    if (await _tokenBlacklistService.IsTokenBlacklistedAsync(token))
+                    var authorizeCode = await _tokenBlacklistService.IsTokenBlacklistedAsync(token);
+
+                    if (authorizeCode != null)
                     {
-                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        context.Response.StatusCode = authorizeCode.Value;
                         await context.Response.WriteAsync("Token is blacklisted.");
                         return;
                     }

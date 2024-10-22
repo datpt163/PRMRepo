@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace Capstone.Application.Module.Auths.CommandHandle
 {
     public class UpdateRoleCommandHandle : IRequestHandler<UpdateRoleCommand, ResponseMediator>
@@ -98,7 +97,7 @@ namespace Capstone.Application.Module.Auths.CommandHandle
                                 {
                                     if (monitorToken.RoleId == request.Id)
                                     {
-                                        await _tokenBlacklistService.BlacklistTokenAsync(monitorToken.Token);
+                                        await _tokenBlacklistService.BlacklistTokenAsync(monitorToken.Token, 888);
                                         tokensToRemove.Add(monitorToken);
                                     }
                                 }

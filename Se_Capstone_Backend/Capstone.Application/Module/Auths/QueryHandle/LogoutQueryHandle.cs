@@ -4,6 +4,7 @@ using Capstone.Application.Module.Auth.Query;
 using Capstone.Application.Module.Auths.Response;
 using Capstone.Domain.Module.Auth.TokenBlackList;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,7 +28,7 @@ namespace Capstone.Application.Module.Auth.QueryHandle
                     return new LogoutResponse { Success = false, ErrorMessage = "Token is required." };
                 }
 
-                await _tokenBlacklistService.BlacklistTokenAsync(request.Token);
+                await _tokenBlacklistService.BlacklistTokenAsync(request.Token, StatusCodes.Status401Unauthorized);
 
                 return new LogoutResponse { Success = true };
             }
