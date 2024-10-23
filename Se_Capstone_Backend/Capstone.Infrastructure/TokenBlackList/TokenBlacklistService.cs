@@ -1,6 +1,4 @@
 ﻿using Capstone.Infrastructure.Redis;
-using System;
-using System.Threading.Tasks;
 
 namespace Capstone.Domain.Module.Auth.TokenBlackList
 {

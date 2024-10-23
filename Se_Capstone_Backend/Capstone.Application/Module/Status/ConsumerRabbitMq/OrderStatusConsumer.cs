@@ -1,13 +1,7 @@
 ﻿using Capstone.Application.Module.Status.ConsumerRabbitMq.Message;
-using Capstone.Domain.Entities;
 using Capstone.Infrastructure.Repository;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Status.ConsumerRabbitMq
 {

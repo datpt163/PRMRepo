@@ -1,8 +1,5 @@
 ﻿using Capstone.Domain.Entities;
 using Capstone.Application.Module.Jobs.Command;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 

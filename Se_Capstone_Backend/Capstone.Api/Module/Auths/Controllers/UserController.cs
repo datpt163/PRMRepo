@@ -5,10 +5,8 @@ using Capstone.Application.Module.Auth.Command;
 using Capstone.Application.Module.Auths.Query;
 using Capstone.Application.Module.Auths.Response;
 using Capstone.Application.Module.Users.Command;
-using Capstone.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 

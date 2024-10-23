@@ -1,9 +1,6 @@
 ﻿using Capstone.Domain.Entities;
 using Capstone.Application.Module.Skills.Command;
 using Capstone.Application.Module.Skills.Response;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 

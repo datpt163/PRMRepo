@@ -1,14 +1,11 @@
 ﻿using Capstone.Api.Common.ResponseApi.Controllers;
 using Capstone.Api.Common.ResponseApi.Model;
-using Capstone.Application.Module.Auth.Query;
-using Capstone.Application.Module.Auth.Response;
 using Capstone.Application.Module.Auths.Command;
 using Capstone.Application.Module.Auths.Query;
 using Capstone.Application.Module.Auths.Response;
 using Capstone.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

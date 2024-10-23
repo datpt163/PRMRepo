@@ -2,17 +2,12 @@
 using Capstone.Application.Module.Users.Query;
 using Capstone.Application.Module.Users.Response;
 using Capstone.Domain.Entities;
-using Capstone.Domain.Enums;
 using Capstone.Domain.Helpers;
 using Capstone.Infrastructure.Helpers;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
 
 namespace Capstone.Application.Module.Users.QueryHandle

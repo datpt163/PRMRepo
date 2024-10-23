@@ -1,6 +1,6 @@
 ﻿using Capstone.Application.Module.Applicants.Response;
 using MediatR;
-using System;
+
 
 namespace Capstone.Application.Module.Applicants.Command
 {

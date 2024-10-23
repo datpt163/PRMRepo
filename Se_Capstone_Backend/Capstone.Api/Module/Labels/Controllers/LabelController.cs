@@ -3,12 +3,8 @@ using Capstone.Api.Common.ResponseApi.Model;
 using Capstone.Api.Module.Labels.Requests;
 using Capstone.Application.Module.Labels.Command;
 using Capstone.Application.Module.Labels.Query;
-using Capstone.Application.Module.Projects.Command;
-using Capstone.Application.Module.Projects.Query;
-using Capstone.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 

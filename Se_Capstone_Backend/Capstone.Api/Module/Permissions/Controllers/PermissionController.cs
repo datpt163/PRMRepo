@@ -2,7 +2,6 @@
 using Capstone.Application.Module.Permissions.Command;
 using Capstone.Application.Module.Permissions.Query;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Capstone.Api.Module.Permissions.Controllers

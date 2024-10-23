@@ -3,12 +3,7 @@ using Capstone.Application.Module.Labels.Command;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Capstone.Application.Module.Labels.CommandHandle
 {

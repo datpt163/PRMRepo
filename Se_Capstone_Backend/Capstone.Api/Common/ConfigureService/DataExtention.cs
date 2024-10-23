@@ -1,12 +1,7 @@
-﻿using Capstone.Application.Common.Cloudinaries;
-using Capstone.Application.Common.Jwt;
-using Capstone.Domain.Entities;
+﻿using Capstone.Domain.Entities;
 using Capstone.Infrastructure.DbContexts;
 using Capstone.Infrastructure.Repository;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace Capstone.Api.Common.ConfigureService
 {
