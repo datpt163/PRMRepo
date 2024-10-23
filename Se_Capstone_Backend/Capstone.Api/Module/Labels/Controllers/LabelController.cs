@@ -38,6 +38,23 @@ namespace Capstone.Api.Module.Labels.Controllers
             }
         }
 
+        [HttpPost("default")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles = "ADD_DEFAULT_LABEL")]
+        public async Task<IActionResult> CreateLabelDefault([FromBody] CreateLabelDefaultCommand request)
+        {
+            var result = await _mediator.Send(request);
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(result.Data);
+            else
+            {
+                if (result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetListLabel(Guid? projectId)
         {
@@ -100,6 +117,22 @@ namespace Capstone.Api.Module.Labels.Controllers
         public async Task<IActionResult> UpdateLabel(Guid id, [FromBody] UpdateLabelRequest request)
         {
             var result = await _mediator.Send(new UpdateLabelCommand() { Id = id, Title = request.Title, Description = request.Description });
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(result.Data);
+            else
+            {
+                if (result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+        }
+
+        [HttpPut("default/{id}")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles = "UPDATE_DEFAULT_LABEL")]
+        public async Task<IActionResult> UpdateDefaultLabel(Guid id, [FromBody] UpdateLabelDefaultRequest request)
+        {
+            var result = await _mediator.Send(new UpdateDefaultLabelCommand() { Id = id, Title = request.Title, Description = request.Description });
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data);
             else
