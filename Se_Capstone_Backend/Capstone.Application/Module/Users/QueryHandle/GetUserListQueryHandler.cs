@@ -156,7 +156,7 @@ namespace Capstone.Application.Module.Users.QueryHandle
                 }).ToList();
 
 
-            int totalCount =  usersQuery.Count();
+            int totalCount = await usersQuery.CountAsync(cancellationToken);
 
             var result = new PagingResultSP<UsersDto>(userList, totalCount, request.PageIndex, request.PageSize);
 

@@ -17,6 +17,8 @@ namespace Capstone.Api.Common.ConfigureService
             var dbConnectionString = configuration.GetConnectionString("value");
             services.AddDbContext<SeCapstoneContext>(options => options.UseNpgsql(configuration.GetConnectionString("value")));
             services.AddTransient<IRepository<Job>, Repository<Job>>();
+            services.AddTransient<IRepository<Project>, Repository<Project>>();
+            services.AddTransient<IRepository<Skill>, Repository<Skill>>();
             services.AddScoped<IRepository<User>, Repository<User>>();
             services.AddScoped<IRepository<Role>, Repository<Role>>();
             services.AddScoped<IRepository<Applicant>, Repository<Applicant>>();
