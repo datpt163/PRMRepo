@@ -3,22 +3,14 @@ using Capstone.Api.Middleware;
 using Capstone.Api.Module.Auth.Validator;
 using Capstone.Api.Module.Statuses.SignalR;
 using Capstone.Application;
-using Capstone.Application.Common.Email;
-using Capstone.Application.Common.Jwt;
 using Capstone.Domain.Entities;
 using Capstone.Infrastructure.DbContexts;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 using System.Globalization;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 

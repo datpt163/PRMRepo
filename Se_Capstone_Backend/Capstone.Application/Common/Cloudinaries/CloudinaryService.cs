@@ -1,9 +1,7 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.Extensions.Configuration;
-using System.IO;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace Capstone.Application.Common.Cloudinaries
 {

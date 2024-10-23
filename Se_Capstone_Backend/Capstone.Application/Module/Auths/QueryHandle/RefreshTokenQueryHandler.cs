@@ -1,6 +1,5 @@
 ﻿using Capstone.Application.Common.Jwt;
 using Capstone.Application.Common.ResponseMediator;
-using Capstone.Application.Module.Auth.Query;
 using Capstone.Application.Module.Auth.Response;
 using Capstone.Application.Module.Auths.Query;
 using Capstone.Application.Module.Auths.Response;
@@ -11,14 +10,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Net;
-using System.Security.Claims;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+
 
 namespace Capstone.Application.Module.Auth.QueryHandle
 {

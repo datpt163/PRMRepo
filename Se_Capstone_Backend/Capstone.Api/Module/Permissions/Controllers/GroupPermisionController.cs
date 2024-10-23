@@ -1,14 +1,8 @@
 ﻿using Capstone.Api.Common.ResponseApi.Controllers;
-using Capstone.Api.Common.ResponseApi.Model;
-using Capstone.Application.Module.Auth.Query;
-using Capstone.Application.Module.Auth.Response;
 using Capstone.Application.Module.Permissions.Command;
 using Capstone.Application.Module.Permissions.Query;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace Capstone.Api.Module.Permissions.Controllers
 {

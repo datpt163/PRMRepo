@@ -5,10 +5,7 @@ using Capstone.Domain.Helpers;
 using Capstone.Infrastructure.Helpers;
 using Capstone.Infrastructure.Repository;
 using MediatR;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
 
 public class UpdateApplicantCommandHandler : IRequestHandler<UpdateApplicantCommand, ApplicantDto?>
 {

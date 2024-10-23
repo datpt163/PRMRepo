@@ -1,12 +1,9 @@
 ﻿using Capstone.Api.Module.Auths.Request;
-using Capstone.Application.Common.ResponseMediator;
-using Capstone.Application.Module.Auth.Query;
 using Capstone.Application.Module.Auths.Response;
 using Capstone.Domain.Module.Auth.TokenBlackList;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using System.Threading;
-using System.Threading.Tasks;
+
 
 namespace Capstone.Application.Module.Auth.QueryHandle
 {

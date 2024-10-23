@@ -1,6 +1,5 @@
 ﻿using Capstone.Application.Common.Cloudinaries;
 using Capstone.Application.Common.Jwt;
-using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Users.Command;
 using Capstone.Application.Module.Users.Response;
 using Capstone.Domain.Entities;
@@ -9,8 +8,6 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Users.CommandHandle
 {

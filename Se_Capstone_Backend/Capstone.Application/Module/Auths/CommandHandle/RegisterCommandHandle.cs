@@ -4,20 +4,10 @@ using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Auth.Command;
 using Capstone.Application.Module.Auths.Response;
 using Capstone.Domain.Entities;
-using Capstone.Domain.Enums;
 using Capstone.Infrastructure.Repository;
-using CloudinaryDotNet.Actions;
-using CloudinaryDotNet.Core;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration.UserSecrets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace Capstone.Application.Module.Users.CommandHandle
 {

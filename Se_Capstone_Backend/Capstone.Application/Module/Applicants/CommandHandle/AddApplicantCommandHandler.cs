@@ -6,9 +6,7 @@ using Capstone.Domain.Helpers;
 using Capstone.Infrastructure.Helpers;
 using Capstone.Infrastructure.Repository;
 using MediatR;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
+
 
 namespace Capstone.Application.Module.Applicants.CommandHandler
 {

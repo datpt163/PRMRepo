@@ -1,14 +1,10 @@
 ﻿using Capstone.Application.Module.Projects.Query;
 using Capstone.Application.Module.Projects.Request;
 using Capstone.Application.Module.Projects.Response;
-using Capstone.Domain.Entities; // Giả sử Project là một thực thể trong Domain
+using Capstone.Domain.Entities;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Projects.Handlers
 {

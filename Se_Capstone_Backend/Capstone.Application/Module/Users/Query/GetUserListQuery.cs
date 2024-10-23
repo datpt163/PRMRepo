@@ -1,7 +1,6 @@
 ﻿using Capstone.Application.Common.Paging;
 using Capstone.Application.Module.Users.Response;
 using MediatR;
-using System;
 
 namespace Capstone.Application.Module.Users.Query
 {

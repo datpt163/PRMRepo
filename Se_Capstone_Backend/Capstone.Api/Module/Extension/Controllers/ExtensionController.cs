@@ -2,7 +2,6 @@
 using Capstone.Application.Common.Helper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Capstone.Api.Module.Extension.Controllers
 {
@@ -26,7 +25,7 @@ namespace Capstone.Api.Module.Extension.Controllers
         {
             using var stream = image.OpenReadStream();
             var url = await _cloudinaryService.UploadImageAsync(stream, image.FileName);
-            return Created(url, new { Url = url }); // Return 201 Created with location
+            return Created(url, new { Url = url }); 
         }
 
         // DELETE /api/extensions/images/{publicId}
@@ -37,7 +36,7 @@ namespace Capstone.Api.Module.Extension.Controllers
             var success = await _cloudinaryService.DeleteImageByUrlAsync(publicId);
             if (success)
             {
-                return NoContent(); // Return 204 No Content if deleted successfully
+                return NoContent(); 
             }
             return NotFound("Image not found or could not be deleted.");
         }

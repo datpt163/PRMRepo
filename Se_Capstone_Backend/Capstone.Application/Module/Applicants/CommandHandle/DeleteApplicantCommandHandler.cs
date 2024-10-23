@@ -4,9 +4,7 @@ using Capstone.Domain.Entities;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+
 
 namespace Capstone.Application.Module.Applicants.CommandHandler
 {

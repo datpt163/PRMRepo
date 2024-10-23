@@ -1,16 +1,9 @@
 ﻿using Capstone.Application.Module.Jobs.Command;
-using Capstone.Application.Module.Jobs.Response;
 using Capstone.Api.Common.ResponseApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using MediatR;
-using Capstone.Domain.Entities;
-using Capstone.Infrastructure.Repository;
 using Capstone.Application.Module.Jobs.Query;
-using Capstone.Api.Module.Jobs.Request;
-using static Google.Apis.Requests.BatchRequest;
+
 
 namespace Capstone.Api.Module.Jobs.Controllers
 {
