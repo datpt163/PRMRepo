@@ -1,10 +1,6 @@
 ﻿using Capstone.Domain.Entities;
 using Capstone.Application.Module.Skills.Query;
 using Capstone.Application.Module.Skills.Response;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Capstone.Application.Common.Paging;

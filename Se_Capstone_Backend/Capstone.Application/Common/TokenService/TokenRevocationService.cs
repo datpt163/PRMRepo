@@ -3,12 +3,7 @@ using Capstone.Application.Module.Auths.Model;
 using Capstone.Domain.Module.Auth.TokenBlackList;
 using Capstone.Infrastructure.Redis;
 using Microsoft.AspNetCore.Http;
-using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Capstone.Application.Common.TokenService
 {

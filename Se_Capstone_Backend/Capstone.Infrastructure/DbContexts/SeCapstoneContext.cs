@@ -1,10 +1,7 @@
 ﻿using Capstone.Domain.Entities;
 using Capstone.Domain.Enums;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Threading.Tasks;
 
 namespace Capstone.Infrastructure.DbContexts
 {
@@ -40,7 +37,7 @@ namespace Capstone.Infrastructure.DbContexts
         public DbSet<Issue> Issues { get; set; }
         public DbSet<Position> Positions { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<User> Users { get; set; }
+        public new DbSet<User> Users { get; set; }
         public DbSet<GroupPermission> GroupPermissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

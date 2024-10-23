@@ -1,12 +1,7 @@
-﻿using Capstone.Application.Module.Auth.Response;
+﻿
 using Capstone.Domain.Entities;
 using Capstone.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Capstone.Application.Module.Auths.Response
 {

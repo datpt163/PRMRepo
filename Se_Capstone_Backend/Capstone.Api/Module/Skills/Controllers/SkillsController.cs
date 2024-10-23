@@ -1,26 +1,19 @@
 ﻿using Capstone.Application.Module.Skills.Command;
-using Capstone.Application.Module.Skills.Response;
 using Capstone.Api.Common.ResponseApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using MediatR;
-using Capstone.Domain.Entities;
-using Capstone.Infrastructure.Repository;
 using Capstone.Application.Module.Skills.Query;
-using Capstone.Api.Module.Skills.Request;
-using static Google.Apis.Requests.BatchRequest;
+
 
 namespace Capstone.Api.Module.skills.Controllers
 {
     [ApiController]
     [Route("api/skills")]
-    public class skillsController : BaseController
+    public class SkillsController : BaseController
     {
         private readonly IMediator _mediator;
 
-        public skillsController(IMediator mediator)
+        public SkillsController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -75,6 +68,13 @@ namespace Capstone.Api.Module.skills.Controllers
             return ResponseOk(response.Data, response.Paging, "Skills retrieved successfully");
         }
 
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetSkillsByUserId(Guid userId)
+        {
+            var query = new GetSkillsByUserIdQuery { UserId = userId };
+            var skillResponses = await _mediator.Send(query);
+            return ResponseOk(skillResponses, "Skills retrieved successfully");
+        }
 
     }
 }

@@ -1,10 +1,7 @@
 ﻿using Capstone.Api.Common.ResponseApi.Controllers;
-using Capstone.Application.Module.Permissions.Query;
 using Capstone.Application.Module.Position.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Capstone.Api.Module.Position.Controllers

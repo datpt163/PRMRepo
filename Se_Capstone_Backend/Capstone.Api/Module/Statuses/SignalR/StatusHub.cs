@@ -2,24 +2,20 @@
 using Capstone.Application.Module.Status.ConsumerRabbitMq.Message;
 using Capstone.Infrastructure.Repository;
 using MassTransit;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 namespace Capstone.Api.Module.Statuses.SignalR
 {
     [Authorize]
     public class StatusHub : Hub
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IJwtService _jwtService;
         private readonly IPublishEndpoint _publishEndpoint;
 
-        public StatusHub(IUnitOfWork unitOfWork, IJwtService jwtService, IPublishEndpoint publishEndpoint)
+        public StatusHub(IUnitOfWork unitOfWork, IPublishEndpoint publishEndpoint)
         {
             _unitOfWork = unitOfWork;
-            _jwtService = jwtService;
             _publishEndpoint = publishEndpoint;
         }
 
@@ -28,7 +24,7 @@ namespace Capstone.Api.Module.Statuses.SignalR
             try
             {
                 Console.WriteLine("Connnect success");
-                await base.OnConnectedAsync(); // Gọi lại phương thức gốc để đảm bảo các xử lý mặc định được thực thi
+                await base.OnConnectedAsync(); 
             }
             catch (Exception ex)
             {

@@ -5,7 +5,7 @@ namespace Capstone.Api.Module.Auths.Request
 {
     public class LogoutQuery : IRequest<LogoutResponse>
     {
-        public string Token { get; set; }
+        public string Token { get; set; } = string.Empty;
 
         public LogoutQuery(string token)
         {

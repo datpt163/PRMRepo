@@ -1,10 +1,7 @@
 ﻿using Capstone.Domain.Entities.Common;
 using Capstone.Domain.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace Capstone.Domain.Entities
 {

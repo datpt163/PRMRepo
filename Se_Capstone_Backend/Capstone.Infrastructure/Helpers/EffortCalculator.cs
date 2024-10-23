@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Capstone.Domain.Helpers
 {
     public static class EffortCalculator

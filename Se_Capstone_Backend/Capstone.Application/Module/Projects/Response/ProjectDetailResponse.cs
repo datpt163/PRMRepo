@@ -1,10 +1,4 @@
-﻿using Capstone.Domain.Entities;
-using Capstone.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Capstone.Domain.Enums;
 
 namespace Capstone.Application.Module.Projects.Response
 {

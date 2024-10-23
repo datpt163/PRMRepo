@@ -1,15 +1,8 @@
 ﻿using Capstone.Application.Common.FileService;
 using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Status.Command;
-using Capstone.Infrastructure.Repository;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
-using Capstone.Domain.Entities;
 
 namespace Capstone.Application.Module.Status.CommandHandle
 {

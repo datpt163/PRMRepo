@@ -1,9 +1,6 @@
 ﻿using Capstone.Domain.Entities;
 using Capstone.Application.Module.Skills.Query;
 using Capstone.Application.Module.Skills.Response;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

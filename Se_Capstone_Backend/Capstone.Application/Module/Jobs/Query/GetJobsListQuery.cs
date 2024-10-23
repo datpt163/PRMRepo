@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Capstone.Application.Module.Jobs.Response;
 using Capstone.Application.Common.Paging;
-using Capstone.Application.Module.Applicants.Response;
 
 namespace Capstone.Application.Module.Jobs.Query
 {

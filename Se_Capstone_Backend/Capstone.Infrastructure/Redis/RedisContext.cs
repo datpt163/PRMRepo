@@ -1,12 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using Microsoft.VisualBasic.FileIO;
-using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using StackExchange.Redis;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Capstone.Infrastructure.Redis
 {

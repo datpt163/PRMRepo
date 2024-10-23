@@ -4,7 +4,6 @@ using System.Text;
 using Newtonsoft.Json;
 using Capstone.Application.Common.Email;
 using Microsoft.Extensions.Logging;
-using System.Net.Mail;
 
 namespace Capstone.Application.Common.RabbitMQ
 {

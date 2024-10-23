@@ -1,11 +1,4 @@
-﻿using Capstone.Application.Common.Paging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Capstone.Application.Module.Users.Response
+﻿namespace Capstone.Application.Module.Users.Response
 {
     public class UsersDto
     {
