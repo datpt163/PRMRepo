@@ -30,6 +30,7 @@ namespace Capstone.Infrastructure.DbContexts
         public DbSet<Applicant> Applicants { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<Job> Jobs { get; set; }
+        public DbSet<Skill> Skills { get; set; }
         public DbSet<Label> Labels { get; set; }
         public DbSet<LeaveLog> LeaveLogs { get; set; }
         public DbSet<LogEntry> LogEntries { get; set; }
@@ -45,6 +46,10 @@ namespace Capstone.Infrastructure.DbContexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>()
+            .HasMany(u => u.Skills)
+            .WithMany(s => s.Users);
 
             modelBuilder.Entity<Applicant>()
                 .Property(e => e.Id)
