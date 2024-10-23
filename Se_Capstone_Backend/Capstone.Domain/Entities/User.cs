@@ -27,6 +27,9 @@ namespace Capstone.Domain.Entities
         public string? RefreshToken { get; set; }
         public User() { }
         public Position? Position { get; set; }
+
+        public ICollection<Skill>? Skills { get; set; } = new List<Skill>();
+
         public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
         public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
         public ICollection<Project> LeadProjects { get; set; } = new List<Project>();
