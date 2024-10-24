@@ -17,17 +17,17 @@ namespace Capstone.Application.Common.Gpt
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
         }
 
-        public async Task<string> GetChatGptResponseAsync(string prompt)
+        public async Task<string> GetChatGptResponseAsync(string prompt, string systemMessage = "You are a helpful assistant.", int maxTokens = 4096)
         {
             var requestBody = new
             {
                 model = "gpt-3.5-turbo",
                 messages = new[]
                 {
-                    new { role = "system", content = "You are a helpful assistant." },
+                    new { role = "system", content = systemMessage },
                     new { role = "user", content = prompt }
                 },
-                max_tokens = 1000
+                max_tokens = maxTokens
             };
 
             var requestJson = JsonSerializer.Serialize(requestBody);

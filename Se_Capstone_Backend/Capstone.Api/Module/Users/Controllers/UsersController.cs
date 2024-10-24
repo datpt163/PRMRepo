@@ -107,5 +107,15 @@ namespace Capstone.Api.Module.Users.Controllers
                 return ResponseBadRequest(messageResponse: result.ErrorMessage);
             }
         }
+
+        [HttpGet("active")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetActiveUsers()
+        {
+            var query = new GetActiveUsersQuery();
+            var response = await _mediator.Send(query);
+
+            return ResponseOk(response); 
+        }
     }
 }

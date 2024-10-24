@@ -5,6 +5,7 @@ using Capstone.Api.Module.Statuses.SignalR;
 using Capstone.Application;
 using Capstone.Domain.Entities;
 using Capstone.Infrastructure.DbContexts;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -14,12 +15,17 @@ using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers()
-    .AddFluentValidation(fv =>
-        fv.RegisterValidatorsFromAssemblyContaining<RegisterCommandValidator>());
+#region Fluent Validation
+builder.Services.AddFluentValidationAutoValidation(); 
+builder.Services.AddFluentValidationClientsideAdapters(); 
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterCommandValidator>();
+builder.Services.AddControllers();
+#endregion
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
+
+#region CORS
 var corsUrls = builder.Configuration.GetSection("Cors:Urls").Get<string[]>() ?? Array.Empty<string>();
 builder.Services.AddCors(options =>
 {
@@ -33,23 +39,28 @@ builder.Services.AddCors(options =>
                 .AllowCredentials(); 
         });
 });
+#endregion
+
 builder.Services.AddSignalR();
 builder.Services.AddSwaggerService();
 builder.Services.AddDataService(builder.Configuration);
+
+#region MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AssemblyReference.Assembly));
 builder.Services.AddIdentity<User, Capstone.Domain.Entities.Role>()
     .AddEntityFrameworkStores<SeCapstoneContext>()
     .AddDefaultTokenProviders();
+#endregion
 
 builder.Services.AddAuthSerivce(builder.Configuration);
 builder.Services.AddMassTransitService(builder.Configuration);
-
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
         options.TokenLifespan = TimeSpan.FromDays(1));
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+#region Redis Cache
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
     var configuration = ConfigurationOptions.Parse(
@@ -57,6 +68,8 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     configuration.ResolveDns = true;
     return ConnectionMultiplexer.Connect(configuration);
 });
+#endregion
+
 builder.Services.AddGreetingService(builder.Configuration);
 var app = builder.Build();
 
@@ -75,14 +88,18 @@ app.UseRequestLocalization(new RequestLocalizationOptions
 });
 #endregion
 
+#region MiddleWare
 app.UseMiddleware<BlacklistedTokenMiddleware>();
+#endregion
 
+#region Environment
 //if (app.Environment.IsDevelopment())
 //{
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseDeveloperExceptionPage();
 //}
+#endregion
 
 app.UseCors("AllowAll");
 app.UseHttpsRedirection();

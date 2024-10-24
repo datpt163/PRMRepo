@@ -3,7 +3,7 @@ using Capstone.Api.Common.ResponseApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Capstone.Application.Module.Skills.Query;
-
+using Capstone.Api.Module.Skills.Request;
 
 namespace Capstone.Api.Module.skills.Controllers
 {
@@ -74,6 +74,104 @@ namespace Capstone.Api.Module.skills.Controllers
             var query = new GetSkillsByUserIdQuery { UserId = userId };
             var skillResponses = await _mediator.Send(query);
             return ResponseOk(skillResponses, "Skills retrieved successfully");
+        }
+
+        [HttpDelete("user")]
+        public async Task<IActionResult> RemoveSkillFromUser([FromBody] RemoveSkillFromUserRequest request)
+        {
+            try
+            {
+                var command = new RemoveSkillFromUserCommand
+                {
+                    UserId = request.UserId,
+                    SkillId = request.SkillId
+                };
+
+                var result = await _mediator.Send(command);
+
+                if (!result)
+                {
+                    return ResponseNotFound("User or skill not found, or skill not associated with the user");
+                }
+
+                return ResponseOk(result, "Remove skill success!!!");
+            }
+            catch (Exception ex)
+            {
+                return ResponseBadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("user/multiple")]
+        public async Task<IActionResult> RemoveSkillsFromUser([FromBody] RemoveSkillsFromUserRequest request)
+        {
+            try
+            {
+                var command = new RemoveSkillsFromUserCommand
+                {
+                    UserId = request.UserId,
+                    SkillIds = request.SkillIds
+                };
+
+                var result = await _mediator.Send(command);
+
+                if (!result)
+                {
+                    return ResponseNotFound("User or skills not found, or skills not associated with the user");
+                }
+
+                return ResponseOk(result, "Removed skills successfully!!!");
+            }
+            catch (Exception ex)
+            {
+                return ResponseBadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("user")]
+        public async Task<IActionResult> AddSkillToUser([FromBody] AddSkillToUserRequest request)
+        {
+            try
+            {
+                var command = new AddSkillToUserCommand
+                {
+                    UserId = request.UserId,
+                    SkillId = request.SkillId
+                };
+
+                var result = await _mediator.Send(command);
+
+                if (!result)
+                {
+                    return ResponseNotFound("User not found, skill not found, or user already has the skill.");
+                }
+
+                return ResponseOk(result, "Skill added to user successfully!");
+            }
+            catch (Exception ex)
+            {
+                return ResponseBadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("user/multiple")]
+        public async Task<IActionResult> AddMultipleSkillsToUser([FromBody] AddMultipleSkillsToUserRequest request)
+        {
+            try
+            {
+                var command = new AddMultipleSkillsToUserCommand
+                {
+                    UserId = request.UserId,
+                    SkillIds = request.SkillIds
+                };
+
+                var result = await _mediator.Send(command);
+                return ResponseOk(result.Success, result.Message);
+            }
+            catch (Exception ex)
+            {
+                return ResponseBadRequest(ex.Message);
+            }
         }
 
     }
