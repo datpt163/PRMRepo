@@ -48,4 +48,9 @@
     <ProjectReference Include="..\Capstone.Infrastructure\Capstone.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Module\Phase\QueryHandle\" />
+    <Folder Include="Module\Phase\Query\" />
+  </ItemGroup>
+
 </Project>

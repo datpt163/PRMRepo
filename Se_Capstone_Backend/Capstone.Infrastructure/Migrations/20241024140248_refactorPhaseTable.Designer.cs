@@ -3,6 +3,7 @@ using System;
 using Capstone.Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Capstone.Infrastructure.Migrations
 {
     [DbContext(typeof(SeCapstoneContext))]
-    partial class SeCapstoneContextModelSnapshot : ModelSnapshot
+    [Migration("20241024140248_refactorPhaseTable")]
+    partial class refactorPhaseTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -291,13 +294,9 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("actualTime");
 
-                    b.Property<Guid>("AssignedById")
+                    b.Property<Guid>("AssignedId")
                         .HasColumnType("uuid")
-                        .HasColumnName("assignedById");
-
-                    b.Property<Guid>("AssignedToId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("assignedToId");
+                        .HasColumnName("assignedId");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp without time zone")
@@ -387,10 +386,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("updatedBy");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AssignedById");
-
-                    b.HasIndex("AssignedToId");
 
                     b.HasIndex("LabelId");
 
@@ -1290,18 +1285,6 @@ namespace Capstone.Infrastructure.Migrations
 
             modelBuilder.Entity("Capstone.Domain.Entities.Issue", b =>
                 {
-                    b.HasOne("Capstone.Domain.Entities.User", "AssignedBy")
-                        .WithMany("IssuesAssignedTo")
-                        .HasForeignKey("AssignedById")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Capstone.Domain.Entities.User", "AssignedTo")
-                        .WithMany("AssignedIssues")
-                        .HasForeignKey("AssignedToId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Capstone.Domain.Entities.Label", "Label")
                         .WithMany("Issues")
                         .HasForeignKey("LabelId")
@@ -1327,10 +1310,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("AssignedBy");
-
-                    b.Navigation("AssignedTo");
 
                     b.Navigation("Label");
 
@@ -1586,13 +1565,9 @@ namespace Capstone.Infrastructure.Migrations
 
             modelBuilder.Entity("Capstone.Domain.Entities.User", b =>
                 {
-                    b.Navigation("AssignedIssues");
-
                     b.Navigation("Attendances");
 
                     b.Navigation("Comments");
-
-                    b.Navigation("IssuesAssignedTo");
 
                     b.Navigation("IssuesUpdate");
 
