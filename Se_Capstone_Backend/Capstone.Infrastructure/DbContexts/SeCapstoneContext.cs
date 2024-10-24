@@ -153,6 +153,16 @@ namespace Capstone.Infrastructure.DbContexts
            .WithMany(s => s.Labels)
            .HasForeignKey(a => a.ProjectId);
 
+            modelBuilder.Entity<Phase>()
+        .HasOne(a => a.Project)
+         .WithMany(s => s.Phases)
+         .HasForeignKey(a => a.ProjectId);
+
+            modelBuilder.Entity<Issue>()
+      .HasOne(a => a.Phase)
+       .WithMany(s => s.Issues)
+       .HasForeignKey(a => a.PhaseId);
+
             modelBuilder.Entity<Status>()
         .HasOne(a => a.Project)
          .WithMany(s => s.Statuses)
@@ -181,11 +191,6 @@ namespace Capstone.Infrastructure.DbContexts
               .WithMany(s => s.Issues)
               .HasForeignKey(a => a.StatusId);
 
-            modelBuilder.Entity<Issue>()
-             .HasOne(a => a.Project)
-              .WithMany(s => s.Issues)
-              .HasForeignKey(a => a.ProjectId)
-               .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Project>()
                   .HasOne(a => a.Lead)
@@ -202,6 +207,18 @@ namespace Capstone.Infrastructure.DbContexts
            .WithMany()
            .HasForeignKey(a => a.MainJobId)
            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Issue>()
+        .HasOne(a => a.AssignedBy)
+        .WithMany(a => a.IssuesAssignedTo)
+        .HasForeignKey(a => a.AssignedById)
+        .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Issue>()
+     .HasOne(a => a.AssignedTo)
+     .WithMany(a => a.AssignedIssues)
+     .HasForeignKey(a => a.AssignedToId)
+     .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<User>()
           .HasOne(a => a.Position)

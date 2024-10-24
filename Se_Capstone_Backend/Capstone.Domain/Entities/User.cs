@@ -35,6 +35,8 @@ namespace Capstone.Domain.Entities
         public ICollection<LeaveLog> LeaveLogs { get; set; } = new List<LeaveLog>();
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public ICollection<Issue> IssuesUpdate { get; set; } = new List<Issue>();
+        public ICollection<Issue> AssignedIssues { get; set; } = new List<Issue>();
+        public ICollection<Issue> IssuesAssignedTo { get; set; } = new List<Issue>();
         public User(string email, string address, Gender gender, DateTime dob, string phone, string userName, string fullName)
         {
             Email = email;  
