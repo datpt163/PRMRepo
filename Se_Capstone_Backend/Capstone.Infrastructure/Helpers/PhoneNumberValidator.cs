@@ -6,8 +6,8 @@ namespace Capstone.Domain.Helpers
     {
         public static bool Validate(string phoneNumber)
         {
-            return Regex.IsMatch(phoneNumber, @"^\d+$");
+            return Regex.IsMatch(phoneNumber, @"^\d+(-\d+)*$");
         }
-
     }
+
 }

@@ -169,5 +169,22 @@ namespace Capstone.Api.Module.Projects.Controlers
             });
             return ResponseOk(result);
         }
+
+        [HttpPost("suggest")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSuggestProject([FromBody] SuggestInvMemberRequest request)
+        {
+            var query = new SuggestProjectQuery
+            {
+                ProjectName = request.ProjectName,
+                ProjectDetail = request.ProjectDetail,
+                UserStatistics = request.UserStatistics
+            };
+
+            var result = await _mediator.Send(query);
+
+            return ResponseOk(result, "Successfully retrieved suggestions!");
+        }
+
     }
 }
