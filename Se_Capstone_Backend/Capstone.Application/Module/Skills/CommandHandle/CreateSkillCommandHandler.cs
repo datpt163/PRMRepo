@@ -30,7 +30,7 @@ namespace Capstone.Application.Module.Skills.CommandHandle
             };
 
              _skillRepository.Add(skill);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
             return new SkillDto
             {
                 Id = skill.Id,
