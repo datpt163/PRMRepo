@@ -27,6 +27,7 @@ namespace Capstone.Infrastructure.Repository
         public IRepository<Role> roles = null!;
         public IRepository<Status> statuses = null!;
         public IRepository<Comment> comments = null!;
+        public IRepository<Phase> phases = null!;
         public IRepository<GroupPermission> groupPermissions = null!;
         public IRepository<User> Users => users ?? new Repository<User>(_context);
         public IRepository<Comment> Comments => comments ?? new Repository<Comment>(_context);
@@ -36,6 +37,7 @@ namespace Capstone.Infrastructure.Repository
         public IRepository<Issue> Issues => issues ?? new Repository<Issue>(_context);
         public IRepository<Job> Jobs => jobs ?? new Repository<Job>(_context);
         public IRepository<Skill> Skills => skills ?? new Repository<Skill>(_context);
+        public IRepository<Phase> Phases => phases ?? new Repository<Phase>(_context);
         public IRepository<Label> Labels => labels ?? new Repository<Label>(_context);
         public IRepository<LeaveLog> LeaveLogs =>  leaveLogs ?? new Repository<LeaveLog>(_context);
         public IRepository<LogEntry> LogEntrys => logEntrys ?? new Repository<LogEntry>(_context);
