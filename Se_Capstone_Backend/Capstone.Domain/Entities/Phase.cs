@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Capstone.Domain.Entities
 {
@@ -19,7 +14,6 @@ namespace Capstone.Domain.Entities
         public string? Description { get; set; } = string.Empty;
         public DateTime ExpectedStartDate { get; set; }
         public DateTime ExpectedEndDate { get; set;}
-        public DateTime? ActualStartDate { get; set; }
         public DateTime? ActualEndDate { get; set; }
         [JsonIgnore]
         public Guid ProjectId { get; set; }
@@ -27,5 +21,17 @@ namespace Capstone.Domain.Entities
         public Project Project { get; set; } = null!;
         [JsonIgnore]
         public ICollection<Issue> Issues { get; set; } = new List<Issue>();
+        public string IsValidExpectDate(ICollection<Phase> phases)
+        {
+            foreach (var phase in phases)
+            {
+                if (ExpectedStartDate < phase.ExpectedEndDate && ExpectedEndDate > phase.ExpectedStartDate)
+                {
+                    return $"The time range from {ExpectedStartDate:dd/MM/yyyy} to {ExpectedEndDate:dd/MM/yyyy} " +
+                       $"overlaps with phase '{phase.Title}'";
+                }
+            }
+            return "";
+        }
     }
 }
