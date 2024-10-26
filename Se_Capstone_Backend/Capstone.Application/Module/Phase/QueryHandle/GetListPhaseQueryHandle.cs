@@ -31,7 +31,7 @@ namespace Capstone.Application.Module.Phase.QueryHandle
 
             return new ResponseMediator("", new
             {
-                Data = project.Phases,
+                Phases = project.Phases,
                 Status = status,
             });
         }
