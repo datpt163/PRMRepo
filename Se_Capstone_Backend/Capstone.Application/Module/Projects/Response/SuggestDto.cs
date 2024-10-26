@@ -8,6 +8,11 @@ namespace Capstone.Application.Module.Projects.Response
 {
     public class SuggestDto
     {
-        public List<Guid> UserId = new List<Guid>();
+        public List<Guid> UserId { get; set; } = new List<Guid>();
+    }
+    public class SuggestMapping
+    {
+        public Guid UserId { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }
