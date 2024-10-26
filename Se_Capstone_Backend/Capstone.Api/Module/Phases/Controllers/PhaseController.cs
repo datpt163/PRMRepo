@@ -1,5 +1,6 @@
 ﻿using Capstone.Api.Common.ResponseApi.Controllers;
 using Capstone.Api.Common.ResponseApi.Model;
+using Capstone.Api.Module.Phases.Request;
 using Capstone.Application.Module.Phase.Command;
 using Capstone.Application.Module.Phase.Query;
 using Capstone.Application.Module.Status.Query;
@@ -41,9 +42,9 @@ namespace Capstone.Api.Module.Phases.Controllers
         [HttpPut("{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [Authorize(Roles = "UPDATE_PHASE")]
-        public async Task<IActionResult> UpdatePhase([FromBody] CreatePhaseCommand request)
+        public async Task<IActionResult> UpdatePhase(Guid id, [FromBody] UpdatePhaseRequest request)
         {
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(new UpdatePhaseCommand() { Id = id, Title = request.Title, Description = request.Description, ExpectedEndDate = request.ExpectedEndDate, ExpectedStartDate = request.ExpectedStartDate});
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data);
             else

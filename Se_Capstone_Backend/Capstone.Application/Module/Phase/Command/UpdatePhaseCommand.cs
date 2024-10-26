@@ -15,6 +15,5 @@ namespace Capstone.Application.Module.Phase.Command
         public string? Description { get; set; } = string.Empty;
         public DateTime ExpectedStartDate { get; set; }
         public DateTime ExpectedEndDate { get; set; }
-        public Guid ProjectId { get; set; }
     }
 }
