@@ -47,5 +47,30 @@ namespace Capstone.Domain.Entities
         public ICollection<Label> Labels { get; set; } = new List<Label>(); 
         public ICollection<User> Users { get; set; } = new List<User>();
 
+        public (PhaseStatus status, Phase? phaseRunning, Phase? phaseAfterPhaseRunning) GetStatusPhaseOfProject()
+        {
+            Phases = Phases.OrderBy(c => c.ExpectedStartDate).ToList();
+            var phaseFirst = Phases.FirstOrDefault();
+            if (phaseFirst == null)
+                return (PhaseStatus.NoPhase, null, null);
+
+            if (!phaseFirst.ActualStartDate.HasValue)
+                return (PhaseStatus.NoPhaseRunning, null, null);
+
+
+            for (int i = 0; i < Phases.Count; i++)
+            {
+                var phase = Phases.ToList()[i];
+                if (phase.ActualStartDate.HasValue && !phase.ActualEndDate.HasValue)
+                {
+                    var nextPhase = (i + 1 < Phases.Count) ? Phases.ToList()[i + 1] : null;
+                    if(nextPhase == null)
+                        return (PhaseStatus.Complete, phase, null);
+                    return (PhaseStatus.Running, phase, nextPhase);
+                }
+            }
+
+            return (PhaseStatus.Other, null, null);
+        }
     }
 }
