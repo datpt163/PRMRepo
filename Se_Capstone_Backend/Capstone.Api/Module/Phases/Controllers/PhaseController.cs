@@ -54,6 +54,22 @@ namespace Capstone.Api.Module.Phases.Controllers
             }
         }
 
+        [HttpDelete("{id}")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles = "DELETE_PHASE")]
+        public async Task<IActionResult> UpdatePhase(Guid id)
+        {
+            var result = await _mediator.Send(new DeletePhaseCommand() { Id = id});
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseNoContent();
+            else
+            {
+                if (result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+        }
+
         [HttpPut("complete")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [Authorize(Roles = "UPDATE_PHASE")]
@@ -61,7 +77,7 @@ namespace Capstone.Api.Module.Phases.Controllers
         {
             var result = await _mediator.Send(new CompletePhaseCommand() {ProjectId = projectId });
             if (string.IsNullOrEmpty(result.ErrorMessage))
-                return ResponseOk(result.Data);
+                return ResponseNoContent();
             else
             {
                 if (result.StatusCode == 404)
