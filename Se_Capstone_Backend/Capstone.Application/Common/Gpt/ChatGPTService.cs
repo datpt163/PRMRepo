@@ -37,8 +37,9 @@ namespace Capstone.Application.Common.Gpt
 
             if (!response.IsSuccessStatusCode)
             {
-                return $"Error: {response.StatusCode}";
+                throw new HttpRequestException($"Error: {response.StatusCode}");
             }
+
 
             var responseJson = await response.Content.ReadAsStringAsync();
             var chatGptResponse = JsonSerializer.Deserialize<ChatGptResponse>(responseJson);

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Projects.Query
 {
-    public class SuggestProjectQuery : IRequest<SuggestDto>
+    public class SuggestProjectQuery : IRequest<List<SuggestMapping>>
     {
         public string ProjectName { get; set; } = string.Empty;
         public string ProjectDetail { get; set; } = string.Empty;

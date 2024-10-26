@@ -1,8 +1,11 @@
-﻿using Capstone.Application.Common.Gpt;
+﻿using Capstone.Application.Common.Cohere;
+using Capstone.Application.Common.Gpt;
+using Capstone.Application.Common.HuggingFace;
 using Capstone.Application.Module.Projects.Query;
 using Capstone.Application.Module.Projects.Response;
 using Capstone.Domain.Entities;
 using Capstone.Infrastructure.Repository;
+using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -13,32 +16,62 @@ using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Projects.QueryHandle
 {
-    public class SuggestProjectQueryHandler : IRequestHandler<SuggestProjectQuery, SuggestDto>
+    public class SuggestProjectQueryHandler : IRequestHandler<SuggestProjectQuery, List<SuggestMapping>>
     {
         private readonly IChatGPTService _chatGptService;
-
-        public SuggestProjectQueryHandler(IChatGPTService chatGptService)
+        private readonly IHuggingFaceService _huggingFaceService;
+        private readonly ICohereService _cohereService;
+        public SuggestProjectQueryHandler(IChatGPTService chatGptService, IHuggingFaceService huggingFaceService, ICohereService cohereService)
         {
             _chatGptService = chatGptService;
+            _huggingFaceService = huggingFaceService;
+            _cohereService = cohereService;
+
         }
 
-        public async Task<SuggestDto> Handle(SuggestProjectQuery request, CancellationToken cancellationToken)
+        public async Task<List<SuggestMapping>> Handle(SuggestProjectQuery request, CancellationToken cancellationToken)
         {
-            var systemMessage = "You are a helpful assistant that provides potential employee suggestions based on project requirements. Please return the result as a JSON array of GUIDs.";
-            var maxTokens = 3000;
+            string systemMessage = "You are a helpful assistant that provides potential employee suggestions based on project requirements. " +
+                "Please just return the result of top 3 suggest UID UserStatistics as a JSON array of GUIDs example [\"\", \"\", \"\"]. You need to return just result, don't add anything superfluous";
+            var maxTokens = 4096;
             var requestJson = JsonSerializer.Serialize(request);
-            var gptResponse = await _chatGptService.GetChatGptResponseAsync(requestJson, systemMessage, maxTokens);
-            var potentialEmployees = ParseGptResponse(gptResponse);
-            var suggestDto = new SuggestDto
-            {
-                UserId = potentialEmployees
-            };
-            return suggestDto;
+            //var response = await _chatGptService.GetChatGptResponseAsync(requestJson, systemMessage, maxTokens);
+            //var response = await _huggingFaceService.GetResponseAsync(requestJson, systemMessage, maxTokens);
+            var response = await _cohereService.GetResponseAsync(requestJson, systemMessage, maxTokens);
+
+            var potentialEmployeeIds = ParseGptResponse(response);
+
+            var suggestMappings = request.UserStatistics
+                  .Where(us => potentialEmployeeIds.Contains(us.Id))
+                  .Select(us => new SuggestMapping
+                  {
+                      UserId = us.Id,
+                      Name = us.FullName ?? string.Empty,
+                  })
+                  .ToList();
+
+            return suggestMappings;
         }
         private List<Guid> ParseGptResponse(string gptResponse)
         {
-            return JsonSerializer.Deserialize<List<Guid>>(gptResponse) ?? new List<Guid>();
+            if (!gptResponse.Contains('[') || !gptResponse.Contains(']'))
+            {
+                throw new ArgumentException("The response does not contain valid JSON array brackets.");
+            }
+
+            int startIndex = gptResponse.IndexOf('[');
+            int endIndex = gptResponse.LastIndexOf(']');
+
+            if (startIndex < 0 || endIndex < 0 || endIndex < startIndex)
+            {
+                throw new ArgumentException("Invalid format: Could not find a valid JSON array.");
+            }
+
+            string jsonArrayString = gptResponse.Substring(startIndex, endIndex - startIndex + 1);
+
+            return JsonSerializer.Deserialize<List<Guid>>(jsonArrayString) ?? new List<Guid>();
         }
+
 
     }
 }
