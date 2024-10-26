@@ -36,6 +36,10 @@ namespace Capstone.Application.Module.Phase.CommandHandle
             if (request.ExpectedEndDate.Date < request.ExpectedStartDate.Date)
                 return new ResponseMediator("End date must be greater or equal than the start date", null);
 
+            if (request.ExpectedStartDate.Date < project.StartDate)
+                return new ResponseMediator("Start date must be greater or equal than the start date of project", null);
+
+
             var phase = new Domain.Entities.Phase() { ProjectId = request.ProjectId, Title = request.Title, Description = request.Description, ExpectedStartDate = request.ExpectedStartDate, ExpectedEndDate = request.ExpectedEndDate };
             var errorMessage = phase.IsValidExpectDate(project.Phases);
             if (!string.IsNullOrEmpty(errorMessage))
