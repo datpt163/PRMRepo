@@ -23,7 +23,7 @@ namespace Capstone.Application.Common.AutoMapper
              .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
              .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
              .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.UserName))
-               .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Avatar))
+               .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.Avatar))
              .ForMember(dest => dest.PositionName, opt => opt.MapFrom(src => ( src.Position != null ? src.Position.Name : null)));
 
             CreateMap<Permission, PermissionDTO>();
