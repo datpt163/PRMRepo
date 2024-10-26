@@ -54,6 +54,22 @@ namespace Capstone.Api.Module.Phases.Controllers
             }
         }
 
+        [HttpPut("complete")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles = "UPDATE_PHASE")]
+        public async Task<IActionResult> CompletePhase(Guid projectId)
+        {
+            var result = await _mediator.Send(new CompletePhaseCommand() {ProjectId = projectId });
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(result.Data);
+            else
+            {
+                if (result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetListPhase(Guid projectId)
         {

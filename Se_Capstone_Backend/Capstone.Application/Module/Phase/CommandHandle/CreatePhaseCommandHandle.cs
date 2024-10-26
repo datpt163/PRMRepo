@@ -1,6 +1,7 @@
 ﻿using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Phase.Command;
 using Capstone.Domain.Entities;
+using Capstone.Domain.Enums;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -39,9 +40,9 @@ namespace Capstone.Application.Module.Phase.CommandHandle
             var errorMessage = phase.IsValidExpectDate(project.Phases);
             if (!string.IsNullOrEmpty(errorMessage))
                 return new ResponseMediator(errorMessage, null, 400);
-            var listPhaseCheck = project.Phases;
-            listPhaseCheck.Add(phase);
-            listPhaseCheck.OrderBy(c => c.ExpectedStartDate);
+            (PhaseStatus status, Domain.Entities.Phase? phaseRunning, Domain.Entities.Phase? phaseAfterPhaseRunning) = project.GetStatusPhaseOfProject();
+            if((status == PhaseStatus.Running || status == PhaseStatus.Complete) && phaseRunning != null && request.ExpectedStartDate < phaseRunning.ExpectedEndDate)
+                return new ResponseMediator("Start date must be greater or equal running and completed phases ", null);
 
 
             _unitOfWork.Phases.Add(phase);

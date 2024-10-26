@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Capstone.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 
 namespace Capstone.Domain.Entities
@@ -14,6 +16,7 @@ namespace Capstone.Domain.Entities
         public string? Description { get; set; } = string.Empty;
         public DateTime ExpectedStartDate { get; set; }
         public DateTime ExpectedEndDate { get; set;}
+        public DateTime? ActualStartDate { get; set; }
         public DateTime? ActualEndDate { get; set; }
         [JsonIgnore]
         public Guid ProjectId { get; set; }
@@ -33,5 +36,6 @@ namespace Capstone.Domain.Entities
             }
             return "";
         }
+      
     }
 }
