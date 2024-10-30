@@ -6,14 +6,21 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Capstone.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class refactorIssuesTableV4 : Migration
+    public partial class refactorIssuesTableV1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_issues_labels_labelId",
-                table: "issues");
+            migrationBuilder.RenameColumn(
+                name: "subject",
+                table: "issues",
+                newName: "title");
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "actualStartDate",
+                table: "phases",
+                type: "timestamp without time zone",
+                nullable: true);
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "startDate",
@@ -32,14 +39,6 @@ namespace Capstone.Infrastructure.Migrations
                 oldClrType: typeof(short),
                 oldType: "smallint",
                 oldDefaultValue: (short)1);
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "labelId",
-                table: "issues",
-                type: "uuid",
-                nullable: true,
-                oldClrType: typeof(Guid),
-                oldType: "uuid");
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "dueDate",
@@ -105,21 +104,19 @@ namespace Capstone.Infrastructure.Migrations
                 oldClrType: typeof(string),
                 oldType: "character varying(100)",
                 oldMaxLength: 100);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_issues_labels_labelId",
-                table: "issues",
-                column: "labelId",
-                principalTable: "labels",
-                principalColumn: "id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_issues_labels_labelId",
-                table: "issues");
+            migrationBuilder.DropColumn(
+                name: "actualStartDate",
+                table: "phases");
+
+            migrationBuilder.RenameColumn(
+                name: "title",
+                table: "issues",
+                newName: "subject");
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "startDate",
@@ -141,16 +138,6 @@ namespace Capstone.Infrastructure.Migrations
                 oldType: "smallint",
                 oldNullable: true,
                 oldDefaultValue: (short)1);
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "labelId",
-                table: "issues",
-                type: "uuid",
-                nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"),
-                oldClrType: typeof(Guid),
-                oldType: "uuid",
-                oldNullable: true);
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "dueDate",
@@ -218,14 +205,6 @@ namespace Capstone.Infrastructure.Migrations
                 nullable: false,
                 oldClrType: typeof(string),
                 oldType: "text");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_issues_labels_labelId",
-                table: "issues",
-                column: "labelId",
-                principalTable: "labels",
-                principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
         }
     }
 }

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Capstone.Infrastructure.Migrations
 {
     [DbContext(typeof(SeCapstoneContext))]
-    [Migration("20241026014417_refactorIssuesTableV3")]
-    partial class refactorIssuesTableV3
+    [Migration("20241030022913_refactorIssuesTableV1")]
+    partial class refactorIssuesTableV1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,8 +49,7 @@ namespace Capstone.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("text")
                         .HasColumnName("email");
 
                     b.Property<bool>("IsDeleted")
@@ -67,8 +66,7 @@ namespace Capstone.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("text")
                         .HasColumnName("name");
 
                     b.Property<string>("PhoneNumber")
@@ -116,8 +114,7 @@ namespace Capstone.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("text")
                         .HasColumnName("description");
 
                     b.Property<string>("Detail")
@@ -136,8 +133,8 @@ namespace Capstone.Infrastructure.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("title");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -273,8 +270,8 @@ namespace Capstone.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
@@ -312,11 +309,10 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("createdBy");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("text")
                         .HasColumnName("description");
 
-                    b.Property<DateTime>("DueDate")
+                    b.Property<DateTime?>("DueDate")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("dueDate");
 
@@ -325,7 +321,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("estimatedTime");
 
                     b.Property<int>("Index")
-                        .HasMaxLength(100)
                         .HasColumnType("integer")
                         .HasColumnName("index");
 
@@ -361,13 +356,13 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("position");
 
-                    b.Property<short>("Priority")
+                    b.Property<short?>("Priority")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("smallint")
                         .HasDefaultValue((short)1)
                         .HasColumnName("priority");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateTime?>("StartDate")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("startDate");
 
@@ -375,10 +370,10 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("statusId");
 
-                    b.Property<string>("Subject")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("subject");
+                        .HasColumnName("title");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp without time zone")
