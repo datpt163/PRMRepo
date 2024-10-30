@@ -89,7 +89,7 @@ namespace Capstone.Api.Module.Projects.Controlers
 
         [HttpGet("{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "GET_DETAIL_PROJECT")]
+        [Authorize(Roles = "READ_DETAIL_PROJECT")]
         public async Task<IActionResult> GetProject(Guid id)
         {
             var result = await _mediator.Send(new GetDetailProjectQuery() { Id = id });

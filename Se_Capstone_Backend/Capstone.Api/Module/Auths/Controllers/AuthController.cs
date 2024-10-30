@@ -120,7 +120,7 @@ namespace Capstone.Api.Module.Auth.Controllers
 
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [HttpPost("admin-change-password")]
-        [Authorize(Roles = "CHANGE_PASSWORD")]
+        [Authorize(Roles = "CHANGE_PASSWORD_USER")]
         public async Task<IActionResult> AdminChange([FromBody] ChangePassUserCommand request)
         {
             var result = await _mediator.Send(request);

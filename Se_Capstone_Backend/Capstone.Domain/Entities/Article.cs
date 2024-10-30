@@ -9,9 +9,8 @@ namespace Capstone.Domain.Entities
 
     {
         public Guid Id { get; set; }
-        [MaxLength(100)]
+        [MaxLength(250)]
         public string Title { get; set; } = string.Empty;
-        [MaxLength(100)]
         public string Description { get; set; } = string.Empty;
         public string Detail { get; set; } = string.Empty;
         [MaxLength(100)]

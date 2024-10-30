@@ -8,9 +8,7 @@ namespace Capstone.Domain.Entities
     public class Applicant : BaseEntity
     {
         public Guid Id { get; set; }
-        [MaxLength(100)]
         public string Name { get; set; } = string.Empty;
-        [MaxLength(100)]
         public string Email { get; set; } = string.Empty;
         public DateTime? StartDate { get; set; }
         [MaxLength(100)]

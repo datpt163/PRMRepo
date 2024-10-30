@@ -1,11 +1,8 @@
 ﻿using Capstone.Api.Common.ResponseApi.Controllers;
-using Capstone.Api.Common.ResponseApi.Model;
-using Capstone.Application.Module.Phase.Command;
 using Capstone.Application.Module.Position.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace Capstone.Api.Module.Position.Controllers
 {
