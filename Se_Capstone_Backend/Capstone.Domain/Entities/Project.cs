@@ -42,10 +42,35 @@ namespace Capstone.Domain.Entities
         public bool IsVisible { get; set; } = false;
         public Guid? LeadId { get; set; }
         public User? Lead { get; set; }
+        public ICollection<Phase> Phases { get; set; } = new List<Phase>();
         public ICollection<Status> Statuses { get; set; } = new List<Status>();
         public ICollection<Label> Labels { get; set; } = new List<Label>(); 
         public ICollection<User> Users { get; set; } = new List<User>();
-        public ICollection<Issue> Issues { get; set; } = new List<Issue>();
 
+        public (PhaseStatus status, Phase? phaseRunning, Phase? phaseAfterPhaseRunning) GetStatusPhaseOfProject()
+        {
+            Phases = Phases.OrderBy(c => c.ExpectedStartDate).ToList();
+            var phaseFirst = Phases.FirstOrDefault();
+            if (phaseFirst == null)
+                return (PhaseStatus.NoPhase, null, null);
+
+            if (!phaseFirst.ActualStartDate.HasValue)
+                return (PhaseStatus.NoPhaseRunning, null, null);
+
+
+            for (int i = 0; i < Phases.Count; i++)
+            {
+                var phase = Phases.ToList()[i];
+                if (phase.ActualStartDate.HasValue && !phase.ActualEndDate.HasValue)
+                {
+                    var nextPhase = (i + 1 < Phases.Count) ? Phases.ToList()[i + 1] : null;
+                    if(nextPhase == null)
+                        return (PhaseStatus.Complete, phase, null);
+                    return (PhaseStatus.Running, phase, nextPhase);
+                }
+            }
+
+            return (PhaseStatus.Other, null, null);
+        }
     }
 }

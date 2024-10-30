@@ -20,7 +20,7 @@ namespace Capstone.Application.Module.Projects.Handlers
         public async Task<ProjectEffortCalculationResponse> Handle(GetProjectDetailsQuery request, CancellationToken cancellationToken)
         {
             var project = await _projectRepository.GetQueryNoTracking()
-            .Include(x => x.Issues.Where(issue =>
+            .Include(x => x.Statuses).ThenInclude(c => c.Issues.Where(issue =>
                 (!request.StartTime.HasValue || issue.StartDate >= request.StartTime) &&
                 (!request.EndTime.HasValue || issue.DueDate <= request.EndTime)))
             //.ThenInclude(i => i.User)
@@ -38,7 +38,7 @@ namespace Capstone.Application.Module.Projects.Handlers
                 Tasks = new List<TaskEffort>()
             };
 
-            foreach (var task in project.Issues)
+            foreach (var task in project.Statuses.SelectMany(x => x.Issues))
             {
                 response.Tasks.Add(new TaskEffort
                 {
