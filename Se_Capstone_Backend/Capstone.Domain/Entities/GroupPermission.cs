@@ -7,7 +7,7 @@ namespace Capstone.Domain.Entities
     public class GroupPermission
     {
         public Guid Id { get; set; }
-        [MaxLength(100)]
+        [MaxLength(250)]
         public string Name { get; set; } = string.Empty;
    
         public ICollection<Permission> Permissions { get; set;} = new List<Permission>();
