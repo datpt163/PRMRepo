@@ -26,6 +26,7 @@ namespace Capstone.Application.Module.Issues.CommandHandle
 
            if(request.StartDate.HasValue && request.DueDate.HasValue && request.StartDate.Value.Date > request.DueDate.Value.Date)
                 return new ResponseMediator("Start date must greater or equal due date", null, 400);
+            return new ResponseMediator("Title empty", null, 400);
         }
     }
 }
