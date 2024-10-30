@@ -28,7 +28,7 @@ namespace Capstone.Api.Module.Auths.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "ADD_ROLE")]
+        [Authorize(Roles = "UPSERT_ROLE")]
         public async Task<IActionResult> CreateRole([FromBody] CreateRoleCommand request)
         {
             var result = await _mediator.Send(request);
@@ -39,7 +39,7 @@ namespace Capstone.Api.Module.Auths.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "GET_ROLE_DETAIL")]
+        [Authorize(Roles = "READ_DETAIL_ROLE")]
         public async Task<IActionResult> Detail(Guid id)
         {
             var result = await _mediator.Send(new RoleDetailQuery() { Id = id});
@@ -67,7 +67,7 @@ namespace Capstone.Api.Module.Auths.Controllers
         [HttpPost("add-role-for-user")]
         [SwaggerResponse(204, "Successful")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "ADD_ROLE_FOR_USER")]
+       
         public async Task<IActionResult> AddRoleToUser([FromBody] AddRoleForUserCommand request)
         {
             var result = await _mediator.Send(request);

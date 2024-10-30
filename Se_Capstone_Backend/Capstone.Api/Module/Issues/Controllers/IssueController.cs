@@ -1,5 +1,6 @@
 ﻿using Capstone.Api.Common.ResponseApi.Controllers;
 using Capstone.Api.Common.ResponseApi.Model;
+using Capstone.Api.Module.Issues.Request;
 using Capstone.Api.Module.Statuses.Requests;
 using Capstone.Application.Module.Issues.Command;
 using Capstone.Application.Module.Issues.Query;
@@ -25,10 +26,11 @@ namespace Capstone.Api.Module.Issues.Controllers
 
         [HttpPost]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "ADD_ISSUES_PROJECT")]
-        public async Task<IActionResult> CreateStatus([FromBody] AddIssueCommand request)
+        //[Authorize(Roles = "ADD_ISSUES")]
+        public async Task<IActionResult> CreateStatus([FromBody] CreateIssueRequest request)
         {
-            var result = await _mediator.Send(request);
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var result = await _mediator.Send(new AddIssueCommand(token, request.Title, request.Description, request.StartDate, request.DueDate, request.Priority, request.EstimatedTime, request.ParentIssueId, request.AssigneeId, request.StatusId, request.LabelId));
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data);
             else
@@ -36,7 +38,6 @@ namespace Capstone.Api.Module.Issues.Controllers
                 if (result.StatusCode == 404)
                     return ResponseNotFound(messageResponse: result.ErrorMessage);
                 return ResponseBadRequest(messageResponse: result.ErrorMessage);
-
             }
         }
 
@@ -56,7 +57,7 @@ namespace Capstone.Api.Module.Issues.Controllers
 
         [HttpDelete("{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "DELETE_ISSUE_PROJECT")]
+        [Authorize(Roles = "DELETE_ISSUE")]
         public async Task<IActionResult> DeleteStatus(Guid id)
         {
             var result = await _mediator.Send(new DeleteIssueCommand() { Id = id});
@@ -72,7 +73,7 @@ namespace Capstone.Api.Module.Issues.Controllers
 
         [HttpPut("{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "UPDATE_ISSUE_PROJECT")]
+        [Authorize(Roles = "UPDATE_ISSUE")]
         public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateStatusRequest request)
         {
             var result = await _mediator.Send(new UpdateStatusCommand() { Id = id, Name = request.Name, Description = request.Description, Color = request.Color });
