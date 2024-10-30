@@ -46,8 +46,7 @@ namespace Capstone.Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("text")
                         .HasColumnName("email");
 
                     b.Property<bool>("IsDeleted")
@@ -64,8 +63,7 @@ namespace Capstone.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("text")
                         .HasColumnName("name");
 
                     b.Property<string>("PhoneNumber")
@@ -113,8 +111,7 @@ namespace Capstone.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("text")
                         .HasColumnName("description");
 
                     b.Property<string>("Detail")
@@ -133,8 +130,8 @@ namespace Capstone.Infrastructure.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("title");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -270,8 +267,8 @@ namespace Capstone.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
@@ -291,13 +288,9 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("actualTime");
 
-                    b.Property<Guid>("AssignedById")
+                    b.Property<Guid?>("AssigneeId")
                         .HasColumnType("uuid")
-                        .HasColumnName("assignedById");
-
-                    b.Property<Guid>("AssignedToId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("assignedToId");
+                        .HasColumnName("assigneeId");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp without time zone")
@@ -309,11 +302,10 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("createdBy");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("text")
                         .HasColumnName("description");
 
-                    b.Property<DateTime>("DueDate")
+                    b.Property<DateTime?>("DueDate")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("dueDate");
 
@@ -322,7 +314,6 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnName("estimatedTime");
 
                     b.Property<int>("Index")
-                        .HasMaxLength(100)
                         .HasColumnType("integer")
                         .HasColumnName("index");
 
@@ -330,7 +321,7 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("isDeleted");
 
-                    b.Property<Guid>("LabelId")
+                    b.Property<Guid?>("LabelId")
                         .HasColumnType("uuid")
                         .HasColumnName("labelId");
 
@@ -350,7 +341,7 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("percentage");
 
-                    b.Property<Guid>("PhaseId")
+                    b.Property<Guid?>("PhaseId")
                         .HasColumnType("uuid")
                         .HasColumnName("phaseId");
 
@@ -358,13 +349,17 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("position");
 
-                    b.Property<short>("Priority")
+                    b.Property<short?>("Priority")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("smallint")
                         .HasDefaultValue((short)1)
                         .HasColumnName("priority");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<Guid>("ReporterId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("reporterId");
+
+                    b.Property<DateTime?>("StartDate")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("startDate");
 
@@ -372,10 +367,10 @@ namespace Capstone.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("statusId");
 
-                    b.Property<string>("Subject")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("subject");
+                        .HasColumnName("title");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp without time zone")
@@ -388,9 +383,7 @@ namespace Capstone.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AssignedById");
-
-                    b.HasIndex("AssignedToId");
+                    b.HasIndex("AssigneeId");
 
                     b.HasIndex("LabelId");
 
@@ -399,6 +392,8 @@ namespace Capstone.Infrastructure.Migrations
                     b.HasIndex("ParentIssueId");
 
                     b.HasIndex("PhaseId");
+
+                    b.HasIndex("ReporterId");
 
                     b.HasIndex("StatusId");
 
@@ -1290,23 +1285,14 @@ namespace Capstone.Infrastructure.Migrations
 
             modelBuilder.Entity("Capstone.Domain.Entities.Issue", b =>
                 {
-                    b.HasOne("Capstone.Domain.Entities.User", "AssignedBy")
-                        .WithMany("IssuesAssignedTo")
-                        .HasForeignKey("AssignedById")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Capstone.Domain.Entities.User", "AssignedTo")
-                        .WithMany("AssignedIssues")
-                        .HasForeignKey("AssignedToId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.HasOne("Capstone.Domain.Entities.User", "Assignee")
+                        .WithMany("AssinedIssues")
+                        .HasForeignKey("AssigneeId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Capstone.Domain.Entities.Label", "Label")
                         .WithMany("Issues")
-                        .HasForeignKey("LabelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LabelId");
 
                     b.HasOne("Capstone.Domain.Entities.User", "LastUpdateBy")
                         .WithMany("IssuesUpdate")
@@ -1318,8 +1304,12 @@ namespace Capstone.Infrastructure.Migrations
 
                     b.HasOne("Capstone.Domain.Entities.Phase", "Phase")
                         .WithMany("Issues")
-                        .HasForeignKey("PhaseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("PhaseId");
+
+                    b.HasOne("Capstone.Domain.Entities.User", "Reporter")
+                        .WithMany("ReportIssues")
+                        .HasForeignKey("ReporterId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Capstone.Domain.Entities.Status", "Status")
@@ -1328,9 +1318,7 @@ namespace Capstone.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AssignedBy");
-
-                    b.Navigation("AssignedTo");
+                    b.Navigation("Assignee");
 
                     b.Navigation("Label");
 
@@ -1339,6 +1327,8 @@ namespace Capstone.Infrastructure.Migrations
                     b.Navigation("ParentIssue");
 
                     b.Navigation("Phase");
+
+                    b.Navigation("Reporter");
 
                     b.Navigation("Status");
                 });
@@ -1586,19 +1576,19 @@ namespace Capstone.Infrastructure.Migrations
 
             modelBuilder.Entity("Capstone.Domain.Entities.User", b =>
                 {
-                    b.Navigation("AssignedIssues");
+                    b.Navigation("AssinedIssues");
 
                     b.Navigation("Attendances");
 
                     b.Navigation("Comments");
-
-                    b.Navigation("IssuesAssignedTo");
 
                     b.Navigation("IssuesUpdate");
 
                     b.Navigation("LeadProjects");
 
                     b.Navigation("LeaveLogs");
+
+                    b.Navigation("ReportIssues");
                 });
 #pragma warning restore 612, 618
         }
