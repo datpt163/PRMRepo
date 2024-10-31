@@ -20,7 +20,7 @@ namespace Capstone.Infrastructure.DbContexts
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql("Host=se-capstone-fpt-5427.k.aivencloud.com:21222;Database=SeCapstone;Username=avnadmin;Password=AVNS_ZPTphEdG3DfvRXb-xUQ");
+                optionsBuilder.UseNpgsql("Host=ec2-52-221-213-11.ap-southeast-1.compute.amazonaws.com:5432;Database=SeCapstone_db;Username=postgres;Password=headnshoulder");
             }
         }
 
@@ -209,15 +209,15 @@ namespace Capstone.Infrastructure.DbContexts
            .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Issue>()
-        .HasOne(a => a.AssignedBy)
-        .WithMany(a => a.IssuesAssignedTo)
-        .HasForeignKey(a => a.AssignedById)
+        .HasOne(a => a.Reporter)
+        .WithMany(a => a.ReportIssues)
+        .HasForeignKey(a => a.ReporterId)
         .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Issue>()
-     .HasOne(a => a.AssignedTo)
-     .WithMany(a => a.AssignedIssues)
-     .HasForeignKey(a => a.AssignedToId)
+     .HasOne(a => a.Assignee)
+     .WithMany(a => a.AssinedIssues)
+     .HasForeignKey(a => a.AssigneeId)
      .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<User>()
