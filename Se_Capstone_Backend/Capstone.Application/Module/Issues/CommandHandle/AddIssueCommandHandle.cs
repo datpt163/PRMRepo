@@ -1,6 +1,8 @@
-﻿using Capstone.Application.Common.Jwt;
+﻿using AutoMapper;
+using Capstone.Application.Common.Jwt;
 using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Issues.Command;
+using Capstone.Application.Module.Issues.DTO;
 using Capstone.Domain.Entities;
 using Capstone.Domain.Enums;
 using Capstone.Infrastructure.Redis;
@@ -17,9 +19,11 @@ namespace Capstone.Application.Module.Issues.CommandHandle
         private readonly IUnitOfWork _unitOfWork;
         private readonly IJwtService _jwtService;
         private readonly RedisContext _redisContext;
+        private readonly IMapper _mapper;
 
-       public AddIssueCommandHandle(IUnitOfWork unitOfWork, IJwtService jwtService, RedisContext redisContext)
+        public AddIssueCommandHandle(IUnitOfWork unitOfWork, IJwtService jwtService, RedisContext redisContext, IMapper mapper)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
             _jwtService = jwtService;
             _redisContext = redisContext;
@@ -86,7 +90,9 @@ namespace Capstone.Application.Module.Issues.CommandHandle
             };
             _unitOfWork.Issues.Add(issue);
             await _unitOfWork.SaveChangesAsync();
-            return new ResponseMediator("", issue);
+            var issueResponse = _unitOfWork.Issues.Find(x => x.Id == issue.Id).Include(c => c.Phase).Include(c => c.Label).Include(c => c.Status).Include(c => c.LastUpdateBy).Include(c => c.ParentIssue).Include(c => c.Reporter).Include(c => c.Assignee).Include(c => c.SubIssues).Include(c => c.Comments).FirstOrDefault();
+            var response =  _mapper.Map<IssueDTO?>(issueResponse);
+            return new ResponseMediator("", response);
         }
 
 

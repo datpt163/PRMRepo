@@ -26,7 +26,7 @@ namespace Capstone.Api.Module.Issues.Controllers
 
         [HttpPost]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        //[Authorize(Roles = "ADD_ISSUES")]
+        [Authorize(Roles = "ADD_ISSUE")]
         public async Task<IActionResult> CreateStatus([FromBody] CreateIssueRequest request)
         {
             string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
@@ -63,6 +63,22 @@ namespace Capstone.Api.Module.Issues.Controllers
             var result = await _mediator.Send(new DeleteIssueCommand() { Id = id});
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseNoContent();
+            else
+            {
+                if (result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+        }
+
+        [HttpGet("{id}")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        [Authorize(Roles = "DELETE_ISSUE")]
+        public async Task<IActionResult> GetDetailIssue(Guid id)
+        {
+            var result = await _mediator.Send(new GetDetailIssueQuery() { Id = id });
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(result.Data);
             else
             {
                 if (result.StatusCode == 404)

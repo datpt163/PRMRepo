@@ -170,9 +170,11 @@ namespace Capstone.Infrastructure.DbContexts
 
 
             modelBuilder.Entity<Comment>()
-            .HasOne(a => a.Issue)
-             .WithMany(s => s.Comments)
-             .HasForeignKey(a => a.IssueId);
+      .HasOne(a => a.Issue)
+      .WithMany(s => s.Comments)
+      .HasForeignKey(a => a.IssueId)
+      .OnDelete(DeleteBehavior.Cascade);
+
 
             modelBuilder.Entity<Issue>()
             .HasOne(a => a.ParentIssue)
