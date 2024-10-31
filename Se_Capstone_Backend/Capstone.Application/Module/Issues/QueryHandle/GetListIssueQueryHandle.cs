@@ -20,18 +20,22 @@ namespace Capstone.Application.Module.Issues.QueryHandle
             if(!request.ProjectId.HasValue)
                 return new ResponseMediator("User  not found", null, 404);
 
-            var project = _unitOfWork.Projects.Find(x => x.Id == request.ProjectId).Include(c => c.Statuses).ThenInclude(c => c.Issues).ThenInclude(c => c.Assignee).FirstOrDefault();
+            var project = await _unitOfWork.Projects.Find(x => x.Id == request.ProjectId).Include(c => c.Statuses).ThenInclude(c => c.Issues).ThenInclude(c => c.Assignee).FirstOrDefaultAsync();
             if(project == null)
                 return new ResponseMediator("Project  not found", null, 404);
 
-            return new ResponseMediator("", project.Statuses.SelectMany(x => x.Issues).ToList().Select(x => new
+            return new ResponseMediator("", project.Statuses.SelectMany(x => x.Issues).ToList().OrderByDescending(x => x.Index).Select(x => new
             {
                 Id = x.Id,
                 Title = x.Title,
+                Index = x.Index,
+                Status = x.Status,
+                Label = x.Label,
                 DueDate = x.DueDate,
-                AssigneeId = x.Assignee.Id,
-                AssigneeName = x.Assignee.UserName,
-                AssigneeAvatar = x.Assignee.Avatar,
+                PhaseId = x.PhaseId,
+                AssigneeId = x.Assignee?.Id,
+                AssigneeName = x.Assignee?.UserName,
+                AssigneeAvatar = x.Assignee?.Avatar,
             }));
         }
     }
