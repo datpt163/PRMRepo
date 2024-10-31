@@ -27,6 +27,7 @@ namespace Capstone.Application.Common.AutoMapper
              .ForMember(dest => dest.PositionName, opt => opt.MapFrom(src => ( src.Position != null ? src.Position.Name : null)));
 
             CreateMap<Permission, PermissionDTO>();
+            CreateMap<Issue, Application.Module.Issues.DTO.IssueDTO>();
         }
     }
 }
