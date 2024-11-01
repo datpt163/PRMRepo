@@ -1,4 +1,6 @@
-﻿using Capstone.Application.Common.ResponseMediator;
+﻿using AutoMapper;
+using Capstone.Application.Common.ResponseMediator;
+using Capstone.Application.Module.Issues.DTO;
 using Capstone.Application.Module.Issues.Query;
 using Capstone.Infrastructure.Repository;
 using MediatR;
@@ -10,8 +12,10 @@ namespace Capstone.Application.Module.Issues.QueryHandle
     public class GetListIssueQueryHandle : IRequestHandler<GetListIssuesQuery, ResponseMediator>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public GetListIssueQueryHandle(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public GetListIssueQueryHandle(IUnitOfWork unitOfWork, IMapper mapper)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
@@ -24,19 +28,9 @@ namespace Capstone.Application.Module.Issues.QueryHandle
             if(project == null)
                 return new ResponseMediator("Project  not found", null, 404);
 
-            return new ResponseMediator("", project.Statuses.SelectMany(x => x.Issues).ToList().OrderByDescending(x => x.Index).Select(x => new
-            {
-                Id = x.Id,
-                Title = x.Title,
-                Index = x.Index,
-                Status = x.Status,
-                Label = x.Label,
-                DueDate = x.DueDate,
-                PhaseId = x.PhaseId,
-                AssigneeId = x.Assignee?.Id,
-                AssigneeName = x.Assignee?.UserName,
-                AssigneeAvatar = x.Assignee?.Avatar,
-            }));
+            var issueIds = project.Statuses.SelectMany(x => x.Issues).ToList().Select(c => c.Id);
+            var issues = _unitOfWork.Issues.Find(x => issueIds.Contains(x.Id)).Include(c => c.Phase).Include(c => c.Label).Include(c => c.Status).Include(c => c.LastUpdateBy).Include(c => c.ParentIssue).Include(c => c.Reporter).Include(c => c.Assignee).Include(c => c.SubIssues).Include(c => c.Comments).OrderByDescending(x => x.Index);
+            return new ResponseMediator("", _mapper.Map<List<IssueDTO>>(issues));
         }
     }
 }
