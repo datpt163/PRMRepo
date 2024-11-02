@@ -36,7 +36,7 @@ namespace Capstone.Api.Middleware
                     {
                         context.Response.StatusCode = Token.TokenLogout;
                         context.Response.ContentType = "application/json";
-                        await context.Response.WriteAsync("{\"message\": \"Token is blacklisted.\"}"); 
+                        await context.Response.WriteAsync("{\"status\": 403, \"message\": \"Token is blacklisted.\"}");
                         return;
                     }
 
