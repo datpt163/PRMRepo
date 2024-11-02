@@ -21,6 +21,7 @@ namespace Capstone.Application.Common.Cohere
 
         public async Task<string> GetResponseAsync(string requestJson, string systemMessage, int maxTokens)
         {
+            await Console.Out.WriteLineAsync(_apiKey);
             var requestBody = new
             {
                 prompt = systemMessage + requestJson,
