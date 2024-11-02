@@ -18,7 +18,7 @@ namespace Capstone.Application.Module.Skills.QueryHandle
 
         public async Task<List<SkillDto>> Handle(GetSkillsByUserIdQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetQueryNoTracking().FirstOrDefaultAsync(x=> x.Id == request.UserId);
+            var user = await _userRepository.GetQueryNoTracking().Include(x=> x.Skills).FirstOrDefaultAsync(x=> x.Id == request.UserId);
 
             if (user == null || user.Skills == null)
             {
