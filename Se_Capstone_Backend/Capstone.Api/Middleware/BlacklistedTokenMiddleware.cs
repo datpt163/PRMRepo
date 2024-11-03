@@ -34,8 +34,9 @@ namespace Capstone.Api.Middleware
 
                     if (authorizeCode != null)
                     {
-                        context.Response.StatusCode = authorizeCode.Value;
-                        await context.Response.WriteAsync("Token is blacklisted.");
+                        context.Response.StatusCode = Token.TokenLogout;
+                        context.Response.ContentType = "application/json";
+                        await context.Response.WriteAsync("{\"status\": 403, \"message\": \"Token is blacklisted.\"}");
                         return;
                     }
 
@@ -44,7 +45,8 @@ namespace Capstone.Api.Middleware
                         Console.WriteLine("Token expired!!!");
 
                         context.Response.StatusCode = Token.TokenExpired;
-                        await context.Response.WriteAsync(errorMessage);
+                        context.Response.ContentType = "application/json";
+                        await context.Response.WriteAsync($"{{\"message\": \"{errorMessage}\"}}");
                         return;
                     }
                 }
@@ -55,7 +57,8 @@ namespace Capstone.Api.Middleware
             {
                 Console.WriteLine($"Exception occurred: {ex.Message}");
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                await context.Response.WriteAsync("An internal error occurred.");
+                context.Response.ContentType = "application/json";
+                await context.Response.WriteAsync("{\"message\": \"An internal error occurred.\"}");
             }
         }
 
