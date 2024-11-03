@@ -6,6 +6,7 @@ using Capstone.Application.Module.Issues.Command;
 using Capstone.Application.Module.Issues.Query;
 using Capstone.Application.Module.Status.Command;
 using Capstone.Application.Module.Status.Query;
+using Capstone.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,9 +44,9 @@ namespace Capstone.Api.Module.Issues.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetListStatus(Guid? projectId)
+        public async Task<IActionResult> GetListStatus(Guid? projectId, int? pageIndex, int? pageSize, int? index, string? title, Priority? priority, Guid? assigneeId, Guid? reporterId, Guid? statusId, Guid? labelId, Guid? phaseId)
         {
-            var result = await _mediator.Send(new GetListIssuesQuery() { ProjectId = projectId });
+            var result = await _mediator.Send(new GetListIssuesQuery() { ProjectId = projectId, PageIndex = pageIndex, PageSize = pageSize, Index = index, Title = title, Priority = priority, AssigneeId = assigneeId, ReporterId = reporterId, StatusId = statusId, LabelId = labelId, PhaseId = phaseId });
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data);
             else
