@@ -34,8 +34,8 @@ namespace Capstone.Api.Middleware
 
                     if (authorizeCode != null)
                     {
+                        context.Response.Clear();
                         context.Response.StatusCode = authorizeCode.Value;
-                        await context.Response.WriteAsync("Token is blacklisted.");
                         return;
                     }
 
