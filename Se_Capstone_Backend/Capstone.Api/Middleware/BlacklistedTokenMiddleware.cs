@@ -36,6 +36,8 @@ namespace Capstone.Api.Middleware
                     {
                         context.Response.Clear();
                         context.Response.StatusCode = authorizeCode.Value;
+                        context.Response.ContentType = "application/json";
+                        await context.Response.WriteAsync($"{{\"message\": \"{authorizeCode}\"}}");
                         return;
                     }
 
