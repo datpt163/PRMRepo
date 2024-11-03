@@ -34,9 +34,8 @@ namespace Capstone.Api.Middleware
 
                     if (authorizeCode != null)
                     {
-                        context.Response.StatusCode = Token.TokenLogout;
-                        context.Response.ContentType = "application/json";
-                        await context.Response.WriteAsync("{\"status\": 403, \"message\": \"Token is blacklisted.\"}");
+                        context.Response.Clear();
+                        context.Response.StatusCode = authorizeCode.Value;
                         return;
                     }
 
