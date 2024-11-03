@@ -14,7 +14,21 @@ using StackExchange.Redis;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
+#region CORS
+var corsUrls = builder.Configuration.GetSection("Cors:Urls").Get<string[]>() ?? Array.Empty<string>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
 
+            policy.WithOrigins(corsUrls)
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                .AllowCredentials();
+        });
+});
+#endregion
 #region Fluent Validation
 builder.Services.AddFluentValidationAutoValidation(); 
 builder.Services.AddFluentValidationClientsideAdapters(); 
@@ -25,21 +39,7 @@ builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 
-#region CORS
-var corsUrls = builder.Configuration.GetSection("Cors:Urls").Get<string[]>() ?? Array.Empty<string>();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-        policy =>
-        {
-           
-            policy.WithOrigins(corsUrls)
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                .AllowCredentials(); 
-        });
-});
-#endregion
+
 
 builder.Services.AddSignalR();
 builder.Services.AddSwaggerService();
@@ -69,10 +69,10 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     return ConnectionMultiplexer.Connect(configuration);
 });
 #endregion
-
 builder.Services.AddGreetingService(builder.Configuration);
-var app = builder.Build();
 
+var app = builder.Build();
+app.UseCors("AllowAll");
 #region Cultures
 var supportedCultures = new[]
     {
@@ -101,8 +101,7 @@ app.UseDeveloperExceptionPage();
 //}
 #endregion
 
-app.UseCors("AllowAll");
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
