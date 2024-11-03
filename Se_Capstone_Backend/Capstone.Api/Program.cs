@@ -76,7 +76,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 
 builder.Services.AddGreetingService(builder.Configuration);
 var app = builder.Build();
-
+app.UseCors("AllowAll");
 #region Cultures
 var supportedCultures = new[]
     {
@@ -105,7 +105,7 @@ app.UseDeveloperExceptionPage();
 //}
 #endregion
 
-app.UseCors("AllowAll");
+
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
