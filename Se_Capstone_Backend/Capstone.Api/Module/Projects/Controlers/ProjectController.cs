@@ -50,7 +50,7 @@ namespace Capstone.Api.Module.Projects.Controlers
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data);
             else
-            {
+            {  
                 if (result.StatusCode == 404)
                     return ResponseNotFound(messageResponse: result.ErrorMessage);
                 return ResponseBadRequest(messageResponse: result.ErrorMessage);
