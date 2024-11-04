@@ -15,13 +15,13 @@ namespace Capstone.Application.Common.Cohere
         public CohereService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _apiKey = configuration["Cohere:ApiKey"] ?? string.Empty;
+            _apiKey = configuration["Cohere:ApiKey"] ?? Environment.GetEnvironmentVariable("COHERE_API_KEY") ?? string.Empty;
+            Console.WriteLine($"API Key from Configuration: {_apiKey}"); 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
         }
 
         public async Task<string> GetResponseAsync(string requestJson, string systemMessage, int maxTokens)
         {
-            Console.WriteLine(_apiKey);
             var requestBody = new
             {
                 prompt = systemMessage + requestJson,
