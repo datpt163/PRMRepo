@@ -4,6 +4,7 @@ using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Issues.Command;
 using Capstone.Application.Module.Issues.DTO;
 using Capstone.Infrastructure.Repository;
+using Google.Apis.Util;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,7 +29,7 @@ namespace Capstone.Application.Module.Issues.CommandHandle
 
         public async Task<ResponseMediator> Handle(UpdateIssueCommand request, CancellationToken cancellationToken)
         {
-            var issue = _unitOfWork.Issues.Find(x => x.Id == request.Id).Include(c => c.Phase).Include(c => c.Label).Include(c => c.Status).Include(c => c.LastUpdateBy).Include(c => c.ParentIssue).Include(c => c.Reporter).Include(c => c.Assignee).Include(c => c.SubIssues).Include(c => c.Comments).FirstOrDefault();
+            var issue = _unitOfWork.Issues.Find(x => x.Id == request.Id).Include(c => c.Phase).Include(c => c.Label).Include(c => c.Status).ThenInclude(c => c.Issues).Include(c => c.LastUpdateBy).Include(c => c.ParentIssue).Include(c => c.Reporter).Include(c => c.Assignee).Include(c => c.SubIssues).Include(c => c.Comments).FirstOrDefault();
             if (issue == null)
                 return new ResponseMediator("Issue not found", null);
 
@@ -67,6 +68,14 @@ namespace Capstone.Application.Module.Issues.CommandHandle
             if (user == null)
                 return new ResponseMediator("User  not found", null, 404);
 
+            foreach (var iss in issue.Status.Issues)
+                if (iss.Position > issue.Position)
+                    iss.Position--;
+
+            foreach (var issu in status.Issues)
+                issu.Position++;
+
+            issue.Position = 1;
             issue.Title = request.Title;
             issue.Description = request.Description;
             issue.StartDate = request.StartDate;

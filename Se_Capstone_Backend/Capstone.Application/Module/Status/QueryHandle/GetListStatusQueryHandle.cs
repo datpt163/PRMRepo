@@ -1,4 +1,6 @@
-﻿using Capstone.Application.Common.ResponseMediator;
+﻿using AutoMapper;
+using Capstone.Application.Common.ResponseMediator;
+using Capstone.Application.Module.Issues.DTO;
 using Capstone.Application.Module.Status.Query;
 using Capstone.Infrastructure.Repository;
 using MediatR;
@@ -9,8 +11,10 @@ namespace Capstone.Application.Module.Status.QueryHandle
     public class GetListStatusQueryHandle : IRequestHandler<GetListStatusQuery, ResponseMediator>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public GetListStatusQueryHandle(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public GetListStatusQueryHandle(IUnitOfWork unitOfWork, IMapper mapper)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
@@ -19,13 +23,21 @@ namespace Capstone.Application.Module.Status.QueryHandle
             if (!request.projectId.HasValue)
                 return new ResponseMediator("Project id null", null);
 
-            var statuses = await _unitOfWork.Statuses.GetQuery(x => x.ProjectId == request.projectId).Include(x => x.Issues).OrderBy(x => x.Position).Select(x => new
+            var statuses = await _unitOfWork.Statuses.GetQuery(x => x.ProjectId == request.projectId).
+                Include(x => x.Issues.Where(c => c.ParentIssueId == null)).ThenInclude(c => c.Phase).
+                 Include(x => x.Issues).ThenInclude(c => c.Label).
+                 Include(x => x.Issues).ThenInclude(c => c.Status).
+                 Include(x => x.Issues).ThenInclude(c => c.LastUpdateBy).
+                 Include(x => x.Issues).ThenInclude(c => c.Reporter).
+                 Include(x => x.Issues).ThenInclude(c => c.Assignee)
+                .OrderBy(x => x.Position).Select(x => new
             {
                 Id = x.Id,
                 Name = x.Name,
                 Description = x.Description,
                 Position = x.Position,
                 Color = x.Color,
+                Issues = _mapper.Map<List<IssueDTO>>(x.Issues.OrderBy(x => x.Position)),
                 IssueCount = x.Issues.Count,
             }).ToListAsync();
             return new ResponseMediator("", statuses);

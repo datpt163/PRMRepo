@@ -19,30 +19,10 @@ namespace Capstone.Application.Module.Labels.CommandHandle
             var label = _unitOfWork.Labels.Find(x => x.Id == request.Id).Include(c => c.Issues).Include(c => c.Project).FirstOrDefault();
             if (label == null)
                 return new ResponseMediator("Label not found", null, 404);
-            if(label.Issues.Count == 0)
-            {
-                _unitOfWork.Labels.Remove(label);
-                await _unitOfWork.SaveChangesAsync();
-                return new ResponseMediator("", null);
-            }
-            else
-            {
-                if(!request.NewLabelId.HasValue)
-                    return new ResponseMediator("New label null", null, 400);
-                var newLabel = _unitOfWork.Labels.Find(x => x.Id == request.NewLabelId).FirstOrDefault();
-                if(newLabel == null)
-                    return new ResponseMediator("new label not found", null, 404);
-                if(newLabel.ProjectId != label.ProjectId)
-                    return new ResponseMediator("Old label and new label not same project", null, 400);
 
-                foreach(var i in label.Issues)
-                    i.LabelId = newLabel.Id;
-
-                _unitOfWork.Labels.Update(label);
-                _unitOfWork.Labels.Remove(label);
-                await _unitOfWork.SaveChangesAsync();
-                return new ResponseMediator("", null);
-            }
+            _unitOfWork.Labels.Remove(label);
+            await _unitOfWork.SaveChangesAsync();
+            return new ResponseMediator("", null);
         }
     }
 }

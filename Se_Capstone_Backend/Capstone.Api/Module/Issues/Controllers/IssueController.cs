@@ -27,7 +27,7 @@ namespace Capstone.Api.Module.Issues.Controllers
 
         [HttpPost]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "ADD_ISSUE")]
+        [Authorize]
         public async Task<IActionResult> CreateStatus([FromBody] CreateIssueRequest request)
         {
             string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
@@ -58,7 +58,7 @@ namespace Capstone.Api.Module.Issues.Controllers
 
         [HttpDelete("{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "DELETE_ISSUE")]
+        [Authorize]
         public async Task<IActionResult> DeleteStatus(Guid id)
         {
             var result = await _mediator.Send(new DeleteIssueCommand() { Id = id});
@@ -74,7 +74,7 @@ namespace Capstone.Api.Module.Issues.Controllers
 
         [HttpGet("{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "DELETE_ISSUE")]
+        [Authorize]
         public async Task<IActionResult> GetDetailIssue(Guid id)
         {
             var result = await _mediator.Send(new GetDetailIssueQuery() { Id = id });
@@ -90,10 +90,11 @@ namespace Capstone.Api.Module.Issues.Controllers
 
         [HttpPut("{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
-        [Authorize(Roles = "UPDATE_ISSUE")]
-        public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateStatusRequest request)
+        [Authorize]
+        public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateIssueRequest request)
         {
-            var result = await _mediator.Send(new UpdateStatusCommand() { Id = id, Name = request.Name, Description = request.Description, Color = request.Color });
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var result = await _mediator.Send(new UpdateIssueCommand(id, token, request.Title, request.Description, request.StartDate, request.DueDate, request.Percentage, request.Priority, request.EstimatedTime, request.ParentIssueId, request.AssigneeId, request.StatusId , request.LabelId));
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data);
             else
