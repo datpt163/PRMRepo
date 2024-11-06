@@ -13,7 +13,7 @@ namespace Capstone.Application.Module.Issues.Command
 {
     public class AddIssueCommand : IRequest<ResponseMediator>
     {
-        public AddIssueCommand(string token, string title, string? description, DateTime? startDate, DateTime? dueDate, Priority? priority, int? estimatedTime, Guid? parentIssueId, Guid? assignedId,Guid statusId, Guid? labelId)
+        public AddIssueCommand(string token, string title, string? description, DateTime? startDate, DateTime? dueDate, Priority? priority, float? estimatedTime, Guid? parentIssueId, Guid? assignedId,Guid statusId, Guid? labelId)
         {
             Token = token;
             Title = title;
@@ -34,7 +34,7 @@ namespace Capstone.Application.Module.Issues.Command
         public DateTime? StartDate { get; set; }
         public DateTime? DueDate { get; set; }
         public Priority? Priority { get; set; }
-        public int? EstimatedTime { get; set; } 
+        public float? EstimatedTime { get; set; } 
         public Guid? ParentIssueId { get; set; }
         public Guid? AssignedToId { get; set; }
         public Guid StatusId { get; set; }
