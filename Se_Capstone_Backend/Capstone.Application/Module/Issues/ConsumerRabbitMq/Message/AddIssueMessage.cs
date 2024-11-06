@@ -8,6 +8,6 @@ namespace Capstone.Application.Module.Issues.ConsumerRabbitMq.Message
 {
     public class AddIssueMessage
     {
-
+        public Domain.Entities.Issue? issue { get; set; }
     }
 }

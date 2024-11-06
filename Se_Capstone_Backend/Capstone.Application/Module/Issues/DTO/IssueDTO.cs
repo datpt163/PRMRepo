@@ -27,11 +27,11 @@ namespace Capstone.Application.Module.Issues.DTO
         public Label? Label { get; set; }
         public Domain.Entities.Status? Status { get; set; }
         public UserForProjectDetailDTO? LastUpdateBy { get; set; }
-        public Issue? ParentIssue { get; set; }
         public UserForProjectDetailDTO Reporter { get; set; } = null!;
         public UserForProjectDetailDTO? Assignee { get; set; } = null!;
-        public List<Issue> SubIssues { get; set; } = new List<Issue>();
+        public List<IssueDTO> SubIssues { get; set; } = new List<IssueDTO>();
         public List<Comment> Comments { get; set; } = new List<Comment>();
     }
+
 
 }

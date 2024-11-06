@@ -82,9 +82,9 @@ namespace Capstone.Api.Module.Labels.Controllers
         [HttpDelete("{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         [Authorize(Roles = "DELETE_LABEL")]
-        public async Task<IActionResult> DeleteLabel(Guid id, [FromBody] DeleteLabelRequest newLabel)
+        public async Task<IActionResult> DeleteLabel(Guid id)
         {
-            var result = await _mediator.Send(new DeleteLabelCommand() { Id = id, NewLabelId = newLabel.newLabelId });
+            var result = await _mediator.Send(new DeleteLabelCommand() { Id = id });
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseNoContent();
             else
