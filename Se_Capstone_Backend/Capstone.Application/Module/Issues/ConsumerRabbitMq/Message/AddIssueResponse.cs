@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Issues.ConsumerRabbitMq.Message
 {
-    public class AddIssueMessage
+    public class AddIssueResponse
     {
         public Domain.Entities.Issue? Issue { get; set; }
-        public Guid StatusId { get; set; }
     }
 }

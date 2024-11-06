@@ -1,4 +1,5 @@
-﻿using Capstone.Application.Module.Status.ConsumerRabbitMq;
+﻿using Capstone.Application.Module.Issues.ConsumerRabbitMq;
+using Capstone.Application.Module.Status.ConsumerRabbitMq;
 using MassTransit;
 
 namespace Capstone.Api.Common.ConfigureService
@@ -18,6 +19,7 @@ namespace Capstone.Api.Common.ConfigureService
 
 
                 busConfiguration.AddConsumer<OrderStatusConsumer>();
+                busConfiguration.AddConsumer<AddIssueConsumer>();
 
                 busConfiguration.UsingRabbitMq((context, configuration) =>
                 {

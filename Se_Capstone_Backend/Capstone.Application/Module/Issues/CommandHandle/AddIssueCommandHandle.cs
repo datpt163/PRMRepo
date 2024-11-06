@@ -2,11 +2,15 @@
 using Capstone.Application.Common.Jwt;
 using Capstone.Application.Common.ResponseMediator;
 using Capstone.Application.Module.Issues.Command;
+using Capstone.Application.Module.Issues.ConsumerRabbitMq;
+using Capstone.Application.Module.Issues.ConsumerRabbitMq.Message;
 using Capstone.Application.Module.Issues.DTO;
+using Capstone.Application.Module.Status.ConsumerRabbitMq.Message;
 using Capstone.Domain.Entities;
 using Capstone.Domain.Enums;
 using Capstone.Infrastructure.Redis;
 using Capstone.Infrastructure.Repository;
+using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
@@ -20,9 +24,11 @@ namespace Capstone.Application.Module.Issues.CommandHandle
         private readonly IJwtService _jwtService;
         private readonly RedisContext _redisContext;
         private readonly IMapper _mapper;
+        public readonly IPublishEndpoint _publishEndpoint;
 
-        public AddIssueCommandHandle(IUnitOfWork unitOfWork, IJwtService jwtService, RedisContext redisContext, IMapper mapper)
+        public AddIssueCommandHandle(IUnitOfWork unitOfWork, IJwtService jwtService, RedisContext redisContext, IMapper mapper, IPublishEndpoint publishEndpoint)
         {
+            _publishEndpoint = publishEndpoint;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _jwtService = jwtService;
@@ -63,7 +69,6 @@ namespace Capstone.Application.Module.Issues.CommandHandle
             var lastUpdateById = user.Id;
             var assignedById = user.Id;
             var index = SetIndex(status.Project.Id);
-            var position = status.Issues.Count() + 1;
 
             Guid? phaseId = null;
             var result = status.Project.GetStatusPhaseOfProject();
@@ -79,7 +84,6 @@ namespace Capstone.Application.Module.Issues.CommandHandle
                 DueDate = request.DueDate,
                 Priority = request.Priority,
                 EstimatedTime = request.EstimatedTime,
-                Position = position,
                 ParentIssueId = request.ParentIssueId,
                 ReporterId = assignedById,
                 AssigneeId = request.AssignedToId,
@@ -88,8 +92,7 @@ namespace Capstone.Application.Module.Issues.CommandHandle
                 LabelId = request.LabelId,
                 PhaseId = phaseId
             };
-            _unitOfWork.Issues.Add(issue);
-            await _unitOfWork.SaveChangesAsync();
+            await _publishEndpoint.Publish(new AddIssueMessage() { Issue = issue, StatusId = request.StatusId });
             var response =  _mapper.Map<IssueDTO>(issue);
             return new ResponseMediator("", response);
         }
