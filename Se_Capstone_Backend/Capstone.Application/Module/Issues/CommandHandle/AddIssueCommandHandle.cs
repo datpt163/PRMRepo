@@ -60,8 +60,6 @@ namespace Capstone.Application.Module.Issues.CommandHandle
             if(user == null)
                 return new ResponseMediator("User  not found", null, 404);
 
-            await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
-
             var lastUpdateById = user.Id;
             var assignedById = user.Id;
             var index = SetIndex(status.Project.Id);
@@ -92,8 +90,7 @@ namespace Capstone.Application.Module.Issues.CommandHandle
             };
             _unitOfWork.Issues.Add(issue);
             await _unitOfWork.SaveChangesAsync();
-            var issueResponse = _unitOfWork.Issues.Find(x => x.Id == issue.Id).Include(c => c.Phase).Include(c => c.Label).Include(c => c.Status).Include(c => c.LastUpdateBy).Include(c => c.ParentIssue).Include(c => c.Reporter).Include(c => c.Assignee).Include(c => c.SubIssues).Include(c => c.Comments).FirstOrDefault();
-            var response =  _mapper.Map<IssueDTO?>(issueResponse);
+            var response =  _mapper.Map<IssueDTO>(issue);
             return new ResponseMediator("", response);
         }
 
