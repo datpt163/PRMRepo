@@ -52,13 +52,15 @@ namespace Capstone.Application.Module.Issues.CommandHandle
             if(request.LabelId.HasValue && _unitOfWork.Labels.FindOne(x => x.Id == request.LabelId) == null )
                 return new ResponseMediator("Label  not found", null, 404);
 
-            var status = _unitOfWork.Statuses.Find(x => x.Id == request.StatusId).Include(c => c.Project).Include(c => c.Issues).FirstOrDefault();
+            var status = _unitOfWork.Statuses.Find(x => x.Id == request.StatusId).Include(c => c.Project).ThenInclude(c => c.Phases).Include(c => c.Issues).FirstOrDefault();
             if (status == null)
                 return new ResponseMediator("Status  not found", null, 404);
 
             var user = await _jwtService.VerifyTokenAsync(request.Token);
             if(user == null)
                 return new ResponseMediator("User  not found", null, 404);
+
+            await Task.Delay(TimeSpan.FromSeconds(20), cancellationToken);
 
             var lastUpdateById = user.Id;
             var assignedById = user.Id;

@@ -38,17 +38,17 @@ namespace Capstone.Application.Module.Projects.Handlers
                 Tasks = new List<TaskEffort>()
             };
 
-            foreach (var task in project.Statuses.SelectMany(x => x.Issues))
-            {
-                response.Tasks.Add(new TaskEffort
-                {
-                    //UserId = task.UserId,
-                    //UserName = task.UserName,
-                    EstimatedTime = task.EstimatedTime ?? 0,
-                    //ActualTime = task.ActualTime,
-                    PercentDone = task.PercentDone
-                });
-            }
+            //foreach (var task in project.Statuses.SelectMany(x => x.Issues))
+            //{
+            //    response.Tasks.Add(new TaskEffort
+            //    {
+            //        //UserId = task.UserId,
+            //        //UserName = task.UserName,
+            //        EstimatedTime = task.EstimatedTime ?? 0,
+            //        //ActualTime = task.ActualTime,
+            //        PercentDone = task.PercentDone
+            //    });
+            //}
 
             return response;
         }
