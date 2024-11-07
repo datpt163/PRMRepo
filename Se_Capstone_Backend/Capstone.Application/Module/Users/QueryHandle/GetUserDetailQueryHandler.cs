@@ -60,7 +60,7 @@ namespace Capstone.Application.Module.Users.QueryHandle
                     RoleId = roleId,
                     RoleName = roleName,
                     UserName = user.UserName,
-                    PositionName = user.Position != null ? user.Position.Name : ""
+                    PositionName = user.Position != null ? user.Position.Title : ""
                 };
             }
         }

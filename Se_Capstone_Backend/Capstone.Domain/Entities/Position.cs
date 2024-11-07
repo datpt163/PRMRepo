@@ -1,15 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Capstone.Domain.Entities.Common;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace Capstone.Domain.Entities
 {
     [Table("positions")]
-    public class Position
+    public class Position : BaseEntity
     {
         public Guid Id { get; set; }
         [MaxLength(100)]
-        public string Name { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
         [MaxLength(250)]
         public string? Description {  get; set; }
         [JsonIgnore]
