@@ -36,6 +36,8 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           HUGGINGFACE_API_TOKEN: ${{ secrets.HUGGINGFACE_API_TOKEN }}
           COHERE_API_KEY: ${{ secrets.COHERE_API_KEY }}
+          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
         run: |
           echo "$SSH_PRIVATE_KEY" > private_key
           chmod 600 private_key
@@ -55,5 +57,7 @@ jobs:
               -e OPENAI_API_KEY="${OPENAI_API_KEY}" \
               -e HUGGINGFACE_API_TOKEN="${HUGGINGFACE_API_TOKEN}" \
               -e COHERE_API_KEY="${COHERE_API_KEY}" \
+              -e GOOGLE_OAUTH_CLIENT_ID="${GOOGLE_OAUTH_CLIENT_ID}" \
+              -e GOOGLE_OAUTH_CLIENT_SECRET="${GOOGLE_OAUTH_CLIENT_SECRET}" \
               --name capstone-api phongnv0910/capstone-api:latest
           EOF
