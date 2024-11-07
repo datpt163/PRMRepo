@@ -48,4 +48,9 @@
     <ProjectReference Include="..\Capstone.Infrastructure\Capstone.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Module\Position\CommandHandle\" />
+    <Folder Include="Module\Position\Response\" />
+  </ItemGroup>
+
 </Project>

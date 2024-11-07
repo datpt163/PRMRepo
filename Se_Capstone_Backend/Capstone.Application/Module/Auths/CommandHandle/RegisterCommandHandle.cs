@@ -61,7 +61,7 @@ namespace Capstone.Application.Module.Users.CommandHandle
                     var responseUser = new CreateUserResponse(role.Id, role.Name ?? "", responseSave.Status, responseSave.Email ?? "", responseSave.Id, responseSave.UserName ?? "", responseSave.FullName, responseSave.PhoneNumber ?? "", responseSave.Avatar ?? "",
                                              responseSave.Address ?? "", responseSave.Gender, responseSave.Dob, responseSave.BankAccount, responseSave.BankAccountName,
                                              responseSave.CreateDate, responseSave.UpdateDate, responseSave.DeleteDate)
-                    { PositionName = position.Name};
+                    { PositionName = position.Title };
                     await _userManager.AddToRoleAsync(user, role.Name ?? "");
                     return new ResponseMediator("", responseUser);
                 }
