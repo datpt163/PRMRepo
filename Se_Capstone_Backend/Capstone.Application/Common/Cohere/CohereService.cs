@@ -10,12 +10,12 @@ namespace Capstone.Application.Common.Cohere
     public class CohereService : ICohereService
     {
         private readonly HttpClient _httpClient;
-        private readonly string _apiKey;
+        private readonly string? _apiKey;
 
         public CohereService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _apiKey = configuration["Cohere:ApiKey"] ?? Environment.GetEnvironmentVariable("COHERE_API_KEY") ?? string.Empty;
+            _apiKey = !string.IsNullOrEmpty(configuration["Cohere:ApiKey"])? configuration["Cohere:ApiKey"]: Environment.GetEnvironmentVariable("COHERE_API_KEY") ?? string.Empty;
             Console.WriteLine($"API Key from Configuration: {_apiKey}"); 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
         }
