@@ -1,5 +1,7 @@
 ﻿using Capstone.Api.Common.ResponseApi.Controllers;
+using Capstone.Application.Module.Position.Command;
 using Capstone.Application.Module.Position.Queries;
+using Capstone.Application.Module.Skills.Command;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +26,13 @@ namespace Capstone.Api.Module.Position.Controllers
         {
             var result = await _mediator.Send(new GetListPositionQuery());
             return ResponseOk(dataResponse: result.Data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreatePositionCommand command)
+        {
+            var positionDto = await _mediator.Send(command);
+            return ResponseCreated(positionDto, "Position created successfully");
         }
     }
 }
