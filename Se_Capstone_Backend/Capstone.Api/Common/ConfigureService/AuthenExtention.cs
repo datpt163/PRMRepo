@@ -47,7 +47,8 @@ namespace Capstone.Api.Common.ConfigureService
                     ? clientSecret
                     : Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET") ?? string.Empty;
 
-
+                Console.WriteLine("GOOGLE_CLIENT_ID " + options.ClientId);
+                Console.WriteLine("GOOGLE_CLIENT_SECRET" + options.ClientSecret);
 
 
             });
