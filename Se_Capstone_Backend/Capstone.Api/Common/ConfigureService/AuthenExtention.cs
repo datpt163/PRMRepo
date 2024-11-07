@@ -35,11 +35,21 @@ namespace Capstone.Api.Common.ConfigureService
                 };
             }).AddGoogle(options =>
             {
-                IConfigurationSection googleAuthNSection =
-                    configuration.GetSection("Authentication:Google");
+                IConfigurationSection googleAuthNSection = configuration.GetSection("Authentication:Google");
 
-                options.ClientId = googleAuthNSection["ClientId"] ?? string.Empty;
-                options.ClientSecret = googleAuthNSection["ClientSecret"] ?? string.Empty;
+                var clientId = googleAuthNSection["ClientId"];
+                options.ClientId = !string.IsNullOrEmpty(clientId)
+                    ? clientId
+                    : Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID") ?? string.Empty;
+
+                var clientSecret = googleAuthNSection["ClientSecret"];
+                options.ClientSecret = !string.IsNullOrEmpty(clientSecret)
+                    ? clientSecret
+                    : Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET") ?? string.Empty;
+
+
+
+
             });
             services.Configure<JwtSettings>(jwtSettings);
             services.AddScoped<IJwtService, JwtService>();
