@@ -20,10 +20,10 @@ namespace Capstone.Application.Module.Issues.QueryHandle
 
         public async Task<ResponseMediator> Handle(GetDetailIssueQuery request, CancellationToken cancellationToken)
         {
-            var issue = await _unitOfWork.Issues.Find(x => x.Id == request.Id).Include(c => c.Phase).Include(c => c.Label).Include(c => c.Status).Include(c => c.LastUpdateBy).Include(c => c.ParentIssue).Include(c => c.Reporter).Include(c => c.Assignee).Include(c => c.SubIssues).Include(c => c.Comments).FirstOrDefaultAsync();
+            var issue = await _unitOfWork.Issues.Find(x => x.Id == request.Id).Include(c => c.Phase).Include(c => c.Label).Include(c => c.Status).Include(c => c.LastUpdateBy).Include(c => c.Reporter).Include(c => c.Assignee).Include(c => c.SubIssues).Include(c => c.Comments).FirstOrDefaultAsync();
             if(issue == null)
                 return new ResponseMediator("Issue  not found", null, 404);
-            var response = _mapper.Map<IssueDTO?>(issue);
+            var response = _mapper.Map<IssueDTO2?>(issue);
             return new ResponseMediator("", response);
 
         }

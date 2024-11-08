@@ -28,6 +28,7 @@ namespace Capstone.Application.Common.AutoMapper
 
             CreateMap<Permission, PermissionDTO>();
             CreateMap<Issue, Application.Module.Issues.DTO.IssueDTO>();
+            CreateMap<Issue, Application.Module.Issues.DTO.IssueDTO2>();
         }
     }
 }
