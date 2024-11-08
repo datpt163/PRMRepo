@@ -23,48 +23,48 @@ namespace Capstone.Application.Module.Positions.CommandHandle
 
         public async Task<AddMultiplePositionsResponse> Handle(AddMultiplePositionsToUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetQuery()
-                .Include(u => u.Positions)
-                .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken) ?? throw new Exception("User not found.");
-            var existingPositions = new List<string>();
-            var notFoundPositions = new List<Guid>();
+            //var user = await _userRepository.GetQuery()
+            //    .Include(u => u.Positions)
+            //    .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken) ?? throw new Exception("User not found.");
+            //var existingPositions = new List<string>();
+            //var notFoundPositions = new List<Guid>();
 
-            foreach (var positionId in request.PositionIds)
-            {
-                var position = await _positionRepository.GetQueryNoTracking()
-                    .FirstOrDefaultAsync(x => x.Id == positionId, cancellationToken);
+            //foreach (var positionId in request.PositionIds)
+            //{
+            //    var position = await _positionRepository.GetQueryNoTracking()
+            //        .FirstOrDefaultAsync(x => x.Id == positionId, cancellationToken);
 
-                if (position == null)
-                {
-                    notFoundPositions.Add(positionId);
-                    continue;
-                }
+            //    if (position == null)
+            //    {
+            //        notFoundPositions.Add(positionId);
+            //        continue;
+            //    }
 
-                user.Positions ??= new List<Position>();
+            //    user.Positions ??= new List<Position>();
 
-                if (user.Positions.Any(s => s.Id == position.Id))
-                {
-                    existingPositions.Add(position.Title);
-                    continue;
-                }
+            //    if (user.Positions.Any(s => s.Id == position.Id))
+            //    {
+            //        existingPositions.Add(position.Title);
+            //        continue;
+            //    }
 
-                user.Positions.Add(position);
-            }
+            //    user.Positions.Add(position);
+            //}
 
-            await _userRepository.UpdateAsync(user, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            //await _userRepository.UpdateAsync(user, cancellationToken);
+            //await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var message = string.Empty;
 
-            if (existingPositions.Any())
-            {
-                message += $"Positions already exist for user: {string.Join(", ", existingPositions)}. ";
-            }
+            //if (existingPositions.Any())
+            //{
+            //    message += $"Positions already exist for user: {string.Join(", ", existingPositions)}. ";
+            //}
 
-            if (notFoundPositions.Any())
-            {
-                message += $"Positions not found: {string.Join(", ", notFoundPositions)}.";
-            }
+            //if (notFoundPositions.Any())
+            //{
+            //    message += $"Positions not found: {string.Join(", ", notFoundPositions)}.";
+            //}
 
             return new AddMultiplePositionsResponse(true, message);
         }
