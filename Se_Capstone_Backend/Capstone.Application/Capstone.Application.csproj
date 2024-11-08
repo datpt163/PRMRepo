@@ -49,7 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Module\Position\CommandHandle\" />
     <Folder Include="Module\Position\Response\" />
   </ItemGroup>
 
