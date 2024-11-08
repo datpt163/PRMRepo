@@ -19,31 +19,31 @@ namespace Capstone.Application.Module.Positions.CommandHandle
 
         public async Task<bool> Handle(RemovePositionsFromUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetQuery()
-                .Include(x => x.Positions)
-                .FirstOrDefaultAsync(x => x.Id == request.UserId);
+            //var user = await _userRepository.GetQuery()
+            //    .Include(x => x.Positions)
+            //    .FirstOrDefaultAsync(x => x.Id == request.UserId);
 
-            if (user == null)
-            {
-                return false;
-            }
+            //if (user == null)
+            //{
+            //    return false;
+            //}
 
-            var positionsToRemove = user.Positions
-                .Where(s => request.PositionIds.Contains(s.Id))
-                .ToList();
+            //var positionsToRemove = user.Positions
+            //    .Where(s => request.PositionIds.Contains(s.Id))
+            //    .ToList();
 
-            if (!positionsToRemove.Any())
-            {
-                return false;
-            }
+            //if (!positionsToRemove.Any())
+            //{
+            //    return false;
+            //}
 
-            foreach (var position in positionsToRemove)
-            {
-                user.Positions.Remove(position);
-            }
+            //foreach (var position in positionsToRemove)
+            //{
+            //    user.Positions.Remove(position);
+            //}
 
-            await _userRepository.UpdateAsync(user);
-            await _unitOfWork.SaveChangesAsync();
+            //await _userRepository.UpdateAsync(user);
+            //await _unitOfWork.SaveChangesAsync();
 
             return true;
         }
