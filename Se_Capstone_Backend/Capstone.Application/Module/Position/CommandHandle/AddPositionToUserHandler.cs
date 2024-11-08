@@ -22,31 +22,31 @@ namespace Capstone.Application.Module.Positions.CommandHandle
 
         public async Task<bool> Handle(AddPositionToUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetQuery()
-                .Include(u => u.Positions)
-                .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
+            //var user = await _userRepository.GetQuery()
+            //    .Include(u => u.Positions)
+            //    .FirstOrDefaultAsync(u => u.Id == request.UserId, cancellationToken);
 
-            if (user == null)
-            {
-                return false;
-            }
+            //if (user == null)
+            //{
+            //    return false;
+            //}
 
-            var position = await _positionRepository.GetQueryNoTracking().FirstOrDefaultAsync(x=> x.Id == request.PositionId, cancellationToken);
-            if (position == null)
-            {
-                return false;
-            }
-            user.Positions ??= new List<Position>();
+            //var position = await _positionRepository.GetQueryNoTracking().FirstOrDefaultAsync(x=> x.Id == request.PositionId, cancellationToken);
+            //if (position == null)
+            //{
+            //    return false;
+            //}
+            //user.Positions ??= new List<Position>();
 
-            if (user.Positions.Any(s => s.Id == position.Id))
-            {
-                return false;
-            }
+            //if (user.Positions.Any(s => s.Id == position.Id))
+            //{
+            //    return false;
+            //}
 
-            user.Positions.Add(position);
+            //user.Positions.Add(position);
 
-            await _userRepository.UpdateAsync(user, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            //await _userRepository.UpdateAsync(user, cancellationToken);
+            //await _unitOfWork.SaveChangesAsync(cancellationToken);
             return true;
         }
     }

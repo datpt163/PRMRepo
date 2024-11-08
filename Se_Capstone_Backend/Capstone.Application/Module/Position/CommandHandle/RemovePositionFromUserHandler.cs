@@ -19,31 +19,31 @@ namespace Capstone.Application.Module.Positions.CommandHandle
 
         public async Task<bool> Handle(RemovePositionFromUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetQuery()
-                .Include(x => x.Positions)
-                .FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
+            //var user = await _userRepository.GetQuery()
+            //    .Include(x => x.Positions)
+            //    .FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
 
-            if (user == null)
-            {
-                return false;
-            }
+            //if (user == null)
+            //{
+            //    return false;
+            //}
 
-            if (user.Positions == null || !user.Positions.Any())
-            {
-                return false;
-            }
+            //if (user.Positions == null || !user.Positions.Any())
+            //{
+            //    return false;
+            //}
 
-            var position = user.Positions.FirstOrDefault(s => s.Id == request.PositionId);
+            //var position = user.Positions.FirstOrDefault(s => s.Id == request.PositionId);
 
-            if (position == null)
-            {
-                return false;
-            }
+            //if (position == null)
+            //{
+            //    return false;
+            //}
 
-            user.Positions.Remove(position);
+            //user.Positions.Remove(position);
 
-            await _userRepository.UpdateAsync(user, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            //await _userRepository.UpdateAsync(user, cancellationToken);
+            //await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return true;
         }
