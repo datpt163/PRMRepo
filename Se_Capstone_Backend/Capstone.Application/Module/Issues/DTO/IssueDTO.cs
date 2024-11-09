@@ -1,4 +1,5 @@
-﻿using Capstone.Application.Module.Projects.Response;
+﻿using Capstone.Application.Module.Comments.CommentDTOs;
+using Capstone.Application.Module.Projects.Response;
 using Capstone.Domain.Entities;
 using Capstone.Domain.Enums;
 using System;
@@ -30,7 +31,7 @@ namespace Capstone.Application.Module.Issues.DTO
         public UserForProjectDetailDTO Reporter { get; set; } = null!;
         public UserForProjectDetailDTO? Assignee { get; set; } = null!;
         public IssueDTO? ParentIssue { get; set; }
-        public List<Comment> Comments { get; set; } = new List<Comment>();
+        public List<CommentDTO> Comments { get; set; } = new List<CommentDTO>();
     }
 
     public class IssueDTO2
@@ -54,6 +55,6 @@ namespace Capstone.Application.Module.Issues.DTO
         public UserForProjectDetailDTO Reporter { get; set; } = null!;
         public UserForProjectDetailDTO? Assignee { get; set; } = null!;
         public List<IssueDTO> SubIssues { get; set; } = new List<IssueDTO>();
-        public List<Comment> Comments { get; set; } = new List<Comment>();
+        public List<CommentDTO> Comments { get; set; } = new List<CommentDTO>();
     }
 }
