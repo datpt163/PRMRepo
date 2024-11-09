@@ -2,6 +2,7 @@
 using Capstone.Application.Module.Auths.Response;
 using Capstone.Domain.Entities;
 using Capstone.Application.Module.Projects.Response;
+using Capstone.Application.Module.Comments.CommentDTOs;
 namespace Capstone.Application.Common.AutoMapper
 {
     public class MappingProfile : Profile
@@ -28,6 +29,8 @@ namespace Capstone.Application.Common.AutoMapper
 
             CreateMap<Permission, PermissionDTO>();
             CreateMap<Issue, Application.Module.Issues.DTO.IssueDTO>();
+            CreateMap<Comment, CommentDTO>();
+            CreateMap<Issue, Application.Module.Issues.DTO.IssueDTO2>();
         }
     }
 }
