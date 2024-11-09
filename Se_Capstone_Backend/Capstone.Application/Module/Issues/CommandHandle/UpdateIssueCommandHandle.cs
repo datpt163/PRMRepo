@@ -92,7 +92,6 @@ namespace Capstone.Application.Module.Issues.CommandHandle
             await _unitOfWork.SaveChangesAsync();
             var response = _mapper.Map<IssueDTO?>(issue);
             return new ResponseMediator("", response);
-
         }
     }
 }
