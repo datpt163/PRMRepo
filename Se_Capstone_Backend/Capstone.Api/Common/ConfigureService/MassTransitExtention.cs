@@ -20,6 +20,8 @@ namespace Capstone.Api.Common.ConfigureService
 
                 busConfiguration.AddConsumer<OrderStatusConsumer>();
                 busConfiguration.AddConsumer<AddIssueConsumer>();
+                busConfiguration.AddConsumer<OrderIssueConsumer>();
+
 
                 busConfiguration.UsingRabbitMq((context, configuration) =>
                 {

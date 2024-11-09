@@ -56,7 +56,6 @@ namespace Capstone.Application.Module.Status.QueryHandle
             var statuses = await _unitOfWork.Statuses.GetQuery(x => x.ProjectId == request.projectId).
                 Include(x => x.Issues.Where(c => c.ParentIssueId == null)).ThenInclude(c => c.Phase).
                  Include(x => x.Issues).ThenInclude(c => c.Label).
-                 Include(x => x.Issues).ThenInclude(c => c.Status).
                  Include(x => x.Issues).ThenInclude(c => c.LastUpdateBy).
                  Include(x => x.Issues).ThenInclude(c => c.Reporter).
                  Include(x => x.Issues).ThenInclude(c => c.Assignee)
