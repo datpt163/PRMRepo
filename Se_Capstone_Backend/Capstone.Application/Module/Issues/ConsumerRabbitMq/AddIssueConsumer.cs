@@ -25,6 +25,7 @@ namespace Capstone.Application.Module.Issues.ConsumerRabbitMq
 
         public async Task Consume(ConsumeContext<AddIssueMessage> context)
         {
+            Console.WriteLine("xxx");
             var issue = context.Message.Issue;
             if (issue != null)
             {
@@ -35,9 +36,6 @@ namespace Capstone.Application.Module.Issues.ConsumerRabbitMq
                 issue.Position = position;
                 _unitOfWork.Issues.Add(issue);
                 await _unitOfWork.SaveChangesAsync();
-                //var issueResponse = _unitOfWork.Issues.Find(x => x.Id == issue.Id).Include(c => c.Phase).Include(c => c.Label).Include(c => c.Status).Include(c => c.LastUpdateBy).Include(c => c.ParentIssue).Include(c => c.Reporter).Include(c => c.Assignee).Include(c => c.SubIssues).Include(c => c.Comments).FirstOrDefault();
-                //var response = _mapper.Map<IssueDTO?>(issueResponse);
-                //return new ResponseMediator("", response);
             }
         }
     }

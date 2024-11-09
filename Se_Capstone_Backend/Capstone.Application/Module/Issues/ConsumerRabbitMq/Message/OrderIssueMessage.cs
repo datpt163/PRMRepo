@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Capstone.Application.Module.Issues.ConsumerRabbitMq.Message
 {
-    public class AddIssueResponse
+    public class OrderIssueMessage
     {
-        public string respose { get; set; } = string.Empty;
+        public Guid IssueId { get; set; }
+        public Guid StatusId { get; set; }
+        public int Position { get; set; }
     }
 }

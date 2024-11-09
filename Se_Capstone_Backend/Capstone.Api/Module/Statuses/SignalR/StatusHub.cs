@@ -1,4 +1,5 @@
 ﻿using Capstone.Application.Common.Jwt;
+using Capstone.Application.Module.Issues.ConsumerRabbitMq.Message;
 using Capstone.Application.Module.Status.ConsumerRabbitMq.Message;
 using Capstone.Infrastructure.Repository;
 using MassTransit;
@@ -41,6 +42,8 @@ namespace Capstone.Api.Module.Statuses.SignalR
         {
             try
             {
+                await Clients.Group(groupId).SendAsync("StatusOrderResponse", "Success");
+
                 var httpContext = Context.GetHttpContext();
 
                 var status = _unitOfWork.Statuses.Find(x => x.Id == statusId).Include(c => c.Project).ThenInclude(c => c.Statuses).FirstOrDefault();
@@ -48,15 +51,45 @@ namespace Capstone.Api.Module.Statuses.SignalR
                     throw new Exception("Status not found.");
                 if(position > status.Project.Statuses.Count())
                     throw new Exception("Some thing wrong with position");
-                if(position == status.Position)
+                if (position < 1)
+                    throw new Exception("Some thing wrong with position");
+                if (position == status.Position)
                     throw new Exception("Old position same new position");
                 await _publishEndpoint.Publish(new OrderStatusMessage() { Status = status, Position = position });
-                await Clients.Group(groupId).SendAsync("StatusOrderResponse", "Success");
 
             }
             catch (Exception ex)
             {
                Console.WriteLine(ex.ToString());
+            }
+        }
+
+        public async Task IssueOrderRequest(string groupId, Guid issueId, Guid statusId, int position)
+        {
+            try
+            {
+                var httpContext = Context.GetHttpContext();
+
+                var status = _unitOfWork.Statuses.Find(x => x.Id == statusId).Include(c => c.Issues).FirstOrDefault();
+                if (status == null)
+                    throw new Exception("Status not found.");
+
+                var issue = _unitOfWork.Issues.Find(x => x.Id == issueId).FirstOrDefault();
+                if (issue == null)
+                    throw new Exception("Issue not found.");
+
+                if (position < 0)
+                    throw new Exception("Some thing wrong with position");
+
+                if (position > status.Issues.Count())
+                    throw new Exception("Some thing wrong with position");
+                await _publishEndpoint.Publish(new OrderIssueMessage() {  StatusId = statusId, Position = position, IssueId = issueId });
+                await Clients.Group(groupId).SendAsync("IssueOrderResponse", "Success");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
             }
         }
     }
