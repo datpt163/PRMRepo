@@ -7,4 +7,8 @@ namespace Capstone.Application.Module.Status.Query
     {
         public Guid? projectId { get; set; }
     }
+    public class GetListStatusKanbanQuery : IRequest<ResponseMediator>
+    {
+        public Guid? projectId { get; set; }
+    }
 }

@@ -55,6 +55,18 @@ namespace Capstone.Api.Module.Issues.Controllers
             }
         }
 
+        [HttpGet("kanban")]
+        public async Task<IActionResult> GetListStatus(Guid? projectId)
+        {
+            var result = await _mediator.Send(new GetListStatusKanbanQuery() { projectId = projectId });
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(result.Data);
+            else
+            {
+                return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+        }
+
 
         [HttpDelete("{id}")]
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]

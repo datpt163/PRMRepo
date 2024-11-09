@@ -31,7 +31,7 @@ namespace Capstone.Application.Module.Issues.QueryHandle
                 return new PagingResultSP<Application.Module.Issues.DTO.IssueDTO>() { ErrorMessage = "Project not found" };
 
             var issueIds = project.Statuses.SelectMany(x => x.Issues).ToList().Select(c => c.Id);
-            var issues = _unitOfWork.Issues.Find(x => issueIds.Contains(x.Id)).Include(c => c.Phase).Include(c => c.Label).Include(c => c.Status).Include(c => c.LastUpdateBy).Include(c => c.ParentIssue).Include(c => c.Reporter).Include(c => c.Assignee).Include(c => c.SubIssues).Include(c => c.Comments).OrderByDescending(x => x.Index).ToList();
+            var issues = _unitOfWork.Issues.Find(x => issueIds.Contains(x.Id)).Include(c => c.Phase).Include(c => c.Label).Include(c => c.Status).Include(c => c.LastUpdateBy).Include(c => c.ParentIssue).Include(c => c.Reporter).Include(c => c.Assignee).Include(c => c.Comments).OrderByDescending(x => x.Index).ToList();
             if (request.Index.HasValue)
                 issues = issues.Where(x => x.Index == request.Index.Value).ToList();
 
