@@ -4,41 +4,47 @@
     "Name": "Backlog",
     "Color": "blackAlpha",
     "Description": "Plan to do in this phase",
-    "Position": 0
+    "Position": 0,
+    "IsDone": false
   },
   {
     "Id": "ab8b3891-ab2f-429c-8293-3ea01bf1c295",
     "Name": "Todo",
     "Color": "blue",
     "Description": "Plan to do in this week",
-    "Position": 1
+    "Position": 1,
+    "IsDone": false
   },
   {
     "Id": "ab8b3891-ab2f-429c-8293-3ea01bf1c294",
     "Name": "In progress",
     "Color": "blue",
     "Description": "Tasks that you are working on",
-    "Position": 2
+    "Position": 2,
+    "IsDone": false
   },
   {
     "Id": "ab8b3891-ab2f-429c-8293-3ea01bf1c293",
     "Name": "In review",
     "Color": "blue",
     "Description": "This task is waiting for review",
-    "Position": 3
+    "Position": 3,
+    "IsDone": false
   },
   {
     "Id": "ab8b3891-ab2f-429c-8293-3ea01bf1c292",
     "Name": "Done",
     "Color": "green",
-    "Description": "This task is completed",  
-    "Position": 4
+    "Description": "This task is completed",
+    "Position": 4,
+    "IsDone": true
   },
   {
     "Id": "ab8b3891-ab2f-429c-8293-3ea01bf1c291",
     "Name": "Cancelled",
     "Color": "yellow",
     "Description": "Tasks that are decided not to execute anymore",
-    "Position": 5
+    "Position": 5,
+    "IsDone": true
   }
 ]

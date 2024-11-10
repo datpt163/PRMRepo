@@ -35,7 +35,7 @@ namespace Capstone.Application.Module.Status.CommandHandle
                 position = project.Statuses.Count();
             }
 
-            var status = new Capstone.Domain.Entities.Status() { Name = request.Name, ProjectId = request.ProjectId, Description = request.Description,Color = request.Color, Position = position};
+            var status = new Capstone.Domain.Entities.Status() { Name = request.Name, ProjectId = request.ProjectId, Description = request.Description,Color = request.Color, Position = position, IsDone = request.IsDone};
             _unitOfWork.Statuses.Add(status);
             await _unitOfWork.SaveChangesAsync();
             return new ResponseMediator("", status);

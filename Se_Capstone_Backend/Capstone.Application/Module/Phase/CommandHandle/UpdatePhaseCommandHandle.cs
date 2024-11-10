@@ -5,6 +5,7 @@ using Capstone.Domain.Enums;
 using Capstone.Infrastructure.Repository;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 
 namespace Capstone.Application.Module.Phase.CommandHandle
@@ -42,7 +43,7 @@ namespace Capstone.Application.Module.Phase.CommandHandle
 
             var phaseCheck = new Domain.Entities.Phase() { Title = request.Title, Description = request.Description, ExpectedStartDate = request.ExpectedStartDate, ExpectedEndDate = request.ExpectedEndDate };
             var phases = new List<Domain.Entities.Phase>();
-            phases.AddRange(phases);
+            phases.AddRange(phase.Project.Phases);
             var phaseDelete = phases.FirstOrDefault(x => x.Id == request.Id);
             if (phaseDelete != null)
             {
