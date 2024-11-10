@@ -39,6 +39,7 @@ namespace Capstone.Application.Module.Status.CommandHandle
             status.Name = request.Name;
             status.Description = request.Description;
             status.Color = request.Color;
+            status.IsDone = request.IsDone;
             await _fileService.WriteFileAsync(path, JsonSerializer.Serialize(statuses));
             return new ResponseMediator("", status);
         }

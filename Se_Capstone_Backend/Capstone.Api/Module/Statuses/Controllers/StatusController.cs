@@ -115,7 +115,7 @@ namespace Capstone.Api.Module.Statuses.Controllers
         [Authorize(Roles = "UPDATE_STATUS")]
         public async Task<IActionResult> UpdateStatus(Guid id, [FromBody] UpdateStatusRequest request)
         {
-            var result = await _mediator.Send(new UpdateStatusCommand() { Id = id, Name = request.Name, Description = request.Description, Color = request.Color });
+            var result = await _mediator.Send(new UpdateStatusCommand() { Id = id, Name = request.Name, Description = request.Description, Color = request.Color, IsDone = request.IsDone });
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data);
             else
@@ -132,7 +132,7 @@ namespace Capstone.Api.Module.Statuses.Controllers
         [Authorize(Roles = "UPDATE_DEFAULT_STATUS")]
         public async Task<IActionResult> UpdateStatusDefault(Guid id, [FromBody] UpdateStatusDefaultRequest request)
         {
-            var result = await _mediator.Send(new UpdateStatusDefaultCommand() { Id = id, Name = request.Name, Description = request.Description, Color = request.Color });
+            var result = await _mediator.Send(new UpdateStatusDefaultCommand() { Id = id, Name = request.Name, Description = request.Description, Color = request.Color, IsDone = request.IsDone});
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(result.Data);
             else

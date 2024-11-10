@@ -29,6 +29,7 @@ namespace Capstone.Application.Module.Status.QueryHandle
                 Description = x.Description,
                 Position = x.Position,
                 Color = x.Color,
+                IsDone = x.IsDone,
             }).OrderBy(c => c.Position).ToList());
         }
     }

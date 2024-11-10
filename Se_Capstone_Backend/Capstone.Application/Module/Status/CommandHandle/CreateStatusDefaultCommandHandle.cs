@@ -38,7 +38,7 @@ namespace Capstone.Application.Module.Status.CommandHandle
                 position = statuses.Count();
             }
 
-            var status = new Capstone.Domain.Entities.Status() { Id = Guid.NewGuid(), Name = request.Name, Description = request.Description, Color = request.Color, Position = position };
+            var status = new Capstone.Domain.Entities.Status() { Id = Guid.NewGuid(), Name = request.Name, Description = request.Description, Color = request.Color, Position = position, IsDone = request.IsDone};
             statuses.Add(status);
             await _fileService.WriteFileAsync(path, JsonSerializer.Serialize(statuses));
             return new ResponseMediator("", new { ID = status.Id, Name = status.Name, Description = request.Description, Color = request.Color, Position = position } );
