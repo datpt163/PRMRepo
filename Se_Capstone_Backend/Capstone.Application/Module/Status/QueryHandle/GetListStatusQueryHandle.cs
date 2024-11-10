@@ -67,6 +67,7 @@ namespace Capstone.Application.Module.Status.QueryHandle
                     Description = x.Description,
                     Position = x.Position,
                     Color = x.Color,
+                    IsDone = x.IsDone,
                     Issues = _mapper.Map<List<IssueDTO>>(x.Issues.OrderBy(x => x.Position)),
                     IssueCount = x.Issues.Count,
                 }).ToListAsync();
