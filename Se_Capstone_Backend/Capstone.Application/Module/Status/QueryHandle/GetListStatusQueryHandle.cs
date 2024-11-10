@@ -32,6 +32,7 @@ namespace Capstone.Application.Module.Status.QueryHandle
                     Description = x.Description,
                     Position = x.Position,
                     Color = x.Color,
+                    IsDone = x.IsDone,
                     IssueCount = x.Issues.Count,
                 }).ToListAsync();
             return new ResponseMediator("", statuses);
