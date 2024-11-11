@@ -32,14 +32,14 @@ namespace Capstone.Application.Module.Phase.CommandHandle
             if(phaseCheckDuplicateTitle != null)
                 return new ResponseMediator("This title is availble", null, 400);
 
-            if (request.ExpectedStartDate.Date < phase.Project.StartDate)
-                return new ResponseMediator("Start date must be greater or equal than the start date of project", null);
+            //if (request.ExpectedStartDate.Date < phase.Project.StartDate)
+            //    return new ResponseMediator("Start date must be greater or equal than the start date of project", null);
 
             if (request.ExpectedEndDate.Date < request.ExpectedStartDate.Date)
                 return new ResponseMediator("End date must be greater or equal than the start date", null);
 
-            if (request.ExpectedEndDate.Date < DateTime.Now.Date)
-                return new ResponseMediator("End date must be greater or equal than the current time", null);
+            //if (request.ExpectedEndDate.Date < DateTime.Now.Date)
+            //    return new ResponseMediator("End date must be greater or equal than the current time", null);
 
             var phaseCheck = new Domain.Entities.Phase() { Title = request.Title, Description = request.Description, ExpectedStartDate = request.ExpectedStartDate, ExpectedEndDate = request.ExpectedEndDate };
             var phases = new List<Domain.Entities.Phase>();
