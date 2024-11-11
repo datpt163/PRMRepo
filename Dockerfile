@@ -8,7 +8,7 @@ COPY ./Se_Capstone_Backend/Capstone.Api/*.csproj ./Capstone.Api/
 COPY ./Se_Capstone_Backend/Capstone.Infrastructure/*.csproj ./Capstone.Infrastructure/
 COPY ./Se_Capstone_Backend/Capstone.Application/*.csproj ./Capstone.Application/
 COPY ./Se_Capstone_Backend/Capstone.Domain/*.csproj ./Capstone.Domain/
-
+COPY ./Se_Capstone_Backend/Capstone.Domain/*.csproj ./Capstone.Test/
 # Restore dependencies
 RUN dotnet restore
 
