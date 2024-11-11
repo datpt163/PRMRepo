@@ -30,8 +30,8 @@ namespace Capstone.Application.Module.Phase.CommandHandle
             if (project.Phases.Select(x => x.Title.Trim().ToUpper()).Contains(request.Title.Trim().ToUpper()))
                 return new ResponseMediator("This title phase is availble", null, 400);
 
-            if (request.ExpectedStartDate.Date < DateTime.Now.Date || request.ExpectedEndDate.Date < DateTime.Now.Date)
-                return new ResponseMediator("Start date and end date must be greater than the current time", null);
+            //if (request.ExpectedStartDate.Date < DateTime.Now.Date || request.ExpectedEndDate.Date < DateTime.Now.Date)
+            //    return new ResponseMediator("Start date and end date must be greater than the current time", null);
 
             if (request.ExpectedEndDate.Date < request.ExpectedStartDate.Date)
                 return new ResponseMediator("End date must be greater or equal than the start date", null);
