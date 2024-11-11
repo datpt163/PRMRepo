@@ -13,6 +13,8 @@ namespace Capstone.Application.Module.Comments.CommentDTOs
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public Guid IssueId { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; } = DateTime.Now;
         public string Content { get; set; } = string.Empty;
         public UserForProjectDetailDTO? User { get; set; } = null!;
     }
