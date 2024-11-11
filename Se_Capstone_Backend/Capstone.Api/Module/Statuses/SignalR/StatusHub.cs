@@ -6,6 +6,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 namespace Capstone.Api.Module.Statuses.SignalR
 {
      [Authorize]
@@ -56,7 +57,8 @@ namespace Capstone.Api.Module.Statuses.SignalR
                 if (position == status.Position)
                     throw new Exception("Old position same new position");
                 await _publishEndpoint.Publish(new OrderStatusMessage() { Status = status, Position = position });
-
+                await Task.Delay(250);
+                await Clients.Group(groupId).SendAsync("StatusOrderResponse", "Success");
             }
             catch (Exception ex)
             {
@@ -84,6 +86,7 @@ namespace Capstone.Api.Module.Statuses.SignalR
                 if (position > status.Issues.Count())
                     throw new Exception("Some thing wrong with position");
                 await _publishEndpoint.Publish(new OrderIssueMessage() {  StatusId = statusId, Position = position, IssueId = issueId });
+                await Task.Delay(250);
                 await Clients.Group(groupId).SendAsync("IssueOrderResponse", "Success");
 
             }
