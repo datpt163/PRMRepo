@@ -96,13 +96,17 @@ namespace Capstone.Application.Module.Users.CommandHandle
                 user.BankAccountName = request.BankAccountName;
             }
 
-         
+            var currentRoles = await _userManager.GetRolesAsync(user);
+            var roleResponse = _unitOfWork.Roles.Find(x => x.Name != null && currentRoles.Count() > 0 &&  x.Name.ToUpper().Trim().Equals(currentRoles.FirstOrDefault())).FirstOrDefault();
+            roleId = roleResponse?.Id;
+            roleName = roleResponse?.Name;   
+
             if (request.RoleId.HasValue)
             {
                 var role =  _roleRepository.GetQuery().FirstOrDefault(x=> x.Id == request.RoleId.Value);
                 if (role !=null)
                 {
-                    var currentRoles = await _userManager.GetRolesAsync(user);
+                    
                     if(currentRoles != null && currentRoles.Count() > 0) 
                         await _userManager.RemoveFromRolesAsync(user, currentRoles);
                     var roleQuery = await _unitOfWork.Roles.FindOneAsync(x => x.Id == request.RoleId);
@@ -114,6 +118,7 @@ namespace Capstone.Application.Module.Users.CommandHandle
                     }
                 }
             }
+           
 
             if (request.AvatarFile != null)
             {

@@ -49,6 +49,7 @@ namespace Capstone.Application.Module.Comments.CommandHandle
             if (string.IsNullOrEmpty(request.Content))
                 return new ResponseMediator("Content empty", null);
             comment.Content = request.Content;
+            comment.UpdatedAt = DateTime.Now;
             _unitOfWork.Comments.Update(comment);
             await _unitOfWork.SaveChangesAsync();
             var response = _mapper.Map<CommentDTO>(comment);
