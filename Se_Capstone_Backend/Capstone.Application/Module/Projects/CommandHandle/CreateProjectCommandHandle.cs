@@ -32,8 +32,8 @@ namespace Capstone.Application.Module.Projects.CommandHandle
             if (project != null)
                 return new ResponseMediator("Project code is exist", null);
 
-            if (request.StartDate.Date < DateTime.Now.Date || request.EndDate.Date < DateTime.Now.Date)
-                return new ResponseMediator("Start date and end date must be greater than the current time", null);
+            //if (request.StartDate.Date < DateTime.Now.Date || request.EndDate.Date < DateTime.Now.Date)
+            //    return new ResponseMediator("Start date and end date must be greater than the current time", null);
 
             if (request.EndDate.Date < request.StartDate.Date)
                 return new ResponseMediator("End date must be greater or equal than the start date", null);
