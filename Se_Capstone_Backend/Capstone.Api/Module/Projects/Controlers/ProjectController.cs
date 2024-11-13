@@ -91,7 +91,8 @@ namespace Capstone.Api.Module.Projects.Controlers
         [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
         public async Task<IActionResult> GetProject(Guid id)
         {
-            var result = await _mediator.Send(new GetDetailProjectQuery() { Id = id });
+            string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            var result = await _mediator.Send(new GetDetailProjectQuery() { Id = id, Token = token });
             if (string.IsNullOrEmpty(result.ErrorMessage))
                 return ResponseOk(dataResponse: result.Data);
             else
@@ -125,6 +126,23 @@ namespace Capstone.Api.Module.Projects.Controlers
             else
             {
                 if(result.StatusCode == 404)
+                    return ResponseNotFound(messageResponse: result.ErrorMessage);
+                else
+                    return ResponseBadRequest(messageResponse: result.ErrorMessage);
+            }
+        }
+
+        [HttpPut("{projectId}/members/{memberId}")]
+        [SwaggerResponse(400, "Fail", typeof(ResponseFail))]
+        //[Authorize(Roles = "ADD_MEMBER_TO_PROJECT")]
+        public async Task<IActionResult> UpdateMember(Guid projectId, Guid memberId, UpdateMemberRequest request)
+        {
+            var result = await _mediator.Send(new UpdateMemberCommand() { IsIssueConfigurator = request.IsIssueConfigurator, IsProjectConfigurator = request.IsProjectConfigurator, PositionId = request.PositionId, ProjectId = projectId, UserId = memberId});
+            if (string.IsNullOrEmpty(result.ErrorMessage))
+                return ResponseOk(dataResponse: result.Data);
+            else
+            {
+                if (result.StatusCode == 404)
                     return ResponseNotFound(messageResponse: result.ErrorMessage);
                 else
                     return ResponseBadRequest(messageResponse: result.ErrorMessage);

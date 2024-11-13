@@ -36,6 +36,7 @@ namespace Capstone.Infrastructure.DbContexts
         public DbSet<Position> Positions { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public new DbSet<User> Users { get; set; }
+        public DbSet<UserProject> UserProjects { get; set; }
         public DbSet<GroupPermission> GroupPermissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

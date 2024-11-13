@@ -18,6 +18,7 @@ namespace Capstone.Application.Module.Projects.Response
         public string? LeadName { get; set; }
         public string? LeadPosition { get; set; }
         public string? LeadAvatar { get; set; }
+        public List<string> MyPermissions { get; set; } = new List<string>();
         public List<UserForProjectDetailDTO> Members { get; set; } = new List<UserForProjectDetailDTO> { };
     }
 
@@ -28,6 +29,8 @@ namespace Capstone.Application.Module.Projects.Response
         public string UserName { get; set; } = string.Empty;
         public string? RoleName { get; set; }
         public string? PositionName { get; set; }
+        public bool IsProjectConfigurator { get; set; }
+        public bool IsIssueConfigurator { get; set; }
         public string? Avatar { get; set; }
     }
 }
