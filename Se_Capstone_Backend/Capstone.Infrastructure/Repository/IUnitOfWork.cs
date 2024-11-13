@@ -9,8 +9,6 @@ namespace Capstone.Infrastructure.Repository
         public IRepository<Issue> Issues { get; }
         public IRepository<Job> Jobs { get; }
         public IRepository<Label> Labels { get; }
-        public IRepository<LeaveLog> LeaveLogs { get; }
-        public IRepository<LogEntry> LogEntrys { get; }
         public IRepository<Article> Articles { get; }
         public IRepository<Permission> Permissions { get; }
         public IRepository<Project> Projects { get; }

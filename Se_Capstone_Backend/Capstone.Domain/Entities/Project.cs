@@ -45,7 +45,7 @@ namespace Capstone.Domain.Entities
         public ICollection<Phase> Phases { get; set; } = new List<Phase>();
         public ICollection<Status> Statuses { get; set; } = new List<Status>();
         public ICollection<Label> Labels { get; set; } = new List<Label>(); 
-        public ICollection<User> Users { get; set; } = new List<User>();
+        public ICollection<UserProject> UserProjects { get; set; } = new List<UserProject>();
 
         public (PhaseStatus status, Phase? phaseRunning, Phase? phaseAfterPhaseRunning) GetStatusPhaseOfProject()
         {

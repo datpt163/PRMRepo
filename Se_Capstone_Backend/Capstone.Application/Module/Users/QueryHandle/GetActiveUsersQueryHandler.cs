@@ -26,7 +26,8 @@ namespace Capstone.Application.Module.Users.QueryHandle
         {
             var users = await _userRepository.GetQueryNoTracking()
                 .Include(u => u.Skills)
-                .Include(u => u.Projects)
+                .Include(u => u.UserProjects)
+                .ThenInclude(c => c.Project)
                 .Where(u => u.Status == UserStatus.Active)
                 .ToListAsync(cancellationToken);
 
@@ -35,7 +36,7 @@ namespace Capstone.Application.Module.Users.QueryHandle
                 Id = user.Id,
                 FullName = user.FullName,
                 Skills = string.Join(", ", user.Skills?.Select(s => s.Title) ?? Enumerable.Empty<string>()),
-                ActiveProjectCount = user.Projects.Count(p => p.Status == ProjectStatus.Finished)
+                ActiveProjectCount = user.UserProjects.Select(x => x.Project).Count(p => p.Status == ProjectStatus.Finished)
             }).ToList();
 
             return userResponses;
