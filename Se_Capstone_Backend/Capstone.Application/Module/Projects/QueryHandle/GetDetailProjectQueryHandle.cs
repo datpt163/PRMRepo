@@ -26,19 +26,19 @@ namespace Capstone.Application.Module.Projects.QueryHandle
 
         public async Task<ResponseMediator> Handle(GetDetailProjectQuery request, CancellationToken cancellationToken)
         {
-            var project = await _unitOfWork.Projects.Find(x => x.Id == request.Id).Include(c => c.Lead).ThenInclude(c => c.Position).Include(c => c.Users).ThenInclude(c => c.Position).FirstOrDefaultAsync();
+            var project = await _unitOfWork.Projects.Find(x => x.Id == request.Id).Include(c => c.Lead).Include(c => c.UserProjects).ThenInclude(c => c.User).FirstOrDefaultAsync();
 
             if (project == null) 
                 return new ResponseMediator("Project not found", null, 404);
 
             var projectMapper = _mapper.Map<ProjectDetailResponse>(project);
-            foreach(var p in projectMapper.Members)
+            projectMapper.Members = _mapper.Map<List<UserForProjectDetailDTO>>(project.UserProjects.Select(x => x.User));
+            foreach (var p in projectMapper.Members)
             {
                 User user = _unitOfWork.Users.FindOne(x => x.Id == p.Id);
                 if (user != null)
                     p.RoleName = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
             }
-
             return new ResponseMediator("", projectMapper);
         }
     }

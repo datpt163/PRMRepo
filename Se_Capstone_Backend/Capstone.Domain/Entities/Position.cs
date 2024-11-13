@@ -9,11 +9,9 @@ namespace Capstone.Domain.Entities
     public class Position : BaseEntity
     {
         public Guid Id { get; set; }
-        [MaxLength(100)]
-        public string Title { get; set; } = string.Empty;
         [MaxLength(250)]
+        public string Title { get; set; } = string.Empty;
         public string? Description {  get; set; }
-        [JsonIgnore]
-        public ICollection<User> Users { get; set; } = new List<User>();
+        public ICollection<UserProject> UserProjects { get; set; } = new List<UserProject>();
     }
 }

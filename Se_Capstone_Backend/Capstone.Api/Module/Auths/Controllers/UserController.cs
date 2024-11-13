@@ -31,7 +31,7 @@ namespace Capstone.Api.Module.Auths.Controllers
         public async Task<IActionResult> CreateUser([FromBody] RegisterRequest request)
         {
             string token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-            var result = await _mediator.Send(new RegisterCommand(request.PositionId, request.RoleId, token, request.Email, request.Password, request.UserName, request.FullName, request.Address, request.Gender, request.Dob, request.Phone));
+            var result = await _mediator.Send(new RegisterCommand(request.RoleId, token, request.Email, request.Password, request.UserName, request.FullName, request.Address, request.Gender, request.Dob, request.Phone));
             if (!string.IsNullOrEmpty(result.ErrorMessage))
             {
                 if(result.StatusCode == 404)

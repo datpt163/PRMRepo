@@ -24,7 +24,7 @@ namespace Capstone.Application.Module.Users.QueryHandle
         public async Task<UserDto?> Handle(GetUserDetailQuery query, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetQueryNoTracking()
-                .Where(u => u.Id == query.UserId).Include(c => c.Position)
+                .Where(u => u.Id == query.UserId)
                 .FirstOrDefaultAsync(cancellationToken);
             
             if (user == null) 
@@ -36,7 +36,7 @@ namespace Capstone.Application.Module.Users.QueryHandle
                 string roleName = "";
                 if (roles != null && roles.Count > 0)
                 {
-                    var role = await _unitOfWork.Roles.FindOneAsync(x => x.Name.Equals(roles.FirstOrDefault()));
+                    var role = await _unitOfWork.Roles.FindOneAsync(x =>x.Name != null && x.Name.Equals(roles.FirstOrDefault()));
                     roleId = role.Id + "";
                     roleName = role.Name ?? "";
                 }
@@ -60,7 +60,6 @@ namespace Capstone.Application.Module.Users.QueryHandle
                     RoleId = roleId,
                     RoleName = roleName,
                     UserName = user.UserName,
-                    PositionName = user.Position != null ? user.Position.Title : ""
                 };
             }
         }
