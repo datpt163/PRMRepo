@@ -48,6 +48,7 @@ namespace Capstone.Application.Module.Issues.DTO
         public int? ActualTime { get; set; } = 0;
         public int PercentDone { get; set; } = 0;
         public int Position { get; set; }
+        public Guid? ParentIssueId { get; set; }
         public Domain.Entities.Phase? Phase { get; set; }
         public Label? Label { get; set; }
         public Domain.Entities.Status? Status { get; set; }

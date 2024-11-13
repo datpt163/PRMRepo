@@ -29,8 +29,6 @@ namespace Capstone.Infrastructure.DbContexts
         public DbSet<Job> Jobs { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<Label> Labels { get; set; }
-        public DbSet<LeaveLog> LeaveLogs { get; set; }
-        public DbSet<LogEntry> LogEntries { get; set; }
         public DbSet<Article> Articles { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Status> Statuses { get; set; }
@@ -74,17 +72,9 @@ namespace Capstone.Infrastructure.DbContexts
                .Property(e => e.Id)
                .HasDefaultValueSql("gen_random_uuid()");
 
-            modelBuilder.Entity<LeaveLog>()
-               .Property(e => e.Id)
-               .HasDefaultValueSql("gen_random_uuid()");
-
             modelBuilder.Entity<Position>()
               .Property(e => e.Id)
               .HasDefaultValueSql("gen_random_uuid()");
-
-            modelBuilder.Entity<LogEntry>()
-               .Property(e => e.Id)
-               .HasDefaultValueSql("gen_random_uuid()");
 
             modelBuilder.Entity<Article>()
                .Property(e => e.Id)
@@ -131,12 +121,6 @@ namespace Capstone.Infrastructure.DbContexts
             .HasOne(a => a.User)
             .WithMany(s => s.Attendances)
             .HasForeignKey(a => a.UserId);
-
-            modelBuilder.Entity<LeaveLog>()
-             .HasOne(l => l.User)
-             .WithMany(s => s.LeaveLogs)
-             .HasForeignKey(l => l.UserId);
-
 
             modelBuilder.Entity<Issue>()
               .HasOne(a => a.Label)
@@ -222,11 +206,37 @@ namespace Capstone.Infrastructure.DbContexts
      .HasForeignKey(a => a.AssigneeId)
      .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<User>()
-          .HasOne(a => a.Position)
-          .WithMany(x => x.Users)
-          .HasForeignKey(a => a.PositionId)
-          .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<UserProject>()
+            .HasOne(a => a.Position)
+            .WithMany(a => a.UserProjects)
+            .HasForeignKey(a => a.PositionId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<UserProject>()
+            .HasOne(a => a.Project)
+            .WithMany(a => a.UserProjects)
+            .HasForeignKey(a => a.ProjectId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserProject>()
+          .HasOne(a => a.User)
+          .WithMany(a => a.UserProjects)
+          .HasForeignKey(a => a.UserId)
+          .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserProject>()
+            .HasOne(a => a.Position)
+            .WithMany(a => a.UserProjects)
+            .HasForeignKey(a => a.PositionId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<UserProject>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.ProjectId }); 
+
+                entity.Property(e => e.IsProjectConfigurator).HasDefaultValue(false);
+                entity.Property(e => e.IsIssueConfigurator).HasDefaultValue(false);
+            });
 
             modelBuilder.Entity<Applicant>()
               .HasMany(a => a.Jobs)
@@ -235,14 +245,6 @@ namespace Capstone.Infrastructure.DbContexts
                   "applicantJobs",
                   j => j.HasOne<Job>().WithMany().HasForeignKey("JobId"),
                   a => a.HasOne<Applicant>().WithMany().HasForeignKey("ApplicantId"));
-
-            modelBuilder.Entity<Project>()
-             .HasMany(a => a.Users)
-             .WithMany(j => j.Projects)
-             .UsingEntity<Dictionary<string, object>>(
-                 "projectUsers",
-                 j => j.HasOne<User>().WithMany().HasForeignKey("UserId"),
-                 a => a.HasOne<Project>().WithMany().HasForeignKey("ProjectId"));
 
             modelBuilder.Entity<Permission>()
           .HasMany(a => a.Roles)
