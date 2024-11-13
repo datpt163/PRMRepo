@@ -18,6 +18,7 @@ namespace Capstone.Infrastructure.Repository
         public IRepository<Position> Positions { get; }
         public IRepository<Comment> Comments { get; }
         public IRepository<Phase> Phases { get; }
+        public IRepository<UserProject> UserProjects { get; }
         public IRepository<GroupPermission> GroupPermissions { get; }
         int SaveChanges();
 
