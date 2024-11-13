@@ -48,7 +48,7 @@ namespace Capstone.Api.Module.Issues.Controllers
         {
             var result = await _mediator.Send(new GetListIssuesQuery() { ProjectId = projectId, PageIndex = pageIndex, PageSize = pageSize, Index = index, Title = title, Priority = priority, AssigneeId = assigneeId, ReporterId = reporterId, StatusId = statusId, LabelId = labelId, PhaseId = phaseId });
             if (string.IsNullOrEmpty(result.ErrorMessage))
-                return ResponseOk(result.Data);
+                return ResponseOk(result.Data, result.Paging);
             else
             {
                 return ResponseBadRequest(messageResponse: result.ErrorMessage);
