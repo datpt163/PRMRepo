@@ -17,8 +17,8 @@ namespace Capstone.Domain.Entities
         public Guid ProjectId { get; set; }
         public Project Project { get; set; } = null!;
 
-        public Guid PositionId { get; set; }
-        public Position Position { get; set; } = null!;
+        public Guid? PositionId { get; set; }
+        public Position? Position { get; set; } 
         public bool IsProjectConfigurator { get; set; } = false;
         public bool IsIssueConfigurator { get; set; } = false;
     }
