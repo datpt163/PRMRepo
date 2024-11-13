@@ -367,3 +367,4 @@ FodyWeavers.xsd
 /.vscode/launch.json
 /.vscode/tasks.json
 Authentication.API/appsettings.Development.json 
+/Se_Capstone_Backend/Capstone.Api/appsettings.json
