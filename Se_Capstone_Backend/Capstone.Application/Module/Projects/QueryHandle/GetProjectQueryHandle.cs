@@ -37,11 +37,11 @@ namespace Capstone.Application.Module.Projects.QueryHandle
 
             var user = await _jwtService.VerifyTokenAsync(request.Token);
             if (user != null)
-            {
+            {     
                 var roles = await _userManager.GetRolesAsync(user);
                 var role = _unitOfWork.Roles.Find(x => x.Name != null && x.Name == (roles.FirstOrDefault() == null ? "" : roles.FirstOrDefault())).Include(c => c.Permissions).FirstOrDefault();
 
-                if (role != null && role.Name != null && role.Permissions.Select(x => x.Name).Contains("READ_LIST_PROJECT"))
+                if (role != null && role.Name != null && role.Permissions.Select(x => x.Name).Contains("SETTING_ALL_PROJECT"))
                 {
                     projectsQuery = await _unitOfWork.Projects.GetQuery().Include(c => c.Lead).ToListAsync();
                 }
