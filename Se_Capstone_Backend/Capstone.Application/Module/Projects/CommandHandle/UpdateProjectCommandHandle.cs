@@ -46,16 +46,16 @@ namespace Capstone.Application.Module.Projects.CommandHandle
                 var user = _unitOfWork.Users.Find(u => u.Id == request.TeamLeadId).FirstOrDefault();
                 if (user == null)
                     return new ResponseMediator("Team lead not found", null, 404);
-                var roles = await _userManager.GetRolesAsync(user);
-                if (roles == null || roles.Count == 0)
-                    return new ResponseMediator("This user not have role to become a leader", null);
+                //var roles = await _userManager.GetRolesAsync(user);
+                //if (roles == null || roles.Count == 0)
+                //    return new ResponseMediator("This user not have role to become a leader", null);
 
-                var role = _unitOfWork.Roles.Find(x => x.Name != null && x.Name.Equals(roles.FirstOrDefault())).Include(c => c.Permissions).FirstOrDefault();
-                if (role == null)
-                    return new ResponseMediator("This user not have role to become a leader", null);
+                //var role = _unitOfWork.Roles.Find(x => x.Name != null && x.Name.Equals(roles.FirstOrDefault())).Include(c => c.Permissions).FirstOrDefault();
+                //if (role == null)
+                //    return new ResponseMediator("This user not have role to become a leader", null);
 
-                if (!role.Permissions.Any(x => x.Name == "IS_PROJECT_LEAD"))
-                    return new ResponseMediator("This user not have role to become a leader", null);
+                //if (!role.Permissions.Any(x => x.Name == "IS_PROJECT_LEAD"))
+                //    return new ResponseMediator("This user not have role to become a leader", null);
             }
 
             project.Name = request.Name.Trim();
